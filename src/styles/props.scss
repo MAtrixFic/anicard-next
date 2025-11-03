@@ -1,0 +1,11 @@
+$body: #041023;
+$darkGrey: #666666;
+$soLightGrey: #DADADA;
+$purple: #833E96;
+$green: #5BE98B;
+
+@mixin MainBack() {
+    background: #DADADA;
+    background: linear-gradient(141deg, rgba(218, 218, 218, .2) 1%, rgba(102, 102, 102, .2) 100%);
+    backdrop-filter: blur(5px);
+}

@@ -1,0 +1,22 @@
+@use './props.scss';
+
+.battle-cards {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 1rem;
+    height: calc(100vh - (5rem + 10px));
+
+    &__btns {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: .6rem 1rem;
+        box-sizing: border-box;
+        @include props.MainBack()
+    }
+}
