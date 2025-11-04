@@ -4,13 +4,13 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import useHeaderScroll from "../../devs/hooks/useHeaderScroll"
+import { ValueInfo } from "../routes/shop/ValueInfo";
 
 const Header = () => {
     const isVisible = useHeaderScroll();
     const router = useRouter();
     const pathname = usePathname();
 
-    console.log(pathname === '/')
     return (
         <header className={`header ${isVisible ? 'showen' : 'hidden'}`}>
             <div className="header__container">
@@ -23,7 +23,12 @@ const Header = () => {
                         </button>
                     </div>
                     <div className="header__right-container">
-                        <Link className="header__link header__link-logo" href={'/profile'} />
+                        <div className="header__money-block">
+                            <ValueInfo src="/keys/crown-key.jpg" count={3} name="crown-key" />
+                        </div>
+                        <div className="header__profile-block">
+                            <Link className="header__link header__link-logo" href={'/profile'} />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import PreviewCard from './PreviewCard'
 import PreviewSelectionCard from './PreviewSelectionCard'
-import PurpleButton from '../PurpleButton'
+import PurpleButton from '../buttons/PurpleButton'
 import { Arrow } from '../../icons/Cards'
 import Input from '../Input'
 import SearchFilter from '../../routes/profile/SearchFilter'
@@ -11,7 +11,7 @@ export interface ICard extends IShortCardInfo { src: string, id: number }
 export interface IShortCardInfo {
     desc?: string,
     name: string,
-    rang: 'A' | 'S'
+    rang: 'A' | 'S' | 'C' | 'B' | 'D'
 }
 
 interface ICardGlobalChoiseList {
@@ -24,7 +24,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     const cards = useCardsStore(state => state.allCards)
     const GetCards = useCardsStore(state => state.GetCards)
     const favoridsPreview = useRef<ICard[]>(GetCards(cardsType))
-    
+
     const [favoriteCards, setFavoriteCards] = useState<(ICard | null)[]>(favoridsPreview.current.length > 0 ? favoridsPreview.current : new Array(choisenCardsNumber).fill(null))
     const [selectedCard, setSelectedCard] = useState<ICard | null>(null)
 
@@ -59,7 +59,10 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
                     {new Array(choisenCardsNumber).fill(0).map((_, i) =>
-                        <PreviewCard key={i} func={() => SetFavoriteCard(i)} src={favoriteCards[i]?.src} deleteFunc={() => DeleteFavoriteCard(i)} />
+                        <PreviewCard key={i} rang={favoriteCards[i]?.rang}
+                            func={() => SetFavoriteCard(i)}
+                            src={favoriteCards[i]?.src}
+                            deleteFunc={() => DeleteFavoriteCard(i)} />
                     )}
                 </ul>
             </div>

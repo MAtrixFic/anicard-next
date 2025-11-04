@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import CardGlobalChoiseList, { type ICard } from "../../additionals/cards/CardGlobalChoiseList"
-import PurpleButton from "../../additionals/PurpleButton"
+import PurpleButton from "../../additionals/buttons/PurpleButton"
 import { useCardsStore } from "../../../devs/store/CardsStore"
 
 const BattleCards = () => {

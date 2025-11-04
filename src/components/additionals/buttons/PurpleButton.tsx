@@ -1,4 +1,4 @@
-interface IPurpleButtonProps {
+export interface IPurpleButtonProps {
     title: React.ReactNode,
     func?: () => void;
     additionStyle?: string,

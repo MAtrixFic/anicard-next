@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useState } from "react"
 import PreviewCard from "../../additionals/cards/PreviewCard"
-import PurpleButton from "../../additionals/PurpleButton"
+import PurpleButton from "../../additionals/buttons/PurpleButton"
 import FavoriteCardsSelectionPlace from "./FavoriteCardsSelectionPlace"
 import { createPortal } from "react-dom"
 import { useCardsStore } from "../../../devs/store/CardsStore"

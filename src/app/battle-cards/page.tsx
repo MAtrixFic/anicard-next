@@ -1,6 +1,6 @@
 'use client'
 import CardGlobalChoiseList, { ICard } from "@/components/additionals/cards/CardGlobalChoiseList"
-import PurpleButton from "@/components/additionals/PurpleButton"
+import PurpleButton from "@/components/additionals/buttons/PurpleButton"
 import { useCardsStore } from "@/devs/store/CardsStore"
 import { useRef } from "react"
 

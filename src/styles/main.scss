@@ -114,6 +114,15 @@ body {
         }
     }
 
+    &__money-block {
+        padding-inline: 1rem;
+        background-color: white;
+        border-radius: 50px;
+        height: 36px;
+        display: flex;
+        gap: 1rem;
+    }
+
     &__container {
         backdrop-filter: blur(10px);
         flex-grow: 1;
@@ -326,9 +335,31 @@ body {
     border-radius: 15px;
     background-color: props.$soLightGrey;
     overflow: hidden;
-    border: 1.2px solid white;
+    border: 2px solid white;
+    border-inline-width: 3px;
     box-sizing: border-box;
     transition-duration: .2s;
+
+    &-s {
+        border-inline-color: props.$yellow;
+    }
+
+    &-a {
+        border-inline-color: props.$purple;
+    }
+
+
+    &-b {
+        border-inline-color: props.$blue;
+    }
+
+    &-c {
+        border-inline-color: props.$green;
+    }
+
+    &-d {
+        border-inline-color: props.$soLightGrey;
+    }
 
     &.dragging {
         position: absolute;
@@ -757,6 +788,7 @@ body {
         height: 100%;
         width: 100%;
         padding-inline: 1rem;
+        color: white;
 
         &:focus {
             outline: unset;
@@ -803,6 +835,7 @@ body {
     }
 
     &__filter-container {
+        border: 2px solid props.$purple;
         background-color: #1F2938;
         padding: 1rem;
         border-radius: 20px;
@@ -827,5 +860,38 @@ body {
             display: flex;
             justify-content: space-between;
         }
+    }
+}
+
+.light-button {
+    height: 100%;
+    padding: .2rem 1rem;
+    border-radius: 15px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: 0px 0px 17px -6px rgba(255, 255, 255, 0.81) inset;
+    background-color: props.$body;
+    border: 2px solid props.$body;
+    outline: 1px solid white;
+
+    &.tiny{
+        font-size: 1.1rem;
+        font-weight: 500;
+        padding: .2rem .5rem
+    }
+
+    &.green {
+        background-color: props.$green;
+    }
+
+
+    &.blue {
+        background-color: props.$blue;
+    }
+
+    &.purple {
+        background-color: props.$purple;
+        box-shadow: 0px 0px 17px -6px rgba(#521acdcf, 0.81) inset;
     }
 }

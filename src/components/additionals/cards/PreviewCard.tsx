@@ -4,10 +4,11 @@ import { Plus, Delete } from "../../icons/Cards"
 interface IPreviewCardProps {
     func?: () => void;
     deleteFunc?: () => void;
-    src?: string
+    src?: string,
+    rang?: string
 }
 
-const PreviewCard = ({ func, deleteFunc, src }: IPreviewCardProps) => {
+const PreviewCard = ({ func, deleteFunc, src, rang }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
@@ -15,7 +16,7 @@ const PreviewCard = ({ func, deleteFunc, src }: IPreviewCardProps) => {
     }, [src])
 
     return (
-        <li className="card" onClick={func}>
+        <li className={`card card-${rang?.toLocaleLowerCase() || ''}`} onClick={func}>
             <button className="card__active-container">
                 {isSetCard ?
                     <div className="card__preview-container">

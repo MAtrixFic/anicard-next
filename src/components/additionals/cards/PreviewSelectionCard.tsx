@@ -14,7 +14,7 @@ const PreviewSelectionCard = ({ src, setSelection, selectedCard, thisCard }: IPr
     }
 
     return (
-        <li className={`card ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}`}
+        <li className={`card card-${thisCard.rang.toLocaleLowerCase()} ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}`}
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">

@@ -1,5 +1,5 @@
 import BlurSpace from "@/components/additionals/BlurSpace"
-import PurpleButton from "@/components/additionals/PurpleButton"
+import PurpleButton from "@/components/additionals/buttons/PurpleButton"
 import FavoriteCardsList from "@/components/routes/profile/FavoriteCardsList"
 import UserAchivment from "@/components/routes/profile/UserAchivment"
 

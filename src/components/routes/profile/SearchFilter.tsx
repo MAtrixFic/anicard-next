@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import PurpleButton from '../../additionals/PurpleButton'
+import PurpleButton from '../../additionals/buttons/PurpleButton'
 import { FilterIcon } from '../../icons/Cards'
 import BaseList from '../../additionals/BaseList'
 const SearchFilter = () => {

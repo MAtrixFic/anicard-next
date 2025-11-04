@@ -69,27 +69,14 @@
     &__free-container {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: .6rem;
         background-color: white;
-        padding: .2rem;
+        padding-inline: .5rem;
+        padding-top: .5rem;
         border-radius: 25px;
         padding-bottom: .4rem;
         border-bottom: 4px solid props.$purple;
-    }
-
-    &__btn {
-        height: 50px;
-        width: 100px;
-        padding-inline: 1rem;
-        color: white;
-        border-radius: 20px;
-        background-color: props.$purple;
-        border: 4px solid props.$body;
-        box-shadow: 0px 0px 17px -6px rgba(255, 255, 255, 0.81) inset;
-
-        &-open-case {
-            background-color: props.$green;
-        }
     }
 
     &__info-container {
@@ -239,7 +226,7 @@
     }
 
     &__dropped-card {
-        box-shadow: 0px 0px 64px 0px rgba(255, 255, 255, 0.2);
+        // box-shadow: 0px 0px 64px 0px rgba(props.$yellow, 0.8)
         border-radius: 25px;
         display: flex;
         justify-content: center;
@@ -249,14 +236,42 @@
         overflow: hidden;
         background-color: props.$body;
         border-block: 6px solid props.$body;
-        border-inline: 2px solid props.$purple;
+        border-inline: 3px solid props.$yellow;
+        // outline: 1px solid white;
+
+        &-s {
+            box-shadow: 0px 0px 64px 0px rgba(props.$yellow, 0.8);
+            border-inline-color: props.$yellow;
+        }
+
+        &-a {
+            box-shadow: 0px 0px 64px 0px rgba(props.$purple, 0.8);
+            border-inline-color: props.$purple;
+        }
+
+
+        &-b {
+            box-shadow: 0px 0px 64px 0px rgba(props.$blue, 0.8);
+            border-inline-color: props.$blue;
+        }
+
+        &-c {
+            box-shadow: 0px 0px 64px 0px rgba(props.$green, 0.8);
+            border-inline-color: props.$green;
+        }
+
+        &-d {
+            box-shadow: 0px 0px 64px 0px rgba(props.$soLightGrey, 0.8);
+            border-inline-color: props.$soLightGrey;
+        }
     }
 
 
-    &__card-name{
+    &__card-name {
         font-size: 2rem;
         color: white;
         text-align: center;
+        font-family: 'Wadik';
     }
 
     &__card-img {

@@ -6,26 +6,13 @@ import useSwipeRight from "@/devs/hooks/useSwipe"
 import useOverWindowStatus, { type TWindowStatus } from "@/devs/hooks/useOverWindowStatus"
 import { Arrow } from "@/components/icons/Cards"
 import Image from "next/image"
-import { IValueInfoProps, ValueInfo } from "@/components/routes/shop/ValueInfo"
-
+import { useCardsStore } from "@/devs/store/CardsStore"
+import LightButton from "@/components/additionals/buttons/LightButton"
 const Twists = () => {
     return (
         <div className="twists">
             <div className="twists__body">
                 <TwistBanner />
-            </div>
-        </div>
-    )
-}
-
-interface IKeysListProps {
-    keys: IValueInfoProps[]
-}
-export const KeysList = ({ keys }: IKeysListProps) => {
-    return (
-        <div className="keys__list-container">
-            <div className="keys__list">
-                {keys.map((v, i) => <ValueInfo {...v} key={i + v.name} />)}
             </div>
         </div>
     )
@@ -40,9 +27,7 @@ export const TwistBanner = () => {
         <section className="twist-banner">
             <div className="twist-banner__purchase-block">
                 <div className="twist-banner__free-container">
-                    <button className="twist-banner__btn twist-banner__btn-open-case" onClick={SetTimerOpenMode}>
-                        Открыть
-                    </button>
+                    <LightButton title='Открыть' additionStyle="green" func={()=> SetTimerOpenMode()}/>
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info">
                             Следующий через 3 часа
@@ -50,9 +35,7 @@ export const TwistBanner = () => {
                     </div>
                 </div>
                 <div className="twist-banner__money-container">
-                    <button className="twist-banner__btn">
-                        Купить
-                    </button>
+                    <LightButton title='Купить' additionStyle="purple" />
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info">
                             1 ключ
@@ -76,6 +59,8 @@ interface ITwistWindowProps {
 const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
     const [openCardMode, setOpenCardMode] = useState<'locked' | 'opened' | 'hidden'>('locked');
     const { handlers } = useSwipeRight({ onSwipeRight: () => OpenCardPackage(), minDistance: 200 });
+    const droppedCard = useCardsStore(state => state.allCards)[4]
+
 
     function OpenCardPackage() {
         if (openCardMode === 'locked') {
@@ -91,7 +76,7 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                 <div className="twist__body">
                     <div className="twist__package-container" {...handlers}>
                         <Image height={720} width={800} preload quality={60} src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
-                        <Image height={720}  unoptimized preload width={800} src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
+                        <Image height={720} unoptimized preload width={800} src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
                         {openCardMode === 'locked' && <div className="cat-line">
                             <div className="cat-line__arrows-block">
                                 <Arrow />
@@ -100,12 +85,12 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                             </div>
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
-                            <div className="twist__dropped-card">
-                                <Image height={300} preload width={180} src={'/02.jpg'} alt="dropped-card" className="twist__card-img" />
+                            <div className={`twist__dropped-card twist__dropped-card-${droppedCard.rang.toLocaleLowerCase()}`}>
+                                <Image height={300} preload width={180} src={`/${droppedCard.src}`} alt="dropped-card" className="twist__card-img" />
                             </div>
                             <div className="twist__card-name-container">
                                 <h4 className="twist__card-name">
-                                    02
+                                    {droppedCard.name.toUpperCase()}
                                 </h4>
                             </div>
                         </div>

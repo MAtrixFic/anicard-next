@@ -1,8 +1,11 @@
 import Image from "next/image";
+import LightButton from "@/components/additionals/buttons/LightButton";
+import { IShortCardInfo } from "@/components/additionals/cards/CardGlobalChoiseList";
 
 interface IBannerProps {
     src: string,
     name: string,
+    card?: IShortCardInfo
     cost: {
         type: "rubles" | "pay-game-money" | "game-money";
         count: number
@@ -15,12 +18,12 @@ interface IBannerSectionProps {
 }
 
 
-export const Bunner = ({ src, name, cost }: IBannerProps) => {
+export const Bunner = ({ src, name, cost, card }: IBannerProps) => {
     return (
         <div className="banner">
             <div className="banner__view-block">
                 <div className="banner__view-container">
-                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className="banner__view" />
+                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className={`banner__view card-${card?.rang.toLocaleLowerCase()}`} />
                 </div>
                 <div className="banner__name-container">
                     <span className="banner__name">
@@ -32,7 +35,7 @@ export const Bunner = ({ src, name, cost }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count}
                 </span>
-                <button className="banner__btn">Купить</button>
+                <LightButton title={'Купить'} additionStyle="green" />
             </div>
         </div>
     )
@@ -48,7 +51,7 @@ export const BannerSection = ({ banners, title }: IBannerSectionProps) => {
             </div>
             <div className="banner-section__list">
                 {banners.map((v, i) =>
-                    <Bunner key={i + v.name} name={v.name} src={v.src} cost={v.cost} />
+                    <Bunner key={i + v.name} {...v} />
                 )}
             </div>
 

@@ -4,29 +4,41 @@ const Page = () => {
     return (
         <div className="shop">
             <div className="shop__body">
-                <BannerSection title="Ключи" banners={[
+                <BannerSection title="Карты" banners={[
                     {
-                        src: '/keys/silver-key.jpg',
-                        name: "Серебрянный ключ",
-                        cost: {
-                            type: 'game-money',
-                            count: 25
-                        }
-                    },
-                    {
-                        src: '/keys/crown-key.jpg',
-                        name: "Королевский ключ",
+                        card: { name: 'Рем', rang: 'S' },
+                        src: '/Rem.jpg',
+                        name: "Рем",
                         cost: {
                             type: 'game-money',
                             count: 40
                         }
                     },
                     {
-                        src: '/keys/star-key.jpg',
-                        name: "Звездный ключ",
+                        card: { name: 'Чисато', rang: 'S' },
+                        src: '/Chisato.jpg',
+                        name: "Чисато",
                         cost: {
                             type: 'game-money',
-                            count: 100
+                            count: 40
+                        }
+                    },
+                    {
+                        card: { name: 'Рей', rang: 'S' },
+                        src: '/Rey.jpg',
+                        name: "Рей",
+                        cost: {
+                            type: 'game-money',
+                            count: 40
+                        }
+                    },
+                    {
+                        card: { name: 'Сенко', rang: 'D' },
+                        src: '/Senko.jpg',
+                        name: "Сенко",
+                        cost: {
+                            type: 'game-money',
+                            count: 5
                         }
                     },
                 ]} />

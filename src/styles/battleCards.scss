@@ -17,6 +17,6 @@
         align-items: center;
         padding: .6rem 1rem;
         box-sizing: border-box;
-        @include props.MainBack()
+        backdrop-filter: blur(4px);
     }
 }
