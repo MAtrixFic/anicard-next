@@ -20,7 +20,7 @@ export const Bunner = ({ src, name, cost }: IBannerProps) => {
         <div className="banner">
             <div className="banner__view-block">
                 <div className="banner__view-container">
-                    <Image height={80} width={80} quality={40} src={src} alt="banner" className="banner__view" />
+                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className="banner__view" />
                 </div>
                 <div className="banner__name-container">
                     <span className="banner__name">

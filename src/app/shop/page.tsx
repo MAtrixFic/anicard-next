@@ -1,5 +1,4 @@
 import { BannerSection } from "@/components/routes/shop/Bunner"
-import { KeysList } from "../twists/page"
 
 const Page = () => {
     return (

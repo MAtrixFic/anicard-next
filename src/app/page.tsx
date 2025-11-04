@@ -16,7 +16,7 @@ const Page = () => {
                     <nav className="table__start-menu">
                         <PurpleLink additionStyle="huge" title="Боевые карты" to={'battle-cards'} />
                         <PurpleLink additionStyle="huge" title="Крутки" to={'twists'} />
-                        <PurpleLink additionStyle="huge" title="Меню/трейды" to={'#'} />
+                        <PurpleLink additionStyle="huge" title="Меню/трейды" to={'trades'} />
                         <PurpleLink additionStyle="huge" title="Арена" to={'#'} />
                         <PurpleLink additionStyle="huge" title="Магазин" to={'shop'} />
                         <PurpleLink additionStyle="huge" title="Дорожная карта" to={'#'} />
