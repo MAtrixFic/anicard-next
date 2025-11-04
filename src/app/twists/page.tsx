@@ -91,7 +91,7 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                 <div className="twist__body">
                     <div className="twist__package-container" {...handlers}>
                         <Image height={720} width={800} preload quality={60} src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
-                        <Image height={720} quality={60} preload width={800} src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
+                        <Image height={720}  unoptimized preload width={800} src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
                         {openCardMode === 'locked' && <div className="cat-line">
                             <div className="cat-line__arrows-block">
                                 <Arrow />
@@ -101,11 +101,11 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
                             <div className="twist__dropped-card">
-                                <Image height={300} preload width={180} src={'/Senko.jpg'} alt="dropped-card" className="twist__card-img" />
+                                <Image height={300} preload width={180} src={'/02.jpg'} alt="dropped-card" className="twist__card-img" />
                             </div>
                             <div className="twist__card-name-container">
                                 <h4 className="twist__card-name">
-                                    Senko
+                                    02
                                 </h4>
                             </div>
                         </div>
