@@ -1,13 +1,13 @@
 import { type ICard } from "./CardGlobalChoiseList"
+import Image from "next/image"
 
 interface IPreviewSelectionCardProps {
-    src: string,
     setSelection: (card: ICard | null) => void,
     selectedCard: ICard | null,
     thisCard: ICard
 }
 
-const PreviewSelectionCard = ({ src, setSelection, selectedCard, thisCard }: IPreviewSelectionCardProps) => {
+const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard }: IPreviewSelectionCardProps) => {
 
     function SetStateOfCard() {
         setSelection(thisCard.id === selectedCard?.id ? null : thisCard)
@@ -18,7 +18,7 @@ const PreviewSelectionCard = ({ src, setSelection, selectedCard, thisCard }: IPr
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <img src={src} alt={src} className="card__preview" />
+                    <Image height={140} width={60} preload src={`/${thisCard.src}`} alt={thisCard.src} className="card__preview" />
                 </div>
             </button>
         </li>

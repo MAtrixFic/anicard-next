@@ -9,6 +9,7 @@ import '@/styles/battleCards.scss'
 import '@/styles/shop.scss'
 import '@/styles/twists.scss'
 import '@/styles/trades.scss'
+import '@/styles/inventory.scss'
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",

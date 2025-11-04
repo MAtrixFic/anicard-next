@@ -12,6 +12,7 @@
         display: flex;
         flex-direction: column;
         padding: .5rem;
+        gap: 1rem;
     }
 
     &__bottom {
@@ -37,6 +38,26 @@
         &-inventory {
             justify-content: flex-end;
         }
+
+        &-vertical {
+            flex-direction: column;
+            gap: .5rem;
+        }
+    }
+
+    &__list-title-container {
+        background-color: rgba(props.$purple, .4);
+        border: 1px solid props.$purple;
+        backdrop-filter: blur(4px);
+        padding: .5rem;
+        border-radius: 15px 15px 0 0;
+        border-bottom: 2px solid white;
+    }
+
+    &__list-title {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
     }
 
     &__link {
@@ -54,6 +75,13 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+    }
+
+    &__your-offers-list {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
     }
 
     &__orders-list {
@@ -74,8 +102,10 @@
     }
 }
 
-.other-order {
+.other-order,
+.your-offer {
     background-color: white;
+    border-bottom: 4px solid props.$purple;
     border-radius: 10px;
     height: 120px;
     padding: .5rem;
@@ -99,12 +129,12 @@
         justify-content: space-between;
     }
 
-    &__info-block{
+    &__info-block {
         display: flex;
         justify-content: space-between;
     }
 
-    &__price{
+    &__price {
         color: props.$body;
         font-size: 1rem;
         font-weight: 600;
@@ -112,9 +142,10 @@
 
     &__title {
         font-size: 1.2rem;
-        font-weight: 600;
+        font-weight: 500;
         color: props.$body;
         text-align: end;
+        font-family: 'Wadik';
     }
 
     &__manipulations-block {
@@ -123,8 +154,29 @@
         flex-wrap: wrap;
         gap: .5rem;
 
-        button{
+        button {
             max-height: 34px;
         }
+    }
+}
+
+.your-offer {
+    height: 60px;
+
+    &__right-block {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &__price-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__preview-img {
+        object-position: 10% 0;
+        object-fit: cover;
+        min-width: 40px;
     }
 }

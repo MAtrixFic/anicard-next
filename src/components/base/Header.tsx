@@ -13,22 +13,20 @@ const Header = () => {
 
     return (
         <header className={`header ${isVisible ? 'showen' : 'hidden'}`}>
-            <div className="header__container">
-                <div className="header__blur-container">
-                    <div className="header__left-container">
-                        <button className="header__btn header__btn-back"
-                            disabled={pathname === '/'}
-                            onClick={() => router.back()}>
-                            <Back />
-                        </button>
+            <div className="header__container header__container-blur">
+                <div className="header__left-container">
+                    <button className="header__btn header__btn-back"
+                        disabled={pathname === '/'}
+                        onClick={() => router.back()}>
+                        <Back />
+                    </button>
+                </div>
+                <div className="header__right-container">
+                    <div className="header__money-block">
+                        <ValueInfo src="/keys/crown-key.jpg" count={3} name="crown-key" />
                     </div>
-                    <div className="header__right-container">
-                        <div className="header__money-block">
-                            <ValueInfo src="/keys/crown-key.jpg" count={3} name="crown-key" />
-                        </div>
-                        <div className="header__profile-block">
-                            <Link className="header__link header__link-logo" href={'/profile'} />
-                        </div>
+                    <div className="header__profile-block">
+                        <Link className="header__link header__link-logo" href={'/profile'} />
                     </div>
                 </div>
             </div>

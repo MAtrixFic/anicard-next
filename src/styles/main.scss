@@ -51,7 +51,7 @@ main {
     flex-grow: 1;
     min-height: 1px;
     box-sizing: border-box;
-    padding-top: calc(4rem + 10px);
+    padding-top: 4rem;
     padding-bottom: 1rem;
 }
 
@@ -73,7 +73,7 @@ body {
 }
 
 .header {
-    height: 4rem;
+    height: 54px;
     width: 100%;
     display: flex;
     align-items: stretch;
@@ -100,8 +100,12 @@ body {
     }
 
     &__btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         svg {
-            height: 34px;
+            height: 30px;
             stroke: white;
             fill: white;
         }
@@ -124,27 +128,17 @@ body {
     }
 
     &__container {
-        backdrop-filter: blur(10px);
-        flex-grow: 1;
-        display: flex;
-        justify-content: stretch;
-        align-items: stretch;
-
-        background:
-            url('./content/background-anime-card-dark.png') padding-box,
-            linear-gradient(to right, props.$soLightGrey, props.$darkGrey) border-box;
-        border: 1.2px solid transparent;
-        border-radius: 0 0 30px 30px;
-        overflow: hidden;
-    }
-
-    &__blur-container {
         flex-grow: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding-inline: 20px;
-        @include props.MainBack();
+
+        &-blur {
+            backdrop-filter: blur(4px);
+            border-bottom: 2px solid props.$purple;
+            border-radius: 0 0 25px 25px;
+        }
     }
 
     &__link {
@@ -335,7 +329,8 @@ body {
     border-radius: 15px;
     background-color: props.$soLightGrey;
     overflow: hidden;
-    border: 2px solid white;
+    border: 2px solid props.$body;
+    // outline: 1.2px solid white;
     border-inline-width: 3px;
     box-sizing: border-box;
     transition-duration: .2s;
@@ -421,6 +416,20 @@ body {
 
         &.show {
             animation: show-cards-list .4s forwards;
+        }
+    }
+
+    &__delete {
+        backdrop-filter: blur(4px);
+        aspect-ratio: 1;
+        width: 40px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            filter: drop-shadow(0 0 2px red) drop-shadow(0 0 0 3px blue);
         }
     }
 }
@@ -510,6 +519,7 @@ body {
         padding-block: 1rem;
         display: flex;
         flex-direction: column;
+        flex-wrap: wrap;
         flex-grow: 1;
         min-height: 1px;
         overflow-y: auto;
@@ -521,6 +531,10 @@ body {
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
+
+        &.pd {
+            padding-inline: 1rem;
+        }
     }
 
     &__list {
@@ -531,10 +545,7 @@ body {
         justify-items: center;
         row-gap: .5rem;
         flex-shrink: 1;
-        // display: flex;
-        // row-gap: 1rem;
-        // justify-content: space-around;
-        // flex-wrap: wrap;
+        flex-grow: 1;
     }
 
     &__desc-text {
@@ -549,8 +560,8 @@ body {
         display: flex;
         flex-direction: column;
         gap: .4rem;
-        border-bottom: 1px solid white;
-        padding-bottom: .6rem;
+        padding-block: .2rem;
+        flex-grow: 1;
     }
 
     &__top-block {
@@ -875,7 +886,7 @@ body {
     border: 2px solid props.$body;
     outline: 1px solid white;
 
-    &.tiny{
+    &.tiny {
         font-size: 1.1rem;
         font-weight: 500;
         padding: .2rem .5rem

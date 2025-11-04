@@ -9,23 +9,19 @@ const Page = () => {
     return (
         <div className="trades">
             <div className="trades__top">
-                <div className="trades__container trades__container-inventory">
-                    <div className="trades__inventory-container">
+                {/* <div className="trades__container trades__container-inventory"> */}
+                {/* <div className="trades__inventory-container">
                         <Link href='/trades/inventory' className="trades__link">
                             Инвентарь
                         </Link>
+                    </div> */}
+                {/* </div> */}
+                <div className="trades__container trades__container-vertical">
+                    <div className="trades__list-title-container">
+                        <span className="trades__list-title">Твой список предложений:</span>
                     </div>
-                </div>
-                <div className="trades__container">
                     <ul className="trades__your-offers-list">
-                        <li className="your-offer">
-                            <div className="your-offer__preivew-container">
-
-                            </div>
-                            <div className="your-block__info-block">
-
-                            </div>
-                        </li>
+                        <YourOffer cardInfo={{ src: 'Rem.jpg', name: 'Рем', id: 14 }} price={50} />
                     </ul>
                 </div>
             </div>
@@ -76,6 +72,38 @@ const OtherOrder = ({ cardInfo, price }: IOtherOrderProps) => {
                 </div>
             </div>
         </li>
+    )
+}
+
+interface IYourOfferProps {
+    cardInfo: Omit<ICard, 'desc' | 'rang'>
+    price: number,
+}
+
+const YourOffer = ({ cardInfo, price }: IYourOfferProps) => {
+    return (
+        <div className="your-offer">
+            <div className="your-offer__left-block">
+                <Image className="your-offer__preview-img" src={`/${cardInfo.src}`} height={40} width={40} quality={60} preload alt="offer-img" />
+            </div>
+            <div className="your-offer__right-block">
+                <div className="your-offer__info-block">
+                    <div className="your-offer__title-container">
+                        <h4 className="your-offer__title">
+                            {cardInfo.name}
+                        </h4>
+                    </div>
+                </div>
+                <div className="your-offer__manipulations-block">
+                    <div className="your-offer__price-container">
+                        <span className="your-offer__price">
+                            {price} Crystals
+                        </span>
+                    </div>
+                    <LightButton title='Удалить' additionStyle="tiny purple" />
+                </div>
+            </div>
+        </div >
     )
 }
 

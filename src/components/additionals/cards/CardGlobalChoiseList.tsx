@@ -6,6 +6,7 @@ import { Arrow } from '../../icons/Cards'
 import Input from '../Input'
 import SearchFilter from '../../routes/profile/SearchFilter'
 import { useCardsStore, type ICardStore } from '../../../devs/store/CardsStore'
+import useSelectionCard from '@/devs/hooks/useSelectionCard'
 
 export interface ICard extends IShortCardInfo { src: string, id: number }
 export interface IShortCardInfo {
@@ -26,7 +27,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     const favoridsPreview = useRef<ICard[]>(GetCards(cardsType))
 
     const [favoriteCards, setFavoriteCards] = useState<(ICard | null)[]>(favoridsPreview.current.length > 0 ? favoridsPreview.current : new Array(choisenCardsNumber).fill(null))
-    const [selectedCard, setSelectedCard] = useState<ICard | null>(null)
+    const [selectedCard, setSelectedCard] = useSelectionCard()
 
     function SetFavoriteCard(index: number) {
         if (selectedCard) {
@@ -44,16 +45,6 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
         setFavoriteCards(previewFavoriteCards);
     }
 
-    useEffect(() => {
-        function DeselectCard(e: Event) {
-            if (selectedCard?.id && e.target === e.currentTarget) setSelectedCard(null);
-        }
-        const listElement = document.querySelector('.cards-choise__list');
-        listElement?.addEventListener('click', DeselectCard)
-
-        return () => listElement?.removeEventListener('click', DeselectCard)
-    }, [selectedCard?.id])
-
     return (
         <div className="cards-choise">
             <div className="cards-choise__favorite-cards-list-container">
@@ -67,10 +58,10 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </ul>
             </div>
             <div className="cards-choise__list-container">
-                <CardDesctiption
+                {/* <CardDesctiption
                     opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
                     name={selectedCard?.name}
-                />
+                /> */}
                 <section className="cards-choise__filter">
                     <Input />
                     <SearchFilter />
@@ -80,7 +71,6 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                         {cards.filter((v) => !favoriteCards.includes(v))
                             .map((v, i) =>
                                 <PreviewSelectionCard
-                                    src={v?.src}
                                     key={v?.id + i}
                                     setSelection={setSelectedCard}
                                     selectedCard={selectedCard}
@@ -94,7 +84,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     )
 }
 
-const CardDesctiption = ({ name, opts }: { name?: string, opts?: { key: string, value: string }[] }) => {
+export const CardDesctiption = ({ name, opts }: { name?: string, opts?: { key: string, value: string }[] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, isSelected] = useState(false);
 

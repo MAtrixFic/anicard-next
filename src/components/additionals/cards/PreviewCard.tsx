@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Plus, Delete } from "../../icons/Cards"
+import Image from "next/image";
 
 interface IPreviewCardProps {
     func?: () => void;
@@ -26,7 +27,7 @@ const PreviewCard = ({ func, deleteFunc, src, rang }: IPreviewCardProps) => {
                             </button>
                         </div>
                         }
-                        <img src={src} alt="card-preivew" className="card__preview" />
+                        <Image height={140} width={100} quality={80} src={`/${src!}`} alt="card-preivew" className="card__preview" />
                     </div>
                     :
                     <div className="card__set-container">
