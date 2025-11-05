@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ICard } from '@/components/additionals/cards/CardGlobalChoiseList'
+import { ICard } from '@/components/additionals/Windows/CardGlobalChoiseList'
 
 const useSelectionCard = (): [ICard | null, (selectedCard: ICard | null) => void] => {
     const [selectedCard, setSelectedCard] = useState<ICard | null>(null)

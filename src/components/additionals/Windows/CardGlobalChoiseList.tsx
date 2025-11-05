@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import PreviewCard from './PreviewCard'
-import PreviewSelectionCard from './PreviewSelectionCard'
+import PreviewCard from '../cards/PreviewCard'
+import PreviewSelectionCard from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
 import { Arrow } from '../../icons/Cards'
 import Input from '../Input'
 import SearchFilter from '../../routes/profile/SearchFilter'
 import { useCardsStore, type ICardStore } from '../../../devs/store/CardsStore'
 import useSelectionCard from '@/devs/hooks/useSelectionCard'
+import { createPortal } from 'react-dom'
 
 export interface ICard extends IShortCardInfo { src: string, id: number }
 export interface IShortCardInfo {
@@ -47,6 +48,10 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
 
     return (
         <div className="cards-choise">
+            {selectedCard && createPortal(<CardDesctiption
+                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
+                name={selectedCard?.name}
+            />, document.querySelector('.desc-panel')!)}
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
                     {new Array(choisenCardsNumber).fill(0).map((_, i) =>
@@ -58,10 +63,6 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </ul>
             </div>
             <div className="cards-choise__list-container">
-                {/* <CardDesctiption
-                    opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
-                    name={selectedCard?.name}
-                /> */}
                 <section className="cards-choise__filter">
                     <Input />
                     <SearchFilter />

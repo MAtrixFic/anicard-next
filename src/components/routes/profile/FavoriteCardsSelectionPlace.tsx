@@ -4,7 +4,10 @@ import { useRef } from 'react'
 import { useCardsStore } from '../../../devs/store/CardsStore'
 import OverBlackSpace, { type IOverBlackSpaceProps } from '../../additionals/OverBlackSpace'
 import PurpleButton from '../../additionals/buttons/PurpleButton'
-import CardGlobalChoiseList, { type ICard } from '../../additionals/cards/CardGlobalChoiseList'
+import CardGlobalChoiseList, { type ICard } from '../../additionals/Windows/CardGlobalChoiseList'
+
+export interface IForeignWindowProps extends IFavoriteCardsSelectionPlaceProps {
+}
 
 interface IFavoriteCardsSelectionPlaceProps extends IOverBlackSpaceProps {
     func: () => void

@@ -1,4 +1,5 @@
-import { type ICard } from "./CardGlobalChoiseList"
+"use"
+import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 
 interface IPreviewSelectionCardProps {
@@ -18,7 +19,7 @@ const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard }: IPreview
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <Image height={140} width={60} preload src={`/${thisCard.src}`} alt={thisCard.src} className="card__preview" />
+                    <Image height={140} width={60} quality={80} preload src={thisCard.src} alt={thisCard.src} className="card__preview" />
                 </div>
             </button>
         </li>

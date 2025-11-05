@@ -3,25 +3,18 @@ import Image from "next/image"
 import Link from "next/link"
 import SearchFilter from "@/components/routes/profile/SearchFilter"
 import Input from "@/components/additionals/Input"
-import { ICard } from "@/components/additionals/cards/CardGlobalChoiseList"
+import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 
 const Page = () => {
     return (
         <div className="trades">
             <div className="trades__top">
-                {/* <div className="trades__container trades__container-inventory"> */}
-                {/* <div className="trades__inventory-container">
-                        <Link href='/trades/inventory' className="trades__link">
-                            Инвентарь
-                        </Link>
-                    </div> */}
-                {/* </div> */}
                 <div className="trades__container trades__container-vertical">
                     <div className="trades__list-title-container">
                         <span className="trades__list-title">Твой список предложений:</span>
                     </div>
                     <ul className="trades__your-offers-list">
-                        <YourOffer cardInfo={{ src: 'Rem.jpg', name: 'Рем', id: 14 }} price={50} />
+                        <YourOffer cardInfo={{ src: '/Rem.jpg', name: 'Рем', id: 14 }} price={50} />
                     </ul>
                 </div>
             </div>
@@ -32,8 +25,8 @@ const Page = () => {
                 </div>
                 <div className="trades__orders-list-container">
                     <ul className="trades__orders-list">
-                        <OtherOrder cardInfo={{ src: 'Rem.jpg', name: 'Рем', rang: 'S', id: 14 }} price={50} />
-                        <OtherOrder cardInfo={{ src: '02.jpg', name: '02', rang: 'S', id: 16 }} price={45} />
+                        <OtherOrder cardInfo={{ src: '/Rem.jpg', name: 'Рем', rang: 'S', id: 14 }} price={50} />
+                        <OtherOrder cardInfo={{ src: '/02.jpg', name: '02', rang: 'S', id: 16 }} price={45} />
                     </ul>
                 </div>
             </div>
@@ -51,7 +44,7 @@ const OtherOrder = ({ cardInfo, price }: IOtherOrderProps) => {
     return (
         <li className="other-order">
             <div className="other-order__left-block">
-                <Image src={`/${cardInfo.src}`} className="other-order__preview-img" alt="order-img" height={100} width={100} />
+                <Image src={cardInfo.src} className="other-order__preview-img" alt="order-img" height={100} width={100} />
             </div>
             <div className="other-order__right-block">
                 <div className="other-order__info-block">
@@ -84,7 +77,7 @@ const YourOffer = ({ cardInfo, price }: IYourOfferProps) => {
     return (
         <div className="your-offer">
             <div className="your-offer__left-block">
-                <Image className="your-offer__preview-img" src={`/${cardInfo.src}`} height={40} width={40} quality={60} preload alt="offer-img" />
+                <Image className="your-offer__preview-img" src={cardInfo.src} height={40} width={40} quality={60} preload alt="offer-img" />
             </div>
             <div className="your-offer__right-block">
                 <div className="your-offer__info-block">

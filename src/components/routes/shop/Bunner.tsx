@@ -1,6 +1,6 @@
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
-import { IShortCardInfo } from "@/components/additionals/cards/CardGlobalChoiseList";
+import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
 
 interface IBannerProps {
     src: string,

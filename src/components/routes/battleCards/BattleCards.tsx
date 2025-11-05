@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import CardGlobalChoiseList, { type ICard } from "../../additionals/cards/CardGlobalChoiseList"
+import CardGlobalChoiseList, { type ICard } from "../../additionals/Windows/CardGlobalChoiseList"
 import PurpleButton from "../../additionals/buttons/PurpleButton"
 import { useCardsStore } from "../../../devs/store/CardsStore"
 

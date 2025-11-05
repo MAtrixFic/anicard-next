@@ -86,7 +86,7 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
                             <div className={`twist__dropped-card twist__dropped-card-${droppedCard.rang.toLocaleLowerCase()}`}>
-                                <Image height={300} preload width={180} src={`/${droppedCard.src}`} alt="dropped-card" className="twist__card-img" />
+                                <Image height={300} preload width={180} src={droppedCard.src} alt="dropped-card" className="twist__card-img" />
                             </div>
                             <div className="twist__card-name-container">
                                 <h4 className="twist__card-name">

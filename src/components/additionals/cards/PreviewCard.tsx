@@ -27,7 +27,7 @@ const PreviewCard = ({ func, deleteFunc, src, rang }: IPreviewCardProps) => {
                             </button>
                         </div>
                         }
-                        <Image height={140} width={100} quality={80} src={`/${src!}`} alt="card-preivew" className="card__preview" />
+                        <Image height={140} width={100} quality={80} src={src!} alt="card-preivew" className="card__preview" />
                     </div>
                     :
                     <div className="card__set-container">

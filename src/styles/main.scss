@@ -406,7 +406,7 @@ body {
         padding-block: .4rem;
         display: flex;
         justify-content: space-around;
-        transition-duration: .4s;
+
         overflow: hidden;
         transform-origin: 0 50%;
 
@@ -414,7 +414,7 @@ body {
             animation: hide-cards-list .4s forwards;
         }
 
-        &.show {
+        &.opened {
             animation: show-cards-list .4s forwards;
         }
     }
@@ -464,20 +464,24 @@ body {
 @keyframes show-cards-list {
     from {
         max-height: 0px;
+        padding: 0px
     }
 
     to {
         max-height: 160px;
+        padding-block: .4rem;
     }
 }
 
 @keyframes hide-cards-list {
     from {
         max-height: 160px;
+        padding-block: .4rem;
     }
 
     to {
         max-height: 0px;
+        padding: 0px
     }
 
 }
@@ -574,11 +578,13 @@ body {
     &__name {
         font-size: 1.2rem;
         font-weight: 600;
+        color: white;
     }
 
     &__desc-element {
         display: flex;
         gap: 1rem;
+        color: white;
     }
 
     &__desc-key {
@@ -604,12 +610,12 @@ body {
     background-color: rgba($color: props.$body, $alpha: .6);
     backdrop-filter: blur(8px);
 
-    &.show {
-        animation: show-selection-list .3s forwards;
+    &.opened {
+        animation: show-selection-list .4s forwards;
     }
 
     &.to-hide {
-        animation: hide-selection-list .3s forwards;
+        animation: hide-selection-list .4s forwards;
     }
 
     &__btns {

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ICard } from "../../components/additionals/cards/CardGlobalChoiseList";
+import type { ICard } from "../../components/additionals/Windows/CardGlobalChoiseList";
 
 export interface IUserStore {
     nickname: string,
