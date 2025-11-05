@@ -28,9 +28,11 @@ const FavoriteCardsSelectionPlace = ({ func, additionStyle }: IFavoriteCardsSele
     return (
         <OverBlackSpace additionStyle={additionStyle}>
             <CardGlobalChoiseList choisenCardsNumber={3} cardsRef={favoriteCard} cardsType='favoriteCards' />
-            <div className="over-black-space__btns">
-                <PurpleButton title="Сохранить" additionStyle="tiny" func={StoreFavoriteCards} />
-                <PurpleButton title="Выйти" additionStyle="tiny" func={func} />
+            <div className="desc-panel pg">
+                <div className="desc-panel__container">
+                    <PurpleButton title="Сохранить" additionStyle="tiny" func={StoreFavoriteCards} />
+                    <PurpleButton title="Выйти" additionStyle="tiny" func={func} />
+                </div>
             </div>
         </OverBlackSpace>
     )

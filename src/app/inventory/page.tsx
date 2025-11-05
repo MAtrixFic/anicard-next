@@ -37,15 +37,15 @@ const Page = () => {
                 </section>
             </div>
             {selectedCard && <div className="desc-panel">
+                <LightButton title='Продать' additionStyle="green" func={setMarketWindowVisibility} />
+                {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&
+                    createPortal(<MarketOfferWindow card={selectedCard} func={setMarketWindowVisibility} additionStyle={marketWindowStatus} />, document.body)
+                }
                 <CardDesctiption
                     opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
                     name={selectedCard?.name}
                 />
-                <LightButton title='Продать' additionStyle="green" func={setMarketWindowVisibility} />
             </div>}
-            {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&
-                createPortal(<MarketOfferWindow card={selectedCard} func={setMarketWindowVisibility} additionStyle={marketWindowStatus} />, document.body)
-            }
         </div>
     )
 }

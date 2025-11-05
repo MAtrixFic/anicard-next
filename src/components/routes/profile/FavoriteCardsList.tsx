@@ -19,9 +19,9 @@ const FavoriteCardsList = () => {
             <div className="pofile__favorite-cards-list-container">
                 {['to-hide', 'opened'].includes(listMode) &&
                     <ul className={`cards-list ${listMode}`}>
-                        <PreviewCard func={setCardsWindowMode} src={favoriteCards[0]?.src} />
-                        <PreviewCard func={setCardsWindowMode} src={favoriteCards[1]?.src} />
-                        <PreviewCard func={setCardsWindowMode} src={favoriteCards[2]?.src} />
+                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[0]} />
+                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[1]} />
+                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[2]} />
                     </ul>
                 }
                 {['to-hide', 'opened'].includes(cardsSelection) && createPortal(<FavoriteCardsSelectionPlace additionStyle={cardsSelection} func={setCardsWindowMode} />, document.body)}

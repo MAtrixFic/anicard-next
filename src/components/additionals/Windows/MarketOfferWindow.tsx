@@ -16,7 +16,7 @@ const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProp
                 <div className="market-offer__body">
                     <div className="market-offer__info-block">
                         <div className="market-offer__preview-container">
-                            <PreviewCard src={card.src} rang={card.rang} />
+                            <PreviewCard thisCard={card} />
                         </div>
                         <div className="market-offer__info-list-container">
                             <CardDesctiption

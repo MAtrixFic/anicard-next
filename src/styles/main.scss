@@ -503,12 +503,13 @@ body {
 
     &__favorite-list {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, 100px);
         grid-template-rows: 140px;
         grid-auto-rows: 140px;
         justify-content: space-between;
         justify-items: center;
-        row-gap: .5rem;
+        row-gap: .3rem;
+        padding-inline: 1rem;
     }
 
     &__list-container {
@@ -523,9 +524,6 @@ body {
         padding-block: 1rem;
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
-        flex-grow: 1;
-        min-height: 1px;
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -543,13 +541,11 @@ body {
 
     &__list {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: 140px;
-        grid-auto-rows: 140px;
+        grid-template-columns: repeat(auto-fit, 100px);
+        grid-template-rows: repeat(auto-fit, 140px);
         justify-items: center;
-        row-gap: .5rem;
-        flex-shrink: 1;
-        flex-grow: 1;
+        justify-content: space-around;
+        gap: .3rem;
     }
 
     &__desc-text {
@@ -910,5 +906,19 @@ body {
     &.purple {
         background-color: props.$purple;
         box-shadow: 0px 0px 17px -6px rgba(#521acdcf, 0.81) inset;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .card {
+        width: 80px;
+        height: 120px;
+    }
+
+    .cards-choise {
+        &__favorite-list, &__list {
+            grid-template-columns: repeat(auto-fit, 80px);
+            grid-template-rows: repeat(auto-fit, 120px);
+        }
     }
 }

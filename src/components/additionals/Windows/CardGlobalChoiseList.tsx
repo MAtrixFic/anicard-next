@@ -44,6 +44,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
         const previewFavoriteCards = Object.create(favoriteCards)
         previewFavoriteCards[index] = null
         setFavoriteCards(previewFavoriteCards);
+        cardsRef.current = previewFavoriteCards
     }
 
     return (
@@ -55,10 +56,13 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
                     {new Array(choisenCardsNumber).fill(0).map((_, i) =>
-                        <PreviewCard key={i} rang={favoriteCards[i]?.rang}
+                        <PreviewCard key={i}
+                            thisCard={favoriteCards[i]!}
                             func={() => SetFavoriteCard(i)}
-                            src={favoriteCards[i]?.src}
-                            deleteFunc={() => DeleteFavoriteCard(i)} />
+                            deleteFunc={() => DeleteFavoriteCard(i)}
+                            // setSelection={() => setSelectedCard()}
+                        />
+
                     )}
                 </ul>
             </div>

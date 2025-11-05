@@ -2,7 +2,7 @@
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 
-interface IPreviewSelectionCardProps {
+export interface IPreviewSelectionCardProps {
     setSelection: (card: ICard | null) => void,
     selectedCard: ICard | null,
     thisCard: ICard

@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react"
 import { Plus, Delete } from "../../icons/Cards"
 import Image from "next/image";
+import { IPreviewSelectionCardProps } from "./PreviewSelectionCard";
 
-interface IPreviewCardProps {
+interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'selectedCard'>> {
     func?: () => void;
     deleteFunc?: () => void;
-    src?: string,
-    rang?: string
 }
 
-const PreviewCard = ({ func, deleteFunc, src, rang }: IPreviewCardProps) => {
+const PreviewCard = ({ func, deleteFunc, thisCard, setSelection }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
-        setIsSetCard(src ? true : false)
-    }, [src])
+        setIsSetCard(thisCard?.src ? true : false)
+    }, [thisCard])
 
     return (
-        <li className={`card card-${rang?.toLocaleLowerCase() || ''}`} onClick={func}>
+        <li className={`card card-${thisCard?.rang?.toLocaleLowerCase() || ''}`} onClick={func}>
             <button className="card__active-container">
                 {isSetCard ?
                     <div className="card__preview-container">
@@ -27,7 +26,16 @@ const PreviewCard = ({ func, deleteFunc, src, rang }: IPreviewCardProps) => {
                             </button>
                         </div>
                         }
-                        <Image height={140} width={100} quality={80} src={src!} alt="card-preivew" className="card__preview" />
+                        {thisCard &&
+                            <Image
+                                priority
+                                height={140}
+                                width={100}
+                                quality={80}
+                                src={thisCard.src}
+                                alt="card-preivew"
+                                className="card__preview"
+                            />}
                     </div>
                     :
                     <div className="card__set-container">

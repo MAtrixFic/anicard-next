@@ -8,6 +8,7 @@ import { Arrow } from "@/components/icons/Cards"
 import Image from "next/image"
 import { useCardsStore } from "@/devs/store/CardsStore"
 import LightButton from "@/components/additionals/buttons/LightButton"
+
 const Twists = () => {
     return (
         <div className="twists">
@@ -22,12 +23,11 @@ const Twists = () => {
 export const TwistBanner = () => {
     const [openTwist, setOpenTwist, SetTimerOpenMode] = useOverWindowStatus(400);
 
-
     return (
         <section className="twist-banner">
             <div className="twist-banner__purchase-block">
                 <div className="twist-banner__free-container">
-                    <LightButton title='Открыть' additionStyle="green" func={()=> SetTimerOpenMode()}/>
+                    <LightButton title='Открыть' additionStyle="green" func={() => SetTimerOpenMode()} />
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info">
                             Следующий через 3 часа
@@ -44,7 +44,7 @@ export const TwistBanner = () => {
                 </div>
             </div>
             <div className="twist-banner__twist-container">
-                <Image height={600} width={800} src="/cards/cards-package.png" alt="" className={`twist-banner__twist ${openTwist == 'opened' ? 'stop' : 'play'}`} />
+                <Image height={600} priority width={800} src="/cards/cards-package.png" alt="" className={`twist-banner__twist ${openTwist == 'opened' ? 'stop' : 'play'}`} />
             </div>
             {['opened', 'to-hide'].includes(openTwist) && createPortal(<TwistWindow windowMode={openTwist} setOpenWindow={SetTimerOpenMode} />, document.body)}
         </section>
@@ -75,8 +75,8 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
             <div className="twist__container">
                 <div className="twist__body">
                     <div className="twist__package-container" {...handlers}>
-                        <Image height={720} width={800} preload quality={60} src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
-                        <Image height={720} unoptimized preload width={800} src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
+                        <Image height={720} width={800} preload quality={60} priority src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
+                        <Image height={720} unoptimized preload width={800} priority src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
                         {openCardMode === 'locked' && <div className="cat-line">
                             <div className="cat-line__arrows-block">
                                 <Arrow />
@@ -86,7 +86,7 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
                             <div className={`twist__dropped-card twist__dropped-card-${droppedCard.rang.toLocaleLowerCase()}`}>
-                                <Image height={300} preload width={180} src={droppedCard.src} alt="dropped-card" className="twist__card-img" />
+                                <Image height={300} width={180} src={droppedCard.src} alt="dropped-card" className="twist__card-img" />
                             </div>
                             <div className="twist__card-name-container">
                                 <h4 className="twist__card-name">
