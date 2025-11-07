@@ -75,8 +75,8 @@ const TwistWindow = ({ setOpenWindow, windowMode }: ITwistWindowProps) => {
             <div className="twist__container">
                 <div className="twist__body">
                     <div className="twist__package-container" {...handlers}>
-                        <Image height={720} width={800} preload quality={60} priority src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
-                        <Image height={720} unoptimized preload width={800} priority src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
+                        <Image height={720} width={800}  quality={60} priority src={'/cards/cards-package-preview.png'} alt="" className={`twist__package-img ${openCardMode === 'locked' ? 'open' : 'lock'}`} />
+                        <Image height={720} unoptimized  width={800} priority src={'/animation/card-open.gif'} alt="" className={`twist__package-img ${openCardMode === 'opened' ? 'open' : 'lock'}`} />
                         {openCardMode === 'locked' && <div className="cat-line">
                             <div className="cat-line__arrows-block">
                                 <Arrow />

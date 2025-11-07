@@ -1,6 +1,5 @@
 import LightButton from "@/components/additionals/buttons/LightButton"
 import Image from "next/image"
-import Link from "next/link"
 import SearchFilter from "@/components/routes/profile/SearchFilter"
 import Input from "@/components/additionals/Input"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"

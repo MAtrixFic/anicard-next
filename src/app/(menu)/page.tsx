@@ -1,5 +1,6 @@
 import BlurSpace from "@/components/additionals/BlurSpace"
 import PurpleLink from "@/components/additionals/PurpleLink"
+import UserSearch from "@/components/routes/battleSearch/UserSearch"
 
 const Page = () => {
     return (
@@ -17,7 +18,7 @@ const Page = () => {
                         <PurpleLink additionStyle="huge" title="Инвентарь" to={'inventory'} />
                         <PurpleLink additionStyle="huge" title="Крутки" to={'twists'} />
                         <PurpleLink additionStyle="huge" title="Маркет" to={'trades'} />
-                        <PurpleLink additionStyle="huge" title="Арена" to={'#'} />
+                        <UserSearch />
                         <PurpleLink additionStyle="huge" title="Магазин" to={'shop'} />
                         <PurpleLink additionStyle="huge" title="Дорожная карта" to={'#'} />
                     </nav>

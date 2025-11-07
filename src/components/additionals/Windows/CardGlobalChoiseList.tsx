@@ -6,7 +6,7 @@ import { Arrow } from '../../icons/Cards'
 import Input from '../Input'
 import SearchFilter from '../../routes/profile/SearchFilter'
 import { useCardsStore, type ICardStore } from '../../../devs/store/CardsStore'
-import useSelectionCard from '@/devs/hooks/useSelectionCard'
+import useSelection from '@/devs/hooks/useSelection'
 import { createPortal } from 'react-dom'
 
 export interface ICard extends IShortCardInfo { src: string, id: number }
@@ -28,7 +28,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     const favoridsPreview = useRef<ICard[]>(GetCards(cardsType))
 
     const [favoriteCards, setFavoriteCards] = useState<(ICard | null)[]>(favoridsPreview.current.length > 0 ? favoridsPreview.current : new Array(choisenCardsNumber).fill(null))
-    const [selectedCard, setSelectedCard] = useSelectionCard()
+    const [selectedCard, setSelectedCard] = useSelection<ICard>()
 
     function SetFavoriteCard(index: number) {
         if (selectedCard) {
