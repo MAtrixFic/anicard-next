@@ -16,7 +16,7 @@ const UserSearch = () => {
             const threadAnim = setTimeout(() => {
                 setFightIsFound(true);
                 setTimeout(()=> {
-                    router.push('/battle/choice/1')
+                    router.push('/battles/1/prepare')
                 }, 2000)
             }, 4000)
 

@@ -4,8 +4,9 @@ import LightButton from "@/components/additionals/buttons/LightButton";
 import { useEffect, useState } from "react";
 import useSelection from "@/devs/hooks/useSelection";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
+import { useRouter } from "next/navigation";
 
-const BattleChoise = () => {
+const Prepare = () => {
     const [points, setPoints] = useState<TChoicePoint[]>([
         {
             key: "map",
@@ -23,6 +24,8 @@ const BattleChoise = () => {
 
     const [choicePointStatus, _, setStatusInTime] = useOverWindowStatus(800);
 
+    const router = useRouter();
+
     useEffect(() => {
         setTimeout(() => {
             setStatusInTime();
@@ -35,6 +38,9 @@ const BattleChoise = () => {
                         id: 101
                     } : v
                 ))
+                setTimeout(()=> {
+                    router.replace('/battles/1/fight')
+                }, 2000)
             }, 10000)
         }, 8000)
     }, [])
@@ -165,4 +171,4 @@ const PointChoice = ({ points, approveFunc, windowStatus }: IPointChoiceProps) =
     )
 }
 
-export default BattleChoise
+export default Prepare

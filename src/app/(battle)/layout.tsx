@@ -4,7 +4,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <main style={{padding: '1rem'}}>
+        <main style={{ paddingInline: '1rem', paddingBlock: 0 }}>
             {children}
         </main>
     );
