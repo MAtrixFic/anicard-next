@@ -1,13 +1,12 @@
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard"
-import { useState } from "react"
 
-
-const BattleCard = ({ setSelection, selectedCard, thisCard }: IPreviewSelectionCardProps) => {
+const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelectionCardProps, 'setSelection'> & { setSelection?: (card: ICard | null) => void }) => {
 
     function SetStateOfCard() {
-        setSelection(thisCard.id === selectedCard?.id ? null : thisCard)
+        if (setSelection)
+            setSelection(thisCard.id === selectedCard?.id ? null : thisCard)
     }
 
     return (
@@ -23,8 +22,7 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: IPreviewSelectionC
                 <div className="card__stats-container">
                     {thisCard.options && Object.keys(thisCard.options).map((v, i) =>
                         <div className="card__stat">
-                            <span className="card__stat-text">{v}:</span>
-                            <span className="card__stat-text">{thisCard.options![v]}</span>
+                            <span className="card__stat-text">{thisCard.options![v].value}</span>
                         </div>
                     )}
                 </div>

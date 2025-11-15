@@ -1,0 +1,94 @@
+@use 'props.scss';
+
+.rating {
+    padding-top: 2rem;
+    padding-inline: 1rem;
+    display: flex;
+    flex-grow: 1;
+
+    &__rb {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    &__title-container {
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__title {
+        color: white;
+    }
+
+    &__list-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex-grow: 1;
+    }
+}
+
+.rating-element {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem 1rem;
+    border-radius: 15px;
+    backdrop-filter: blur(6px);
+    border-inline: 1.2px solid props.$purple;
+
+    &__left {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    &__text {
+        color: white;
+
+        &-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+
+            &.prize {
+                color: props.$purple;
+            }
+        }
+
+        &-score {
+            &.rating-1 {
+                padding: .2rem .4rem;
+                border-radius: 10px;
+                background-color: rgba(props.$yellow, .4);
+                border: 1px solid props.$yellow;
+                color: props.$yellow;
+            }
+
+            &.rating-2 {
+                padding: .2rem .4rem;
+                border-radius: 10px;
+                background-color: rgba(props.$soLightGrey, .4);
+                border: 1px solid props.$soLightGrey;
+                color: props.$soLightGrey;
+            }
+
+            &.rating-3 {
+                padding: .2rem .4rem;
+                border-radius: 10px;
+                background-color: rgba(props.$cuprum, .4);
+                border: 1px solid props.$cuprum;
+                color: props.$cuprum;
+            }
+        }
+    }
+}

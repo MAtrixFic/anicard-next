@@ -46,16 +46,89 @@ $maxBlockWidth: 400px;
         flex-grow: 1;
         gap: calc((100% - 300px)/2);
         overflow-x: auto;
-        overflow-y: hidden;
+        overflow-y: visible;
         border-radius: 15px;
         scroll-snap-type: x mandatory;
 
         .card {
             flex-shrink: 0;
+
+
+            &:hover,
+            &.selected {
+                transform: scale(1);
+                border-block-color: white;
+
+                .card__stats-container {
+                    opacity: 1;
+                }
+            }
         }
     }
 
     &__inv-element {}
+}
+
+.preview-battle-card {
+    position: relative;
+
+    .card__set-container-rival {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    // transform: rotateY(20deg);
+
+    &.unkown,
+    &.form {
+        .card:hover {
+            border-block-color: props.$body;
+        }
+    }
+
+    &.unkown {
+        .card__set-container-rival {
+            animation: show-card .6s forwards;
+        }
+
+        .preview-battle-card__card {
+            animation: hide-card .6s forwards;
+        }
+    }
+
+    &.form {
+        .card__set-container-rival {
+            animation: hide-card .6s forwards;
+        }
+
+        .preview-battle-card__card {
+            animation: show-card .6s forwards;
+        }
+    }
+
+}
+
+@keyframes show-card {
+    from {
+        transform: rotateY(90deg);
+    }
+
+    to {
+        transform: rotateY(0deg);
+    }
+}
+
+@keyframes hide-card {
+    from {
+        transform: rotateY(0deg);
+    }
+
+    to {
+        transform: rotateY(90deg);
+    }
 }
 
 .health-bar {
@@ -126,8 +199,7 @@ $maxBlockWidth: 400px;
     max-width: $maxBlockWidth;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
-    // border: 1.2px solid white;
+    gap: 1rem;
     border-radius: 25px;
     padding: .5rem;
     backdrop-filter: blur(6px);
@@ -136,6 +208,34 @@ $maxBlockWidth: 400px;
     &__cards-list {
         display: flex;
         justify-content: space-between;
+    }
+
+    &__container {
+        &-battle {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        &-manage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .card {
+        &__stats-container {
+            opacity: 1;
+        }
+
+        flex-shrink: 0;
+
+        &:hover,
+        &.selected {
+            transform: scale(1);
+            border-block-color: white;
+        }
     }
 }
 

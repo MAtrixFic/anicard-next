@@ -14,7 +14,7 @@ export interface IShortCardInfo {
     desc?: string,
     name: string,
     rang: 'A' | 'S' | 'C' | 'B' | 'D',
-    options?: { [key: string]: string | number }
+    options?: { [key: string]: { value: string | number, src?: string } }
 }
 
 interface ICardGlobalChoiseList {

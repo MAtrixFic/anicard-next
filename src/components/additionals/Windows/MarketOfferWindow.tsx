@@ -24,13 +24,13 @@ const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProp
                                 name={card?.name}
                             />
                         </div>
-                        <div className="market-offer__container market-offer__container-inp">
+                        {/* <div className="market-offer__container market-offer__container-inp">
                             <input type="number" placeholder="Цена" className="market-offer__input" />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="market-offer__container market-offer__container-distance">
                         <LightButton title='Выйти' additionStyle="purple" func={func}/>
-                        <LightButton title='Продать' additionStyle="green" />
+                        <LightButton title='Выставить' additionStyle="green" />
                     </div>
                 </div>
             </div>

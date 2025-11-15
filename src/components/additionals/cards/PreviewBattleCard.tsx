@@ -6,10 +6,12 @@ interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'se
     func?: () => void;
     deleteFunc?: () => void;
     activeElemenet?: React.ReactNode,
-    rival?: boolean
+    rival?: {
+        appearance: 'unkown' | 'form';
+    }
 }
 
-const PreviewBattleCard = ({ rival = false, func, deleteFunc, thisCard, setSelection, activeElemenet }: IPreviewCardProps) => {
+const PreviewBattleCard = ({ rival, func, deleteFunc, thisCard, setSelection, activeElemenet }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
@@ -17,12 +19,18 @@ const PreviewBattleCard = ({ rival = false, func, deleteFunc, thisCard, setSelec
     }, [thisCard])
 
     return (
-        <li className={`preview-battle-card`}>
+        <section className={`preview-battle-card ${rival?.appearance}`}>
             {!isSetCard ?
                 rival ?
-                    <div className="card__set-container card__set-container-rival">
-                        <span className="card__set-text">?</span>
-                    </div> :
+                    <>
+                        <div className="card__set-container card__set-container-rival">
+                            <span className="card__set-text">?</span>
+                        </div>
+                        <div className="preview-battle-card__card">
+                            {activeElemenet}
+                        </div>
+                    </>
+                    :
                     <button className="preview-battle-card__set-btn" onClick={func}>
                         <div className="card__set-container">
                             <Plus />
@@ -31,7 +39,7 @@ const PreviewBattleCard = ({ rival = false, func, deleteFunc, thisCard, setSelec
                 :
                 activeElemenet
             }
-        </li >
+        </section>
     )
 }
 export default PreviewBattleCard

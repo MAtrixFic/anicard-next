@@ -9,6 +9,7 @@ import '@/styles/trades.scss'
 import '@/styles/inventory.scss'
 import '@/styles/battleSearch.scss'
 import '@/styles/fight.scss'
+import '@/styles/rating.scss'
 
 export const metadata: Metadata = {
     title: "Anicard",

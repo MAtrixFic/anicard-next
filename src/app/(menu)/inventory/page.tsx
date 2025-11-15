@@ -4,7 +4,7 @@ import SearchFilter from "@/components/routes/profile/SearchFilter"
 import PreviewSelectionCard from "@/components/additionals/cards/PreviewSelectionCard"
 import { useCardsStore } from "@/devs/store/CardsStore"
 import useSelectionCard from "@/devs/hooks/useSelection"
-import { CardDesctiption } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { CardDesctiption, ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindow"
@@ -13,7 +13,7 @@ import { createPortal } from "react-dom"
 
 const Page = () => {
     const cards = useCardsStore(state => state.allCards)
-    const [selectedCard, setSelectedCard] = useSelectionCard()
+    const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
     const [marketWindowStatus, setMarketWindowStatus, setMarketWindowVisibility] = useOverWindowStatus(400);
 
     return (
@@ -37,7 +37,7 @@ const Page = () => {
                 </section>
             </div>
             {selectedCard && <div className="desc-panel">
-                <LightButton title='Продать' additionStyle="green" func={setMarketWindowVisibility} />
+                <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />
                 {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&
                     createPortal(<MarketOfferWindow card={selectedCard} func={setMarketWindowVisibility} additionStyle={marketWindowStatus} />, document.body)
                 }

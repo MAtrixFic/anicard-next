@@ -14,6 +14,7 @@ import useSelection from "@/devs/hooks/useSelection"
 const Fight = () => {
     const cards = useCardsStore(state => state.allCards)
     const portalContainer = usePortal()
+    const [battleStart, setBattleStart] = useState(false)
 
     const [selectedCard, setSelectedCard] = useSelection<ICard>()
     const [selectionBattleCards, setSelectionBattleCards] = useState<[ICard | null, ICard | null, ICard | null]>([null, null, null])
@@ -35,28 +36,38 @@ const Fight = () => {
             </div>
             <div className="fight__battle-scene">
                 <div className="battle-scene">
-                    <div className="battle-scene__fight-container battle-scene__fight-containe-rival">
-                        <ul className="battle-scene__cards-list">
-                            {new Array(3).fill(null).map((v, i) =>
-                                <PreviewBattleCard rival key={v + i} thisCard={undefined} />
-                            )}
-                        </ul>
+                    <div className="battle-scene__container battle-scene__container-battle">
+                        <div className="battle-scene__fight-container battle-scene__fight-containe-rival">
+                            <ul className="battle-scene__cards-list">
+                                {new Array(3).fill(null).map((v, i) =>
+                                    <PreviewBattleCard rival={{ appearance: battleStart ? 'form' : 'unkown' }} key={v + i}
+                                        activeElemenet={cards[i] &&
+                                            <BattleCard
+                                                thisCard={cards[i]} setSelection={undefined} selectedCard={null} />
+                                        }
+                                    />
+                                )}
+                            </ul>
+                        </div>
+                        <div className="battle-scene__fight-container battle-scene__fight-container-you">
+                            <ul className="battle-scene__cards-list">
+                                {new Array(3).fill(null).map((v, i) =>
+                                    <PreviewBattleCard
+                                        key={v + i}
+                                        thisCard={selectionBattleCards[i] || undefined}
+                                        func={() => SetBattleCardard(i)}
+                                        activeElemenet={selectionBattleCards[i] && <BattleCard
+                                            thisCard={selectionBattleCards[i]}
+                                            selectedCard={selectedCard}
+                                            setSelection={setSelectedCard}
+                                        />}
+                                    />
+                                )}
+                            </ul>
+                        </div>
                     </div>
-                    <div className="battle-scene__fight-container battle-scene__fight-containe-you">
-                        <ul className="battle-scene__cards-list">
-                            {new Array(3).fill(null).map((v, i) =>
-                                <PreviewBattleCard
-                                    key={v + i}
-                                    thisCard={selectionBattleCards[i] || undefined}
-                                    func={() => SetBattleCardard(i)}
-                                    activeElemenet={selectionBattleCards[i] && <BattleCard
-                                        thisCard={selectionBattleCards[i]}
-                                        selectedCard={selectedCard}
-                                        setSelection={setSelectedCard}
-                                    />}
-                                />
-                            )}
-                        </ul>
+                    <div className="battle-scene__container battle-scene__container-manage">
+                        <LightButton title="Бой" additionStyle="green" func={() => setBattleStart(prev => !prev)} />
                     </div>
                 </div>
             </div>

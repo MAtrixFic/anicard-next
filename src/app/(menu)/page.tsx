@@ -20,7 +20,7 @@ const Page = () => {
                         <PurpleLink additionStyle="huge" title="Маркет" to={'trades'} />
                         <UserSearch />
                         <PurpleLink additionStyle="huge" title="Магазин" to={'shop'} />
-                        <PurpleLink additionStyle="huge" title="Дорожная карта" to={'#'} />
+                        <PurpleLink additionStyle="huge" title="Рейтинг" to={'rating'} />
                     </nav>
                 </section>
             </BlurSpace>

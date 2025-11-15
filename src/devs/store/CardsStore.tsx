@@ -13,11 +13,26 @@ const useCardsStore = create<ICardStore>((set, get) => ({
     favoriteCards: [],
     battleCards: [],
     allCards: [
-        { src: '/Rem.jpg', desc: 'Мега вайфу', id: 1, rang: "S", name: 'Рем', options: { 'Стихия': 'вода', 'Урон': 60, 'Защита': 15, 'Эффект': 'оглушение' } },
+        {
+            src: '/Rem.jpg', desc: 'Мега вайфу', id: 1, rang: "S", name: 'Рем', options: {
+                rating: { value: 80 },
+                attribute: { value: 'Стан' }
+            }
+        },
         { src: '/Ram.jpg', desc: 'Сестра мега вайфу', id: 2, rang: "A", name: 'Рам' },
         { src: '/Akame.jpg', desc: 'Убийца Акаме', id: 3, rang: "B", name: 'Акаме' },
-        { src: '/Rey.jpg', desc: 'Дед инсайд', id: 4, rang: "S", name: 'Рей' },
-        { src: '/Chisato.jpg', desc: 'Крутой киллер', id: 5, rang: "S", name: 'Чисато' },
+        {
+            src: '/Rey.jpg', desc: 'Дед инсайд', id: 4, rang: "S", name: 'Рей', options: {
+                rating: { value: 80 },
+                attribute: { value: 'Отрава' }
+            }
+        },
+        {
+            src: '/Chisato.jpg', desc: 'Крутой киллер', id: 5, rang: "S", name: 'Чисато', options: {
+                rating: { value: 80 },
+                attribute: { value: 'Горение' }
+            }
+        },
         { src: '/02.jpg', desc: 'Мой дорогой...', id: 6, rang: "B", name: '02' },
         { src: '/Senko.jpg', desc: 'Няшная хозяйка', id: 7, rang: "D", name: 'Сенко' }
     ],
