@@ -13,7 +13,7 @@ const useCardsStore = create<ICardStore>((set, get) => ({
     favoriteCards: [],
     battleCards: [],
     allCards: [
-        { src: '/Rem.jpg', desc: 'Мега вайфу', id: 1, rang: "S", name: 'Рем' },
+        { src: '/Rem.jpg', desc: 'Мега вайфу', id: 1, rang: "S", name: 'Рем', options: { 'Стихия': 'вода', 'Урон': 60, 'Защита': 15, 'Эффект': 'оглушение' } },
         { src: '/Ram.jpg', desc: 'Сестра мега вайфу', id: 2, rang: "A", name: 'Рам' },
         { src: '/Akame.jpg', desc: 'Убийца Акаме', id: 3, rang: "B", name: 'Акаме' },
         { src: '/Rey.jpg', desc: 'Дед инсайд', id: 4, rang: "S", name: 'Рей' },

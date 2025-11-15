@@ -8,7 +8,7 @@ interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'se
     deleteFunc?: () => void;
 }
 
-const PreviewCard = ({ func, deleteFunc, thisCard, setSelection }: IPreviewCardProps) => {
+const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {

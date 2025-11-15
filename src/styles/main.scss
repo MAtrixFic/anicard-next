@@ -323,6 +323,21 @@ body {
     }
 }
 
+.preview-battle-card {
+    height: 140px;
+    aspect-ratio: .7;
+    display: flex;
+
+    &__set-btn {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+        border: 2px dashed white;
+    }
+}
+
 .card {
     height: 140px;
     aspect-ratio: .7;
@@ -334,6 +349,60 @@ body {
     border-inline-width: 3px;
     box-sizing: border-box;
     transition-duration: .2s;
+    position: relative;
+
+    &__set-text {
+        font-family: 'Wadik';
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    &__set-container {
+        &-rival {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+            background-color: props.$purple;
+            border-radius: 15px;
+            border: 1.2px solid white;
+        }
+    }
+
+
+    &__stats-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: .2rem;
+        gap: .1rem;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top,
+                rgba(props.$body, .8),
+                rgba(props.$body, 0));
+        opacity: 0;
+        transition-duration: .3s;
+    }
+
+    &:hover {
+        .card__stats-container {
+            opacity: 1;
+        }
+    }
+
+    &__stat {
+        display: flex;
+        justify-content: space-between;
+
+        span {
+            color: white;
+        }
+    }
 
     &-s {
         border-inline-color: props.$yellow;
@@ -910,13 +979,17 @@ body {
 }
 
 @media screen and (max-width: 330px) {
+
+    .preview-battle-card,
     .card {
         width: 80px;
         height: 120px;
     }
 
     .cards-choise {
-        &__favorite-list, &__list {
+
+        &__favorite-list,
+        &__list {
             grid-template-columns: repeat(auto-fit, 80px);
             grid-template-rows: repeat(auto-fit, 120px);
         }

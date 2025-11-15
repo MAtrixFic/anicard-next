@@ -13,7 +13,8 @@ export interface ICard extends IShortCardInfo { src: string, id: number }
 export interface IShortCardInfo {
     desc?: string,
     name: string,
-    rang: 'A' | 'S' | 'C' | 'B' | 'D'
+    rang: 'A' | 'S' | 'C' | 'B' | 'D',
+    options?: { [key: string]: string | number }
 }
 
 interface ICardGlobalChoiseList {
@@ -60,7 +61,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                             thisCard={favoriteCards[i]!}
                             func={() => SetFavoriteCard(i)}
                             deleteFunc={() => DeleteFavoriteCard(i)}
-                            // setSelection={() => setSelectedCard()}
+                        // setSelection={() => setSelectedCard()}
                         />
 
                     )}

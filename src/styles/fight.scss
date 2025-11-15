@@ -1,14 +1,31 @@
 @use './props.scss';
 
+$maxBlockWidth: 400px;
+
 .fight {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     justify-content: space-between;
+    padding-top: 2rem;
+
+    &__rival {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__battle-scene {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
     &__user-manager {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 1rem;
     }
 
@@ -16,18 +33,20 @@
         display: flex;
         width: 100%;
         border-radius: 25px 25px 0 0;
-        border: 2px solid props.$purple;
+        border: 1.2px solid props.$purple;
         border-top-width: 3px;
         border-bottom: unset;
         padding: .5rem;
+        max-width: $maxBlockWidth;
         backdrop-filter: blur(6px);
     }
 
     &__inventory {
         display: flex;
+        flex-grow: 1;
         gap: calc((100% - 300px)/2);
         overflow-x: auto;
-        overflow-y: visible;
+        overflow-y: hidden;
         border-radius: 15px;
         scroll-snap-type: x mandatory;
 
@@ -42,8 +61,23 @@
 .health-bar {
     width: 100%;
     display: flex;
+    flex-grow: 1;
+    max-width: $maxBlockWidth;
     gap: 1rem;
     align-items: center;
+
+    &.you {
+        .health-bar__user-name {
+            color: props.$blue;
+        }
+    }
+
+
+    &.rival {
+        .health-bar__user-name {
+            color: props.$purple;
+        }
+    }
 
     &__user-logo-container {
         width: 40px;
@@ -71,10 +105,10 @@
         flex-grow: 1;
         flex-shrink: 1;
         height: 10px;
-        background-color: white;
+        background-color: props.$green;
         border-radius: 25px;
-        border: 3px solid props.$body;
-        outline: 2px solid white;
+        border: 2px solid props.$body;
+        outline: 1.4px solid white;
     }
 }
 
@@ -82,6 +116,69 @@
     .fight {
         &__inventory {
             gap: calc((100% - (80px * 3))/2);
+        }
+    }
+}
+
+
+.battle-scene {
+    flex-grow: 1;
+    max-width: $maxBlockWidth;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    // border: 1.2px solid white;
+    border-radius: 25px;
+    padding: .5rem;
+    backdrop-filter: blur(6px);
+    max-width: $maxBlockWidth;
+
+    &__cards-list {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.fight-header {
+    order: -1;
+    height: 60px;
+    padding-inline: 1rem;
+    display: flex;
+    align-content: stretch;
+    justify-content: stretch;
+    backdrop-filter: blur(6px);
+    border-bottom: 1.2px solid props.$purple;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+    }
+}
+
+.weather-element {
+    position: relative;
+
+    &__btn {
+        svg {
+            height: 30px;
+            aspect-ratio: 1;
+        }
+    }
+
+    &__desc-block {
+        position: absolute;
+        right: calc(100%);
+        top: calc(100%);
+        background-color: white;
+        padding: .5rem;
+        border-radius: 15px;
+        min-width: max(40vw, 200px);
+
+        p {
+            color: props.$body;
+            font-size: 1rem;
         }
     }
 }
