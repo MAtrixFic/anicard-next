@@ -65,69 +65,54 @@ $maxBlockWidth: 400px;
             }
         }
     }
-
-    &__inv-element {}
 }
 
-.preview-battle-card {
-    position: relative;
+.flip-card {
+    perspective: 1000px;
+    display: flex;
+    height: 140px;
+    aspect-ratio: .7;
 
-    .card__set-container-rival {
+    &.flip {
+        .flip-card__inner {
+            transform: rotateY(180deg);
+        }
+    }
+
+    &__inner {
+        flex-grow: 1;
+        position: relative;
+        display: flex;
+        transition: transform .8s;
+        transform-style: preserve-3d;
+    }
+
+    &__front,
+    &__back {
         position: absolute;
         left: 0;
         top: 0;
         height: 100%;
         width: 100%;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
-    // transform: rotateY(20deg);
-
-    &.unkown,
-    &.form {
-        .card:hover {
-            border-block-color: props.$body;
-        }
+    &__back {
+        background-color: props.$purple;
+        border: 2px solid white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: rotateY(180deg);
+        border-radius: 15px;
     }
 
-    &.unkown {
-        .card__set-container-rival {
-            animation: show-card .6s forwards;
-        }
-
-        .preview-battle-card__card {
-            animation: hide-card .6s forwards;
-        }
-    }
-
-    &.form {
-        .card__set-container-rival {
-            animation: hide-card .6s forwards;
-        }
-
-        .preview-battle-card__card {
-            animation: show-card .6s forwards;
-        }
-    }
-
-}
-
-@keyframes show-card {
-    from {
-        transform: rotateY(90deg);
-    }
-
-    to {
-        transform: rotateY(0deg);
-    }
-}
-
-@keyframes hide-card {
-    from {
-        transform: rotateY(0deg);
-    }
-
-    to {
-        transform: rotateY(90deg);
+    &__text {
+        font-family: 'Wadik';
+        font-size: 1.8rem;
+        color: white;
     }
 }
 
@@ -231,10 +216,22 @@ $maxBlockWidth: 400px;
 
         flex-shrink: 0;
 
-        &:hover,
+        &:hover {
+            transform: scale(1);
+            border-block-color: props.$body;
+        }
+
         &.selected {
             transform: scale(1);
             border-block-color: white;
+        }
+    }
+
+    &__fight-container {
+        &-rival {
+            .card:hover {
+                border-block-color: props.$body;
+            }
         }
     }
 }

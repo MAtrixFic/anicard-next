@@ -9,6 +9,7 @@ import usePortal from "@/devs/hooks/usePortal"
 import BattleCard from "@/components/additionals/cards/BattleCard"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import useSelection from "@/devs/hooks/useSelection"
+import FlipCard from "@/components/additionals/cards/FlipCard"
 
 
 const Fight = () => {
@@ -16,7 +17,7 @@ const Fight = () => {
     const portalContainer = usePortal()
     const [battleStart, setBattleStart] = useState(false)
 
-    const [selectedCard, setSelectedCard] = useSelection<ICard>()
+    const [selectedCard, setSelectedCard] = useSelection<ICard>(false, '.fight__inventory');
     const [selectionBattleCards, setSelectionBattleCards] = useState<[ICard | null, ICard | null, ICard | null]>([null, null, null])
 
     function SetBattleCardard(index: number) {
@@ -37,11 +38,12 @@ const Fight = () => {
             <div className="fight__battle-scene">
                 <div className="battle-scene">
                     <div className="battle-scene__container battle-scene__container-battle">
-                        <div className="battle-scene__fight-container battle-scene__fight-containe-rival">
+                        <div className="battle-scene__fight-container battle-scene__fight-container-rival">
                             <ul className="battle-scene__cards-list">
                                 {new Array(3).fill(null).map((v, i) =>
-                                    <PreviewBattleCard rival={{ appearance: battleStart ? 'form' : 'unkown' }} key={v + i}
-                                        activeElemenet={cards[i] &&
+                                    <FlipCard state={battleStart ? 'no-flip' : 'flip'}
+                                        key={i}
+                                        element={
                                             <BattleCard
                                                 thisCard={cards[i]} setSelection={undefined} selectedCard={null} />
                                         }
