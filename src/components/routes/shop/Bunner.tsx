@@ -10,6 +10,7 @@ interface IBannerProps {
         type: "rubles" | "pay-game-money" | "game-money";
         count: number
     }
+    count: number
 }
 
 interface IBannerSectionProps {
@@ -18,7 +19,7 @@ interface IBannerSectionProps {
 }
 
 
-export const Bunner = ({ src, name, cost, card }: IBannerProps) => {
+export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
     return (
         <div className="banner">
             <div className="banner__view-block">
@@ -31,11 +32,11 @@ export const Bunner = ({ src, name, cost, card }: IBannerProps) => {
                     </span>
                 </div>
             </div>
-            <div className="banner__count-container">
+            <div className="banner__count-container banner__count-container-normal">
                 <span className="banner__count">
-                    {cost.count}
+                    {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="green" />
+                <LightButton title={'Купить'} additionStyle="green tiny" />
             </div>
         </div>
     )

@@ -36,10 +36,12 @@
     width: 100%;
     height: fit-content;
     min-height: 40px;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
     padding-inline: 1rem;
     flex-direction: column-reverse;
     align-items: stretch;
+    border-radius: 20px 20px 0 0;
+    background-color: rgba(props.$body, .6);
     gap: 1rem;
     display: flex;
 
@@ -213,6 +215,8 @@
         img {
             object-fit: cover;
         }
+
+        background-color: props.$soLightGrey;
     }
 
     &__label {
@@ -250,4 +254,14 @@
     &__input {
         display: none;
     }
+}
+
+.admin-logic {
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

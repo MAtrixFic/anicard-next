@@ -7,6 +7,7 @@ const Page = () => {
                 <BannerSection title="Карты" banners={[
                     {
                         card: { name: 'Рем', rang: 'S' },
+                        count: 2,
                         src: '/Rem.jpg',
                         name: "Рем",
                         cost: {
@@ -16,6 +17,7 @@ const Page = () => {
                     },
                     {
                         card: { name: 'Чисато', rang: 'S' },
+                        count: 4,
                         src: '/Chisato.jpg',
                         name: "Чисато",
                         cost: {
@@ -25,6 +27,7 @@ const Page = () => {
                     },
                     {
                         card: { name: 'Рей', rang: 'S' },
+                        count: 1,
                         src: '/Rey.jpg',
                         name: "Рей",
                         cost: {
@@ -34,6 +37,7 @@ const Page = () => {
                     },
                     {
                         card: { name: 'Сенко', rang: 'D' },
+                        count: 1,
                         src: '/Senko.jpg',
                         name: "Сенко",
                         cost: {

@@ -44,6 +44,9 @@ const Page = () => {
                     </ul>
                 </section>
             </div>
+            <div className="admin-logic">
+                <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="green" />
+            </div>
             {selectedCard && <div className="desc-panel">
                 <div className="desc-panel__admin-logic">
                     <LightButton title='Редактировать' additionStyle="green" func={() => setAdminMode('edit')} />
@@ -162,9 +165,12 @@ const ImageUploader = ({ preloadImage }: IImageUploaderProps) => {
     return (
         <div className="image-uploader">
             <label className="image-uploader__label">
-                {(image || preloadImage) && <div className="image-uploader__preview">
+                {(image || preloadImage) ? <div className="image-uploader__preview">
                     <Image src={image ? image : preloadImage ? preloadImage : ''} alt="card-preview" height={160} width={112} />
-                </div>}
+                </div>
+                    :
+                    <div className="image-uploader__preview" />
+                }
                 <input onChange={async (e) => {
                     if (e.target.files && e.target.files[0]) {
                         await GetImage(e.target.files[0]);
