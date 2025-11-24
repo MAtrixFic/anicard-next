@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Cross } from "../icons/Cards";
 
 export interface IBaseListProps {
     title: string,
-    values: { [key: string]: string }
+    values: { [key: string]: string },
+    defaultValue?: string
 }
 
-const BaseList = ({ title, values }: IBaseListProps) => {
-    const [activeValueKey, setActiveValueKey] = useState<string>();
+const BaseList = ({ title, values, defaultValue }: IBaseListProps) => {
+    const [activeValueKey, setActiveValueKey] = useState<string>(defaultValue ? defaultValue : '');
     const [isOpened, setIsOpened] = useState<boolean>(false);
+    const listRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
-        function ClearHideList() {
-            if (isOpened) setIsOpened(false);
+        function ClearHideList(e: MouseEvent | TouchEvent) {
+            if (listRef.current && listRef.current.contains(e.target as Node)) return;
+            else setIsOpened(false);
         }
 
         const bodyElement = document.body;
@@ -22,7 +25,7 @@ const BaseList = ({ title, values }: IBaseListProps) => {
     }, [isOpened])
 
     return (
-        <section className={`base-list long`}>
+        <section ref={listRef} className={`base-list long ${activeValueKey}`}>
             <div className="base-list__title-container">
                 <h4 className="base-list__title">
                     {title}

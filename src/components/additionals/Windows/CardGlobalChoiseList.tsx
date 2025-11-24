@@ -14,7 +14,7 @@ export interface IShortCardInfo {
     desc?: string,
     name: string,
     rang: 'A' | 'S' | 'C' | 'B' | 'D',
-    options?: { [key: string]: { value: string | number, src?: string } }
+    options: { rating: number, attribute: string }
 }
 
 interface ICardGlobalChoiseList {
@@ -74,7 +74,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </section>
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
-                        {cards.filter((v) => !favoriteCards.includes(v))
+                        {cards.filter((v) => !favoriteCards.map(fv => fv?.id).includes(v.id))
                             .map((v, i) =>
                                 <PreviewSelectionCard
                                     key={v?.id + i}

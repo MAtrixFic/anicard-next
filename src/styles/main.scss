@@ -23,6 +23,12 @@ button {
     }
 }
 
+input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    appearance: textfield;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -377,6 +383,7 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
+        align-items: center;
         padding: .2rem;
         gap: .1rem;
         width: 100%;
@@ -663,12 +670,14 @@ body {
     position: absolute;
     background-color: rgba($color: props.$body, $alpha: .6);
     backdrop-filter: blur(8px);
+    transform: translateY(100%);
 
     &.opened {
         animation: show-selection-list .4s forwards;
     }
 
     &.to-hide {
+        transform: translateY(0%);
         animation: hide-selection-list .4s forwards;
     }
 
@@ -946,6 +955,10 @@ body {
     border: 2px solid props.$body;
     outline: 1px solid white;
 
+    &:disabled {
+        opacity: .8;
+    }
+
     &.tiny {
         font-size: 1.1rem;
         font-weight: 500;
@@ -964,6 +977,16 @@ body {
     &.purple {
         background-color: props.$purple;
         box-shadow: 0px 0px 17px -6px rgba(#521acdcf, 0.81) inset;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .light-button {
+        font-size: 1rem;
+
+        &.tiny {
+            font-size: .9rem;
+        }
     }
 }
 

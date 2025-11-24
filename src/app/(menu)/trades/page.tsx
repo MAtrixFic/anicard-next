@@ -1,10 +1,22 @@
+'use client'
 import LightButton from "@/components/additionals/buttons/LightButton"
 import Image from "next/image"
 import SearchFilter from "@/components/routes/profile/SearchFilter"
 import Input from "@/components/additionals/Input"
-import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { CardDesctiption, ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { useCardsStore } from "@/devs/store/CardsStore"
+import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
+import PreviewSelectionCard from "@/components/additionals/cards/PreviewSelectionCard"
+import useSelection from "@/devs/hooks/useSelection"
+import OverBlackSpace from "@/components/additionals/OverBlackSpace"
+import { useEffect, useState } from "react"
+import PreviewCard from "@/components/additionals/cards/PreviewCard"
+import { Exchange } from "@/components/icons/Cards"
 
 const Page = () => {
+    const cards = useCardsStore(state => state.allCards);
+    const [exchangeSelectionCard, setExchangeSelectionCard] = useState<ICard | null>();
+
     return (
         <div className="trades">
             <div className="trades__top">
@@ -13,7 +25,8 @@ const Page = () => {
                         <span className="trades__list-title">Твой список предложений:</span>
                     </div>
                     <ul className="trades__your-offers-list">
-                        <YourOffer cardInfo={{ src: '/Rem.jpg', name: 'Рем', id: 14 }} price={50} />
+                        <YourOffer cardInfo={cards[1]} />
+                        <YourOfferResponse cardInfo={cards[0]} cardInfoClient={cards[4]} />
                     </ul>
                 </div>
             </div>
@@ -24,11 +37,16 @@ const Page = () => {
                 </div>
                 <div className="trades__orders-list-container">
                     <ul className="trades__orders-list">
-                        <OtherOrder cardInfo={{ src: '/Rem.jpg', name: 'Рем', rang: 'S', id: 14 }} price={50} />
-                        <OtherOrder cardInfo={{ src: '/02.jpg', name: '02', rang: 'S', id: 16 }} price={45} />
+                        {cards.map(v =>
+                            <OtherOrder
+                                key={v.id}
+                                cardInfo={v}
+                                openExchange={setExchangeSelectionCard} />
+                        )}
                     </ul>
                 </div>
             </div>
+            {exchangeSelectionCard && <ExchangeWindow exchangedCard={exchangeSelectionCard} setExchangedCard={setExchangeSelectionCard} />}
         </div>
     )
 }
@@ -37,9 +55,9 @@ const Page = () => {
 
 interface IOtherOrderProps {
     cardInfo: ICard,
-    price: number
+    openExchange: (exchangeCard: ICard) => void;
 }
-const OtherOrder = ({ cardInfo, price }: IOtherOrderProps) => {
+const OtherOrder = ({ cardInfo, openExchange }: IOtherOrderProps) => {
     return (
         <li className="other-order">
             <div className="other-order__left-block">
@@ -52,15 +70,9 @@ const OtherOrder = ({ cardInfo, price }: IOtherOrderProps) => {
                             {cardInfo.name}
                         </h4>
                     </div>
-                    <div className="other-order__price-container">
-                        <span className="other-order__price">
-                            {price} Crystals
-                        </span>
-                    </div>
                 </div>
                 <div className="other-order__manipulations-block">
-                    <LightButton title='Подробнее' additionStyle="tiny purple" />
-                    <LightButton title='Купить' additionStyle="tiny green" />
+                    <LightButton title='Обменять' additionStyle="tiny green" func={() => openExchange(cardInfo)} />
                 </div>
             </div>
         </li>
@@ -69,10 +81,9 @@ const OtherOrder = ({ cardInfo, price }: IOtherOrderProps) => {
 
 interface IYourOfferProps {
     cardInfo: Omit<ICard, 'desc' | 'rang'>
-    price: number,
 }
 
-const YourOffer = ({ cardInfo, price }: IYourOfferProps) => {
+const YourOffer = ({ cardInfo }: IYourOfferProps) => {
     return (
         <div className="your-offer">
             <div className="your-offer__left-block">
@@ -87,15 +98,146 @@ const YourOffer = ({ cardInfo, price }: IYourOfferProps) => {
                     </div>
                 </div>
                 <div className="your-offer__manipulations-block">
-                    <div className="your-offer__price-container">
-                        <span className="your-offer__price">
-                            {price} Crystals
-                        </span>
-                    </div>
                     <LightButton title='Удалить' additionStyle="tiny purple" />
                 </div>
             </div>
         </div >
+    )
+}
+
+interface IYourOfferResponseProps extends IYourOfferProps {
+    cardInfoClient: Omit<ICard, 'desc' | 'rang'>
+}
+
+
+const YourOfferResponse = ({ cardInfo, cardInfoClient }: IYourOfferResponseProps) => {
+    return (
+        <div className="your-offer your-offer__response">
+            <div className="your-offer__left-block">
+                <div className="your-offer__cards">
+                    <div className="your-offer__card">
+                        <Image className="your-offer__preview-img" src={cardInfo.src} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <h4 className="your-offer__title">
+                            {cardInfo.name}
+                        </h4>
+                    </div>
+                    <div className="your-offer__card">
+                        <Image className="your-offer__preview-img" src={cardInfoClient.src} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <h4 className="your-offer__title">
+                            {cardInfoClient.name}
+                        </h4>
+                    </div>
+                </div>
+                <div className="your-offer__exchange">
+                    <Exchange />
+                </div>
+            </div>
+            <div className="your-offer__right-block">
+                <div className="your-offer__manipulations-block">
+                    <LightButton title='Отменить' additionStyle="tiny purple" />
+                    <LightButton title='Принять' additionStyle="tiny green" />
+                </div>
+            </div>
+        </div >
+    )
+}
+
+interface IExchangeWindowProps {
+    exchangedCard: ICard,
+    setExchangedCard: (card: ICard | null) => void;
+}
+
+const ExchangeWindow = ({ exchangedCard, setExchangedCard }: IExchangeWindowProps) => {
+    const cards = useCardsStore(state => state.allCards)
+    const [selectedCard, setSelectedCard] = useSelection<ICard>()
+    const [marketWindowStatus, setMarketWindowStatus, setMarketWindowVisibility] = useOverWindowStatus(300);
+    const [ws, setWS, setWStimer] = useOverWindowStatus(3000)
+
+    useEffect(() => {
+        setWStimer();
+    }, [])
+
+    function ExitExchangeWindow() {
+        setWStimer();
+        setTimeout(() => {
+            setExchangedCard(null);
+        }, 300)
+    }
+
+    const optionKeys = {
+        attribute: 'Атрибут',
+        rating: 'Рейтинг'
+    }
+
+    return (
+        <OverBlackSpace additionStyle={ws}>
+            <div className="exchange-window">
+                <section className="exchange-window__section exchange-window__section-exchanged-card">
+                    <div className="exchange-window__card-preivew">
+                        <PreviewCard thisCard={exchangedCard} />
+                    </div>
+                    <div className="exchange-window__exchange-desc-container">
+                        <ul className="exchange-list">
+                            <ExchangeElement value={exchangedCard.name} />
+                            {Object.keys(exchangedCard.options).map((v) =>
+                                <ExchangeElement
+                                    key={v}
+                                    title={optionKeys[v as keyof typeof optionKeys]}
+                                    value={(exchangedCard.options[v as keyof typeof exchangedCard.options]).toString()} />
+                            )}
+                        </ul>
+                    </div>
+                </section>
+                <section className="exchange-window__section exchange-window__section-your-choice">
+                    <div className="cards-choise__list-container">
+                        <section className="cards-choise__filter pd">
+                            <Input />
+                            <SearchFilter />
+                        </section>
+                        <section className="cards-choise__cards-list">
+                            <ul className="cards-choise__list">
+                                {cards.map((v, i) =>
+                                    <PreviewSelectionCard
+                                        key={v?.id + i}
+                                        setSelection={setSelectedCard}
+                                        selectedCard={selectedCard}
+                                        thisCard={v}
+                                    />
+                                )}
+                            </ul>
+                        </section>
+                    </div>
+                    <div className="exchange-window__logic-block">
+                        {selectedCard && <div className="exchange-window__card-selection">
+                            <CardDesctiption
+                                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
+                                name={selectedCard?.name}
+                            />
+                            <LightButton title='Обменять' additionStyle="green" func={setMarketWindowVisibility} />
+                        </div>}
+                        <LightButton title='Выйти' additionStyle="purple" func={ExitExchangeWindow} />
+                    </div>
+                </section>
+            </div>
+        </OverBlackSpace>
+    )
+}
+
+interface IExchangeElementProps {
+    title?: string,
+    value: string
+}
+
+const ExchangeElement = ({ title, value }: IExchangeElementProps) => {
+    return (
+        <li className="exchange-list__element">
+            {title && <div className="exchange-list__container">
+                <span>{title}:</span>
+            </div>}
+            <div className="exchange-list__container">
+                <span>{value}</span>
+            </div>
+        </li>
     )
 }
 

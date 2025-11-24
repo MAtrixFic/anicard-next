@@ -163,10 +163,21 @@ $maxBlockWidth: 400px;
         flex-grow: 1;
         flex-shrink: 1;
         height: 10px;
-        background-color: props.$green;
         border-radius: 25px;
         border: 2px solid props.$body;
         outline: 1.4px solid white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    &__slider {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: 0 50%;
+        width: 100%;
+        height: 100%;
+        background-color: props.$green;
     }
 }
 
@@ -214,6 +225,8 @@ $maxBlockWidth: 400px;
             opacity: 1;
         }
 
+        transition: opacity 2s;
+
         flex-shrink: 0;
 
         &:hover {
@@ -224,6 +237,17 @@ $maxBlockWidth: 400px;
         &.selected {
             transform: scale(1);
             border-block-color: white;
+        }
+
+        &.defeated {
+            opacity: 0;
+
+            .card__stat:nth-child(1) {
+                .card__stat-text {
+                    color: props.$cuprum;
+                    font-weight: 700;
+                }
+            }
         }
     }
 
@@ -277,5 +301,66 @@ $maxBlockWidth: 400px;
             color: props.$body;
             font-size: 1rem;
         }
+    }
+}
+
+.finish-window {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    &__section {
+        &-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    &__container {
+        &-score {
+            display: flex;
+            justify-content: stretch;
+            width: 100%;
+        }
+
+        &-logic {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    &__score-container {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 15px;
+        border: 2px solid props.$purple;
+        border-bottom: 4px solid props.$purple;
+        background-color: props.$soLightGrey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__score-text {
+        font-size: 2rem;
+        font-weight: bold;
+        color: props.$body;
+    }
+
+    &__status-text {
+        font-family: 'Wadik';
+        color: props.$purple;
+        font-size: 2rem;
     }
 }

@@ -179,4 +179,142 @@
         object-fit: cover;
         min-width: 40px;
     }
+
+    &__response {
+        height: fit-content;
+
+        .your-offer__left-block {
+            display: flex;
+            gap: 1rem;
+            flex-grow: 2;
+        }
+
+        .your-offer__right-block {
+            justify-content: flex-end;
+        }
+    }
+
+    &__card {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+
+        &s {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: .5rem;
+        }
+    }
+
+    &__exchange {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.exchange-window {
+    padding-block: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 1;
+    gap: 2rem;
+
+    &__card-preview {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    &__section {
+        &-exchanged-card {
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        &-your-choice {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 1px;
+        }
+    }
+
+    &__logic-block {
+        background-color: rgba(props.$body, .8);
+        border-radius: 20px 20px 0 0;
+        backdrop-filter: blur(6px);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+        gap: .4rem;
+    }
+
+    &__exchange-desc-container {
+        width: 100%;
+        display: flex;
+    }
+
+    &__card-selection {
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+        gap: .5rem;
+    }
+}
+
+.exchange-list {
+    flex-grow: 1;
+
+    &__element {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    span {
+        font-size: 1rem;
+        color: white;
+        font-weight: 800;
+    }
+}
+
+
+@media screen and (max-width: 370px) {
+
+    .your-offer,
+    .other-order {
+        svg {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 330px) {
+
+    .your-offer,
+    .other-order {
+        svg {
+            height: 25px;
+        }
+
+        h4,
+        .light-button {
+            font-size: 1rem;
+        }
+    }
 }

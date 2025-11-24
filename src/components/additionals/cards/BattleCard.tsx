@@ -1,8 +1,9 @@
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard"
+import { IBattleCard } from "@/devs/store/BattleStore"
 
-const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelectionCardProps, 'setSelection'> & { setSelection?: (card: ICard | null) => void }) => {
+const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelectionCardProps, 'setSelection' | 'thisCard'> & { setSelection?: (card: IBattleCard | null) => void, thisCard: IBattleCard }) => {
 
     function SetStateOfCard() {
         if (setSelection)
@@ -11,8 +12,10 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
 
     return (
         <li
-            className={`card card-${thisCard.rang.toLocaleLowerCase()} 
-        ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}`}
+            className={`card card-${thisCard?.rang.toLocaleLowerCase()} 
+        ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}
+        ${thisCard.hp > 0 ? 'alive' : 'defeated'}
+        `}
 
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
@@ -20,11 +23,19 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
                     <Image height={140} width={60} quality={80} preload src={thisCard.src} alt={thisCard.src} className="card__preview" />
                 </div>
                 <div className="card__stats-container">
-                    {thisCard.options && Object.keys(thisCard.options).map((v, i) =>
-                        <div className="card__stat">
-                            <span className="card__stat-text">{thisCard.options![v].value}</span>
-                        </div>
-                    )}
+                    {thisCard.options &&
+                        <>
+                            <div className="card__stat">
+                                <span className="card__stat-text">{thisCard.hp}</span>
+                            </div>
+                            <div className="card__stat" >
+                                <span className="card__stat-text">{thisCard.options.rating}</span>
+                            </div>
+                            <div className="card__stat">
+                                <span className="card__stat-text">{thisCard.options.attribute}</span>
+                            </div>
+                        </>
+                    }
                 </div>
             </button>
         </li>

@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react"
 import { Plus } from "../../icons/Cards"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard";
+import { IBattleCard } from "@/devs/store/BattleStore";
 
-interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'selectedCard'>> {
+interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'selectedCard' | 'setSelection'>> {
     func?: () => void;
     deleteFunc?: () => void;
-    activeElemenet?: React.ReactNode
+    activeElemenet?: React.ReactNode,
+    setSelection?: (card: IBattleCard | null) => void,
 }
 
-const PreviewBattleCard = ({ func, deleteFunc, thisCard, setSelection, activeElemenet }: IPreviewCardProps) => {
+const PreviewBattleCard = ({ func, thisCard, activeElemenet }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {

@@ -1,101 +1,263 @@
 'use client'
 import { useCardsStore } from "@/devs/store/CardsStore"
-import PreviewBattleCard from "@/components/additionals/cards/PreviewBattleCard"
+import { IBattleCard, useBattleStore } from "@/devs/store/BattleStore"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import { Cloudly } from "@/components/icons/Weathers"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import { createPortal } from "react-dom"
 import usePortal from "@/devs/hooks/usePortal"
 import BattleCard from "@/components/additionals/cards/BattleCard"
-import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import useSelection from "@/devs/hooks/useSelection"
-import FlipCard from "@/components/additionals/cards/FlipCard"
+import BattleScene from "@/components/routes/battleField/BattleScene"
+import HealthBar from "@/components/routes/battleField/HealthBar"
+import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
+import OverBlackSpace from "@/components/additionals/OverBlackSpace"
+import { useRouter } from "next/navigation"
 
+export type TSelectedBattleCard = IBattleCard | null
+export type TSelectionCardsArr = [TSelectedBattleCard, TSelectedBattleCard, TSelectedBattleCard]
 
 const Fight = () => {
-    const cards = useCardsStore(state => state.allCards)
+    const battleCards = useCardsStore(state => state.battleCards)
+    const setCards = useBattleStore(state => state.setCards)
+    const rivalCards = useBattleStore(state => state.rivalBattleCards)
+    const userCards = useBattleStore(state => state.userBattleCards)
+    const battleState = useBattleStore(state => state.battleState)
+    const setBattleState = useBattleStore(state => state.setBattleState)
+
     const portalContainer = usePortal()
-    const [battleStart, setBattleStart] = useState(false)
+    const [defeatedCards, setDefeatedCards] = useState<IBattleCard[]>([])
+    const [selectedCard, setSelectedCard] = useSelection<IBattleCard>(false, '.fight__inventory');
+    const [selectionBattleCards, setSelectionBattleCards] = useState<TSelectionCardsArr>([null, null, null])
 
-    const [selectedCard, setSelectedCard] = useSelection<ICard>(false, '.fight__inventory');
-    const [selectionBattleCards, setSelectionBattleCards] = useState<[ICard | null, ICard | null, ICard | null]>([null, null, null])
+    const [selectionRatingPreBattle, setSelectionRatingPreBattle] = useState<(number | null)[]>([])
+    const [rivalRatingPreBattle, setRivalRatingPreBattle] = useState<(number | null)[]>([])
 
-    function SetBattleCardard(index: number) {
+    const [hps, setHps] = useState<{ rivalHP: number, yourHP: number }>({ rivalHP: 200, yourHP: 200 })
+
+    const setBattleCard = useCallback((index: number) => {
         if (selectedCard) {
             const battleCardsPreview = Object.create(selectionBattleCards)
             battleCardsPreview[index] = selectedCard
             setSelectionBattleCards(battleCardsPreview);
             setSelectedCard(null);
         }
-    }
+    }, [selectedCard])
+
+    useEffect(() => {
+        setCards('userBattleCards', userCards.filter(v => !selectionBattleCards.includes(v)))
+
+        selectionBattleCards.forEach((v) => {
+            if (v)
+                if (v!.hp <= 0) {
+                    setTimeout(() => {
+                        setDefeatedCards(prev => [...prev, v!])
+                        setSelectionBattleCards(prev => prev.map(val => val?.id === v!.id ? null : val) as TSelectionCardsArr);
+                    }, 2400)
+                }
+        })
+    }, [selectionBattleCards])
+
+    useEffect(() => {
+        setCards('userBattleCards', userCards.filter(v => !defeatedCards.includes(v!)))
+    }, [defeatedCards])
+
+    useEffect(() => {
+        rivalCards.forEach((v, i) => {
+            if (v)
+                if (v!.hp <= 0) {
+                    setTimeout(() => {
+                        const newRivalCards = rivalCards.map((val, index) => index === i ? null : val)
+                        setCards('rivalBattleCards', newRivalCards);
+                    }, 2400)
+                }
+        })
+    }, [rivalCards])
+
+    useEffect(() => {
+        setBattleState('waiting-battle')
+        setCards('userBattleCards', battleCards.map(v => ({ ...v, hp: v.options.rating })))
+    }, [])
+
+    useEffect(() => {
+        setHps(prev => ({
+            rivalHP: prev.rivalHP > 0 ? prev.rivalHP : 0,
+            yourHP: prev.yourHP > 0 ? prev.yourHP : 0
+        }))
+    }, [hps.rivalHP, hps.yourHP])
+
+    useEffect(() => {
+        switch (battleState) {
+            case 'battle':
+                setRivalRatingPreBattle(rivalCards.map((v) => v ? v.options.rating : null));
+                setSelectionRatingPreBattle(selectionBattleCards.map((v) => v ? v.options.rating : null))
+                let rDamage = 0;
+                let yDamage = 0;
+                setTimeout(() => {
+                    console.log('Battle')
+                    const newYourBattleCards = selectionBattleCards.map((v, i) => {
+                        const damagePrev = v ? rivalCards[i] ? (v!.options.rating - rivalCards[i]?.hp) > 0 ? (v!.options.rating - rivalCards[i]?.hp) : 0 : v!.options.rating : 0
+                        rDamage += damagePrev
+                        return v ? ({
+                            ...v, hp: rivalCards[i] ? v!.hp - (rivalCards[i]?.options.rating || 0) : v.hp,
+                            options: {
+                                attribute: v.options.attribute,
+                                rating: damagePrev
+                            }
+                        }) : null
+                    })
+                    const newRivalCards = rivalCards.map((v, i) => {
+                        const damagePrev = v ? selectionBattleCards[i] ? (v!.options.rating - selectionBattleCards[i]?.hp) > 0 ? (v!.options.rating - selectionBattleCards[i]?.hp) : 0 : v!.options.rating : 0
+                        yDamage += damagePrev
+                        return v ? ({
+                            ...v, hp: selectionBattleCards[i] ?
+                                v!.hp - (selectionBattleCards[i]?.options.rating || 0) : v.hp,
+                            options: {
+                                attribute: v.options.attribute,
+                                rating: damagePrev
+                            }
+                        }) : null
+                    })
+                    console.log(rDamage, yDamage)
+                    setCards('rivalBattleCards', newRivalCards);
+                    setSelectionBattleCards(newYourBattleCards as TSelectionCardsArr);
+                    setTimeout(() => {
+                        setHps(prev => ({
+                            rivalHP: prev.rivalHP - rDamage,
+                            yourHP: prev.yourHP - yDamage
+                        }))
+                        setTimeout(() => {
+                            setBattleState('waiting-battle')
+                        }, 300)
+                    }, 2000)
+                }, 1000)
+                break;
+            case 'waiting-battle':
+                setSelectionBattleCards(selectionBattleCards.map((v, i) => v ? ({
+                    ...v, options: {
+                        rating: selectionRatingPreBattle[i] ? selectionRatingPreBattle[i] : v.options.rating,
+                        attribute: v.options.attribute
+                    }
+                }) : null) as TSelectionCardsArr)
+                setCards('rivalBattleCards', rivalCards.map((v, i) => v ? ({
+                    ...v, options: {
+                        rating: rivalRatingPreBattle[i] ? rivalRatingPreBattle[i] : v.options.rating,
+                        attribute: v.options.attribute
+                    }
+                }) : null) as TSelectionCardsArr)
+                if (hps.rivalHP <= 0 || hps.yourHP <= 0) {
+                    setBattleState('finished')
+                }
+                break;
+        }
+    }, [battleState])
 
     return (
         <div className="fight">
             {portalContainer && createPortal(<FightHeader />, portalContainer)}
             <div className="fight__rival">
-                <HealthBar userName="CorpBros" health={100} additionalStyle="rival" />
+                <HealthBar userName="CorpBros" health={hps.rivalHP / 2} additionalStyle="rival" />
             </div>
             <div className="fight__battle-scene">
-                <div className="battle-scene">
-                    <div className="battle-scene__container battle-scene__container-battle">
-                        <div className="battle-scene__fight-container battle-scene__fight-container-rival">
-                            <ul className="battle-scene__cards-list">
-                                {new Array(3).fill(null).map((v, i) =>
-                                    <FlipCard state={battleStart ? 'no-flip' : 'flip'}
-                                        key={i}
-                                        element={
-                                            <BattleCard
-                                                thisCard={cards[i]} setSelection={undefined} selectedCard={null} />
-                                        }
-                                    />
-                                )}
-                            </ul>
-                        </div>
-                        <div className="battle-scene__fight-container battle-scene__fight-container-you">
-                            <ul className="battle-scene__cards-list">
-                                {new Array(3).fill(null).map((v, i) =>
-                                    <PreviewBattleCard
-                                        key={v + i}
-                                        thisCard={selectionBattleCards[i] || undefined}
-                                        func={() => SetBattleCardard(i)}
-                                        activeElemenet={selectionBattleCards[i] && <BattleCard
-                                            thisCard={selectionBattleCards[i]}
-                                            selectedCard={selectedCard}
-                                            setSelection={setSelectedCard}
-                                        />}
-                                    />
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="battle-scene__container battle-scene__container-manage">
-                        <LightButton title="Бой" additionStyle="green" func={() => setBattleStart(prev => !prev)} />
-                    </div>
-                </div>
+                <BattleScene
+                    battleState={battleState}
+                    rivalCards={rivalCards}
+                    selectionBattleCards={selectionBattleCards}
+                    setBattleCard={setBattleCard}
+                    selectedCard={selectedCard}
+                    setSelectedCard={setSelectedCard} />
             </div>
             <div className="fight__user-manager">
-                <HealthBar userName="MAtrix" health={100} additionalStyle="you" />
+                <HealthBar userName="MAtrix" health={hps.yourHP / 2} additionalStyle="you" />
                 <section className="fight__card-inventory">
                     <ul className="fight__inventory">
-                        {cards.slice(0, 6).filter(v => !selectionBattleCards.includes(v)).map((v, i) =>
+                        {userCards.map((v, i) =>
                             <BattleCard
-                                key={v?.id + i}
-                                thisCard={v}
+                                key={v!.id + i}
+                                thisCard={v!}
                                 selectedCard={selectedCard}
-                                setSelection={setSelectedCard}
+                                setSelection={(card: IBattleCard | null) => setSelectedCard(battleState === 'waiting-battle' ? card : null)}
                             />
                         )}
                     </ul>
                 </section>
             </div>
+            {battleState === 'finished' && <FinishWindow hps={hps} />}
         </div>
     )
 }
 
-interface IHealthBar {
-    userName: string,
-    health: number,
-    additionalStyle?: string,
+interface IFinishWindowProps {
+    hps: {
+        rivalHP: number,
+        yourHP: number
+    }
+}
+
+const FinishWindow = ({ hps }: IFinishWindowProps) => {
+    const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
+    const [winMode, setWinMode] = useState<'draw' | 'win' | 'loose' | 'no'>('no');
+    const router = useRouter();
+
+    useEffect(() => {
+        setWSTimer();
+        if (hps.rivalHP <= 0 && hps.yourHP <= 0) {
+            setWinMode('draw')
+            return
+        }
+
+        if (hps.rivalHP <= 0) {
+            setWinMode('win')
+            return
+        }
+        if (hps.yourHP <= 0) {
+            setWinMode('loose')
+            return
+        }
+
+    }, [])
+
+    const finishTitle = useMemo(() => ({
+        draw: 'Ничья',
+        win: 'Победа',
+        loose: 'Поражение',
+        no: ''
+    }), [winMode])
+
+    const finishScore = useMemo(() => ({
+        draw: 100,
+        win: 250,
+        loose: -140,
+        no: 0
+    }), [winMode])
+
+    return (
+        <OverBlackSpace additionStyle={ws}>
+            <div className="finish-window">
+                <div className="finish-window__body">
+                    <section className="finish-window__section finish-window__section-main">
+                        <div className="finish-window__container finish-window__container-status">
+                            <h2 className="finish-window__status-text">
+                                {finishTitle[winMode]}
+                            </h2>
+                        </div>
+                        <div className="finish-window__container finish-window__container-score">
+                            <div className="finish-window__score-container">
+                                <h2 className="finish-window__score-text">
+                                    {finishScore[winMode]}
+                                </h2>
+                            </div>
+                        </div>
+                    </section>
+                    <section className="finish-window__section">
+                        <div className="finish-window__container finish-window__container-logic">
+                            <LightButton title={"Выйти"} additionStyle="green" func={() => router.push('/')} />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </OverBlackSpace>
+    )
 }
 
 const WeatherElement = () => {
@@ -143,17 +305,5 @@ const FightHeader = () => {
     )
 }
 
-const HealthBar = ({ userName, health, additionalStyle }: IHealthBar) => {
-    return (
-        <section className={`health-bar ${additionalStyle}`}>
-            <div className="health-bar__user-logo-container">
-                <div className="health-bar__user-name-container">
-                    <span className="health-bar__user-name">{userName}</span>
-                </div>
-            </div>
-            <div className="health-bar__user-health-bar-container" />
-        </section>
-    )
-}
 
 export default Fight
