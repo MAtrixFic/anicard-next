@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import QueryProvider from "@/components/server/QueryProvider";
 
 import '@/styles/main.scss'
 import '@/styles/profile.scss'
@@ -14,6 +15,8 @@ import '@/styles/rating.scss'
 export const metadata: Metadata = {
     title: "Anicard",
     description: "Anime gacha game",
+    icons: {
+    },
 };
 
 export default function RootLayout({
@@ -24,7 +27,9 @@ export default function RootLayout({
     return (
         <html lang="ru">
             <body>
-                {children}
+                <QueryProvider>
+                    {children}
+                </QueryProvider>
             </body>
         </html>
     );

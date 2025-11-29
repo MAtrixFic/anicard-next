@@ -1,4 +1,19 @@
+'use client'
+
+import { GetTopUsers, TRating } from "@/components/server/comp/UserApi"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect } from "react"
+
 const Rating = () => {
+    const { data, isLoading } = useQuery({
+        queryKey: ['rating'],
+        queryFn: () => GetTopUsers()
+    })
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
+
     return (
         <div className="rating">
             <div className="rating__rb">
@@ -9,10 +24,9 @@ const Rating = () => {
                 </div>
                 <div className="rating__list-container">
                     <ul className="rating__list">
-                        <RatingElement numberId={1} username="MAtrix" score={2000} />
-                        <RatingElement numberId={2} username="JEk" score={1900} />
-                        <RatingElement numberId={3} username="GERM" score={1920} />
-                        <RatingElement numberId={4} username="FLASKE" score={1500} />
+                        {data && (data as TRating).top_users.map((v, i) =>
+                            <RatingElement numberId={i + 1} key={v.user_id} username={v.nickname} score={v.rating} />
+                        )}
                     </ul>
                 </div>
             </div>

@@ -585,6 +585,11 @@ body {
         gap: .4rem;
     }
 
+    &__filter-container {
+        display: flex;
+        justify-content: stretch;
+    }
+
     &__cards-list {
         padding-block: 1rem;
         display: flex;
@@ -598,9 +603,14 @@ body {
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
+        width: 100%;
 
         &.pd {
             padding-inline: 1rem;
+
+            &-no {
+                padding: unset;
+            }
         }
     }
 
@@ -977,6 +987,77 @@ body {
     &.purple {
         background-color: props.$purple;
         box-shadow: 0px 0px 17px -6px rgba(#521acdcf, 0.81) inset;
+    }
+}
+
+.auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+
+    &__form {
+        &-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            max-width: 450px;
+        }
+
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    &__label {
+        color: props.$purple;
+        font-size: 1.4rem;
+        font-weight: 600;
+        font-family: 'Wadik';
+        text-align: center;
+    }
+
+    &__top-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__input {
+        padding-inline: 1rem;
+        height: 54px;
+        border-radius: 15px;
+        border: 2px solid props.$purple;
+        background-color: props.$body;
+        color: props.$soLightGrey;
+        font-size: 1.2rem;
+        font-weight: 600;
+
+        &:focus {
+            outline: unset;
+        }
+    }
+
+    &__container {
+        &-nickname {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+    }
+
+    &__error {
+        color: props.$cuprum;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    &__bottom-block {
+        display: flex;
+        justify-content: center;
     }
 }
 

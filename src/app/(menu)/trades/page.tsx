@@ -12,6 +12,7 @@ import OverBlackSpace from "@/components/additionals/OverBlackSpace"
 import { useEffect, useState } from "react"
 import PreviewCard from "@/components/additionals/cards/PreviewCard"
 import { Exchange } from "@/components/icons/Cards"
+import Filter from "@/components/additionals/form/Filter"
 
 const Page = () => {
     const cards = useCardsStore(state => state.allCards);
@@ -32,8 +33,7 @@ const Page = () => {
             </div>
             <div className="trades__bottom">
                 <div className="trades__orders-filter-container">
-                    <Input />
-                    <SearchFilter />
+                    <Filter style="trades__form" submit={(data: any) => console.log(data)} />
                 </div>
                 <div className="trades__orders-list-container">
                     <ul className="trades__orders-list">
@@ -190,9 +190,8 @@ const ExchangeWindow = ({ exchangedCard, setExchangedCard }: IExchangeWindowProp
                 </section>
                 <section className="exchange-window__section exchange-window__section-your-choice">
                     <div className="cards-choise__list-container">
-                        <section className="cards-choise__filter pd">
-                            <Input />
-                            <SearchFilter />
+                        <section className="cards-choise__filter-container">
+                            <Filter style="cards-choise__filter pd-no" submit={(data: any) => console.log(data)} />
                         </section>
                         <section className="cards-choise__cards-list">
                             <ul className="cards-choise__list">

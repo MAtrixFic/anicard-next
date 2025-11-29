@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react"
 import { Cross } from "../icons/Cards";
+import { useFormContext } from "react-hook-form";
 
 export interface IBaseListProps {
-    title: string,
+    naming: { title: string, titleKey: string },
     values: { [key: string]: string },
-    defaultValue?: string
 }
 
-const BaseList = ({ title, values, defaultValue }: IBaseListProps) => {
-    const [activeValueKey, setActiveValueKey] = useState<string>(defaultValue ? defaultValue : '');
+const BaseList = ({ naming, values }: IBaseListProps) => {
+    const formContext = useFormContext();
+    const [activeValueKey, setActiveValueKey] = useState<string>(formContext.getValues(naming.titleKey));
     const [isOpened, setIsOpened] = useState<boolean>(false);
     const listRef = useRef<HTMLElement>(null);
 
@@ -26,26 +27,35 @@ const BaseList = ({ title, values, defaultValue }: IBaseListProps) => {
 
     return (
         <section ref={listRef} className={`base-list long ${activeValueKey}`}>
+            <select {...formContext.register(naming.titleKey)} name={naming.titleKey} style={{ display: 'none' }}>
+                {Object.keys(values).map((v, i) =>
+                    <option key={v + i} value={v}>{values[v]}</option>
+                )}
+            </select>
             <div className="base-list__title-container">
                 <h4 className="base-list__title">
-                    {title}
+                    {naming.title}
                 </h4>
             </div>
             <div className="base-list__selection-container">
                 <div className="base-list__container">
-                    <button disabled={!activeValueKey} className="base-list__btn" onClick={() => setActiveValueKey('')}>
+                    <button disabled={!activeValueKey} className="base-list__btn" onClick={() => {
+                        formContext.setValue(naming.titleKey, '')
+                        setActiveValueKey('')
+                    }}>
                         <Cross />
                     </button>
                 </div>
                 <div className="base-list__active-value-container">
                     <button className="base-list__active-value" onClick={() => setIsOpened(!isOpened)}>
-                        {values[activeValueKey as keyof typeof values]}
+                        {values[activeValueKey]}
                     </button>
                 </div>
                 {isOpened &&
                     <ul className="base-list__selection">
                         {Object.keys(values).map((v, i) =>
                             <li className="base-list__value" key={v + i} onClick={() => {
+                                formContext.setValue(naming.titleKey, v)
                                 setActiveValueKey(v)
                                 setIsOpened(false)
                             }}>
