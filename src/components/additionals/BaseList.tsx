@@ -39,7 +39,7 @@ const BaseList = ({ naming, values }: IBaseListProps) => {
             </div>
             <div className="base-list__selection-container">
                 <div className="base-list__container">
-                    <button disabled={!activeValueKey} className="base-list__btn" onClick={() => {
+                    <button type='button' disabled={!activeValueKey} className="base-list__btn" onClick={() => {
                         formContext.setValue(naming.titleKey, '')
                         setActiveValueKey('')
                     }}>
@@ -47,7 +47,7 @@ const BaseList = ({ naming, values }: IBaseListProps) => {
                     </button>
                 </div>
                 <div className="base-list__active-value-container">
-                    <button className="base-list__active-value" onClick={() => setIsOpened(!isOpened)}>
+                    <button type='button' className="base-list__active-value" onClick={() => setIsOpened(!isOpened)}>
                         {values[activeValueKey]}
                     </button>
                 </div>

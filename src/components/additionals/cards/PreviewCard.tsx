@@ -12,11 +12,11 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
-        setIsSetCard(thisCard?.src ? true : false)
+        setIsSetCard(thisCard?.photo ? true : false)
     }, [thisCard])
 
     return (
-        <li className={`card card-${thisCard?.rang?.toLocaleLowerCase() || ''}`} onClick={func}>
+        <li className={`card card-${thisCard?.rarity?.toLocaleLowerCase() || ''}`} onClick={func}>
             <button className="card__active-container">
                 {isSetCard ?
                     <div className="card__preview-container">
@@ -32,7 +32,7 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                                 height={140}
                                 width={100}
                                 quality={80}
-                                src={thisCard.src}
+                                src={thisCard.photo}
                                 alt="card-preivew"
                                 className="card__preview"
                             />}

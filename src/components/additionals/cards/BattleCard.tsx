@@ -12,7 +12,7 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
 
     return (
         <li
-            className={`card card-${thisCard?.rang.toLocaleLowerCase()} 
+            className={`card card-${thisCard?.rarity.toLocaleLowerCase()} 
         ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}
         ${thisCard.hp > 0 ? 'alive' : 'defeated'}
         `}
@@ -20,7 +20,7 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <Image height={140} width={60} quality={80} preload src={thisCard.src} alt={thisCard.src} className="card__preview" />
+                    <Image height={140} width={60} quality={80} preload src={thisCard.photo} alt={thisCard.photo} className="card__preview" />
                 </div>
                 <div className="card__stats-container">
                     {thisCard.options &&

@@ -2,21 +2,25 @@
 import BlurSpace from "@/components/additionals/BlurSpace"
 import FavoriteCardsList from "@/components/routes/profile/FavoriteCardsList"
 import UserAchivment from "@/components/routes/profile/UserAchivment"
-import { TUser } from "@/components/server/comp/UserApi"
-import { useUser } from "@/devs/hooks/server/useUser"
-import { Suspense, useMemo } from "react"
+import { IUser, useUserStore } from "@/devs/store/UserStore"
+import { Suspense, useEffect, useState } from "react"
 
 const Page = () => {
-    const { data, isError, isLoading } = useUser();
+    const getValues = useUserStore(state => state.getUserValues)
+    const [user, setUser] = useState<IUser>()
 
-    const userData = useMemo(() => {
-        return data ? (data as TUser).user : null
-    }, [data])
+    useEffect(() => {
+        getValues().then(data => setUser(data))
+    }, [])
+
+    useEffect(() => {
+        console.log(user)
+    }, [user])
 
     return (
         <div className="profile">
             <Suspense fallback={<div className="profile__loading">Загрузка...</div>}>
-                {userData &&
+                {user &&
                     <BlurSpace>
                         < section className="profile__user-label">
                             <div className="profile__logo-container">
@@ -25,12 +29,12 @@ const Page = () => {
                             <div className="profile__user-nick-id">
                                 <div className="profile__user-id-container">
                                     <span className="profile__user-id">
-                                        {`UId: ${userData.user_id}`}
+                                        {`UId: ${user.id}`}
                                     </span>
                                 </div>
                                 <div className="profile__user-nick-container">
                                     <h2 className="profile__user-nick">
-                                        {userData.nickname}
+                                        {user.nickname}
                                     </h2>
                                 </div>
                             </div>
@@ -38,7 +42,7 @@ const Page = () => {
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
                                 {[{ score: '21', title: 'Количество карт' },
-                                { score: userData.rating.toString(), title: 'Рейтин' }
+                                { score: user.rating.toString(), title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />
                                 )}

@@ -24,7 +24,7 @@ export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
         <div className="banner">
             <div className="banner__view-block">
                 <div className="banner__view-container">
-                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className={`banner__view card-${card?.rang.toLocaleLowerCase()}`} />
+                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className={`banner__view card-${card?.rarity.toLocaleLowerCase()}`} />
                 </div>
                 <div className="banner__name-container">
                     <span className="banner__name">

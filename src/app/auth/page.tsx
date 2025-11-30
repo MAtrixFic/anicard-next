@@ -2,12 +2,15 @@
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { CreateUser } from "@/components/server/comp/UserApi";
 import LightButton from "@/components/additionals/buttons/LightButton";
+import { useRouter } from "next/navigation";
 
 
 const AuthPage = () => {
+    const router = useRouter();
+
     async function SendAuth(data: any) {
         const res = await CreateUser(data.nickname)
-        console.log((window as any).Telegram.WebApp)
+        if (res) router.replace('/')
         console.log(res)
     }
 

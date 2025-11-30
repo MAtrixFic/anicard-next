@@ -14,7 +14,7 @@ const PreviewBattleCard = ({ func, thisCard, activeElemenet }: IPreviewCardProps
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
-        setIsSetCard(thisCard?.src ? true : false)
+        setIsSetCard(thisCard?.photo ? true : false)
     }, [thisCard])
 
     return (

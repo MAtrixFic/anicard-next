@@ -1,8 +1,6 @@
 'use client'
 import LightButton from "@/components/additionals/buttons/LightButton"
 import Image from "next/image"
-import SearchFilter from "@/components/routes/profile/SearchFilter"
-import Input from "@/components/additionals/Input"
 import { CardDesctiption, ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { useCardsStore } from "@/devs/store/CardsStore"
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
@@ -26,8 +24,8 @@ const Page = () => {
                         <span className="trades__list-title">Твой список предложений:</span>
                     </div>
                     <ul className="trades__your-offers-list">
-                        <YourOffer cardInfo={cards[1]} />
-                        <YourOfferResponse cardInfo={cards[0]} cardInfoClient={cards[4]} />
+                        {/* <YourOffer cardInfo={cards[1]} /> */}
+                        {/* <YourOfferResponse cardInfo={cards[0]} cardInfoClient={cards[4]} /> */}
                     </ul>
                 </div>
             </div>
@@ -61,13 +59,13 @@ const OtherOrder = ({ cardInfo, openExchange }: IOtherOrderProps) => {
     return (
         <li className="other-order">
             <div className="other-order__left-block">
-                <Image src={cardInfo.src} className="other-order__preview-img" alt="order-img" height={100} width={100} />
+                <Image src={cardInfo.photo} className="other-order__preview-img" alt="order-img" height={100} width={100} />
             </div>
             <div className="other-order__right-block">
                 <div className="other-order__info-block">
                     <div className="other-order__title-container">
                         <h4 className="other-order__title">
-                            {cardInfo.name}
+                            {cardInfo.character}
                         </h4>
                     </div>
                 </div>
@@ -87,13 +85,13 @@ const YourOffer = ({ cardInfo }: IYourOfferProps) => {
     return (
         <div className="your-offer">
             <div className="your-offer__left-block">
-                <Image className="your-offer__preview-img" src={cardInfo.src} height={40} width={40} quality={60} preload alt="offer-img" />
+                <Image className="your-offer__preview-img" src={cardInfo.photo} height={40} width={40} quality={60} preload alt="offer-img" />
             </div>
             <div className="your-offer__right-block">
                 <div className="your-offer__info-block">
                     <div className="your-offer__title-container">
                         <h4 className="your-offer__title">
-                            {cardInfo.name}
+                            {cardInfo.character}
                         </h4>
                     </div>
                 </div>
@@ -116,15 +114,15 @@ const YourOfferResponse = ({ cardInfo, cardInfoClient }: IYourOfferResponseProps
             <div className="your-offer__left-block">
                 <div className="your-offer__cards">
                     <div className="your-offer__card">
-                        <Image className="your-offer__preview-img" src={cardInfo.src} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <Image className="your-offer__preview-img" src={cardInfo.photo} height={40} width={40} quality={60} preload alt="offer-img" />
                         <h4 className="your-offer__title">
-                            {cardInfo.name}
+                            {cardInfo.character}
                         </h4>
                     </div>
                     <div className="your-offer__card">
-                        <Image className="your-offer__preview-img" src={cardInfoClient.src} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <Image className="your-offer__preview-img" src={cardInfoClient.photo} height={40} width={40} quality={60} preload alt="offer-img" />
                         <h4 className="your-offer__title">
-                            {cardInfoClient.name}
+                            {cardInfoClient.character}
                         </h4>
                     </div>
                 </div>
@@ -178,12 +176,12 @@ const ExchangeWindow = ({ exchangedCard, setExchangedCard }: IExchangeWindowProp
                     </div>
                     <div className="exchange-window__exchange-desc-container">
                         <ul className="exchange-list">
-                            <ExchangeElement value={exchangedCard.name} />
-                            {Object.keys(exchangedCard.options).map((v) =>
+                            <ExchangeElement value={exchangedCard.character} />
+                            {Object.keys(exchangedCard).map((v) =>
                                 <ExchangeElement
                                     key={v}
                                     title={optionKeys[v as keyof typeof optionKeys]}
-                                    value={(exchangedCard.options[v as keyof typeof exchangedCard.options]).toString()} />
+                                    value={(exchangedCard[v as keyof typeof exchangedCard]).toString()} />
                             )}
                         </ul>
                     </div>
@@ -208,10 +206,10 @@ const ExchangeWindow = ({ exchangedCard, setExchangedCard }: IExchangeWindowProp
                     </div>
                     <div className="exchange-window__logic-block">
                         {selectedCard && <div className="exchange-window__card-selection">
-                            <CardDesctiption
-                                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
-                                name={selectedCard?.name}
-                            />
+                            {/* <CardDesctiption
+                                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rarity }] : []}
+                                name={selectedCard?.character}
+                            /> */}
                             <LightButton title='Обменять' additionStyle="green" func={setMarketWindowVisibility} />
                         </div>}
                         <LightButton title='Выйти' additionStyle="purple" func={ExitExchangeWindow} />

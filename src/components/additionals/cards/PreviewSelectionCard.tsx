@@ -15,11 +15,11 @@ const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard }: IPreview
     }
 
     return (
-        <li className={`card card-${thisCard.rang.toLocaleLowerCase()} ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}`}
+        <li className={`card card-${thisCard.rarity.toLocaleLowerCase()} ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}`}
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <Image height={140} width={60} quality={80} preload src={thisCard.src} alt={thisCard.src} className="card__preview" />
+                    <Image height={140} width={60} quality={80} src={`https://obviously-vocal-seagull.cloudpub.ru${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
                 </div>
             </button>
         </li>

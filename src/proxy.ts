@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { GetUser, TUser } from "./components/server/comp/UserApi";
+import { GetUser, IUserResponse } from "./components/server/comp/UserApi";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export const proxy = async (req: NextRequest) => {
@@ -34,7 +34,7 @@ export const proxy = async (req: NextRequest) => {
                     const user = await GetUser(neededUserIdQuery)
                     if (user) {
                         cookieStore.set('isAuth', JSON.stringify(true), { httpOnly: true })
-                        cookieStore.set('isAdmin', JSON.stringify((user as TUser).isAdmin), { httpOnly: true })
+                        cookieStore.set('isAdmin', JSON.stringify((user as IUserResponse).isAdmin), { httpOnly: true })
                         return true
                     }
                     else return false

@@ -2,12 +2,13 @@ export interface IPurpleButtonProps {
     title: React.ReactNode,
     func?: () => void;
     additionStyle?: string,
-    active?: boolean
+    active?: boolean,
+    submit?: boolean
 }
 
-const PurpleButton = ({ title, func, additionStyle, active = true }: IPurpleButtonProps) => {
+const PurpleButton = ({ title, func, additionStyle, active = true, submit = false }: IPurpleButtonProps) => {
     return (
-        <button disabled={!active} onClick={func} className={`purple-button ${additionStyle}`}>
+        <button type={submit ? 'submit' : 'button'} disabled={!active} onClick={func} className={`purple-button ${additionStyle}`}>
             {title}
         </button>
     )

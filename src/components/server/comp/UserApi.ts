@@ -2,8 +2,11 @@
 import FetchMG from "../fetches/config"
 import { CookieGet } from "../CookieManager"
 
-export type TUser = {
-    ok: boolean,
+export interface IResponse {
+    ok: boolean
+}
+
+export interface IUserResponse extends IResponse {
     user: TUserData,
     isAdmin: boolean
 }
@@ -16,29 +19,28 @@ export type TUserData = {
     rating: number
 }
 
-export type TRating = {
-    ok: boolean,
+export interface IRatingResponse extends IResponse {
     top_users: TUserData[]
 }
 
 export async function CreateUser(nickname: string) {
     try {
         const userId = await CookieGet('userId')
-        const statusCode = await FetchMG.POST('auth', {
-            user_id: (Number)(userId!.value),
+        console.log(nickname, userId?.value)
+        const statusCode = await FetchMG.POST('user', {
+            user_id: Number(userId!.value),
             nickname: nickname
         })
         console.log(statusCode.data)
-        return (statusCode.data)
+        return true
     }
     catch (error) {
-        const errorData = (error as { respose: { data: any } }).respose.data
-        console.log(errorData)
-        return (errorData)
+        console.log(error)
+        return false
     }
 }
 
-export async function GetUser(userId: string): Promise<TUser | boolean> {
+export async function GetUser(userId: string): Promise<IUserResponse | boolean> {
     try {
         const res = await FetchMG.GET(`user/${userId}`)
         console.log(res.data)
@@ -50,7 +52,7 @@ export async function GetUser(userId: string): Promise<TUser | boolean> {
     }
 }
 
-export async function GetTopUsers(): Promise<TRating | boolean> {
+export async function GetTopUsers(): Promise<IRatingResponse | boolean> {
     try {
         const res = await FetchMG.GET(`rating/top`)
         console.log(res.data)

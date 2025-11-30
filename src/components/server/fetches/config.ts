@@ -15,7 +15,7 @@ class FetchMG {
     }
 
     public static async POST(endpoint: string, params?: any) {
-        return await FetchMG.api.post(endpoint, { params });
+        return await FetchMG.api.post(endpoint, params);
     }
 }
 

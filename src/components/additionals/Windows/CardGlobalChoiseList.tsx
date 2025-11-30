@@ -8,13 +8,17 @@ import SearchFilter from '../../routes/profile/SearchFilter'
 import { useCardsStore, type ICardStore } from '../../../devs/store/CardsStore'
 import useSelection from '@/devs/hooks/useSelection'
 import { createPortal } from 'react-dom'
+import Filter from '../form/Filter'
+import { useCards } from '@/devs/hooks/server/useCards'
 
-export interface ICard extends IShortCardInfo { src: string, id: number }
+export interface ICard extends IShortCardInfo { photo: string, id: number }
 export interface IShortCardInfo {
-    desc?: string,
-    name: string,
-    rang: 'A' | 'S' | 'C' | 'B' | 'D',
-    options: { rating: number, attribute: string }
+    universe: string,
+    rating: number,
+    character: string,
+    rarity: 'A' | 'S' | 'C' | 'B' | 'D',
+    attribute: string,
+    category: string
 }
 
 interface ICardGlobalChoiseList {
@@ -24,6 +28,7 @@ interface ICardGlobalChoiseList {
 }
 
 const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICardGlobalChoiseList) => {
+    const { } = useCards();
     const cards = useCardsStore(state => state.allCards)
     const GetCards = useCardsStore(state => state.GetCards)
     const favoridsPreview = useRef<ICard[]>(GetCards(cardsType))
@@ -51,8 +56,8 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     return (
         <div className="cards-choise">
             {selectedCard && createPortal(<CardDesctiption
-                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rang }] : []}
-                name={selectedCard?.name}
+                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rarity }] : []}
+                name={selectedCard?.character}
             />, document.querySelector('.desc-panel')!)}
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
@@ -68,10 +73,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </ul>
             </div>
             <div className="cards-choise__list-container">
-                <section className="cards-choise__filter">
-                    <Input />
-                    <SearchFilter />
-                </section>
+                <Filter style='cards-choise__filter' submit={() => console.log('filter')} />
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
                         {cards.filter((v) => !favoriteCards.map(fv => fv?.id).includes(v.id))
@@ -90,16 +92,16 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     )
 }
 
-export const CardDesctiption = ({ name, opts }: { name?: string, opts?: { key: string, value: string }[] }) => {
+export const CardDesctiption = (card: ICard) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, isSelected] = useState(false);
 
     useEffect(() => {
-        if (name) {
+        if (card) {
             isSelected(true)
         }
         else isSelected(false);
-    }, [name])
+    }, [card.id])
 
     return (
         <section className="card-desc__description">
@@ -108,7 +110,7 @@ export const CardDesctiption = ({ name, opts }: { name?: string, opts?: { key: s
                     <>
                         <div className="card-desc__top-container">
                             <h4 className='card-desc__name'>
-                                {name}
+                                {card.character ? card.character : 'Карта'}
                             </h4>
                         </div>
                         <div className="card-desc__top-container">
@@ -124,13 +126,13 @@ export const CardDesctiption = ({ name, opts }: { name?: string, opts?: { key: s
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {opts && opts?.map((v, i) =>
-                        <li className="card-desc__desc-element" key={i + v.key}>
+                    {Object.keys(card).filter(v => !['created', 'updated', 'photo'].includes(v)).map((v, i) =>
+                        <li className="card-desc__desc-element" key={i}>
                             <span className='card-desc__desc-key'>
-                                {`${v.key}:`}
+                                {`${v}:`}
                             </span>
                             <span className='card-desc__desc-value'>
-                                {v.value}
+                                {card[v as keyof ICard]}
                             </span>
                         </li>
                     )}
