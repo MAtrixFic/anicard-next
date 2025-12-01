@@ -1,7 +1,7 @@
 'use client'
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { CookieGet } from "@/components/server/CookieManager"
-import { AddCard } from "@/components/server/comp/AdminApi"
+import { AddCard, DeleteCard } from "@/components/server/comp/AdminApi"
 
 export const useAdmin = () => {
     async function AddAdminCard(card: Omit<ICard, 'id'> & { price: number }) {
@@ -14,7 +14,11 @@ export const useAdmin = () => {
 
 
     async function RemoveAdminCard(cardId: string) {
-
+        const userId = await CookieGet('userId')
+        if (userId) {
+            return await DeleteCard(userId.value, cardId);
+        }
+        else return false
     }
 
     return { AddAdminCard, RemoveAdminCard }

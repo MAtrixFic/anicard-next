@@ -32,6 +32,13 @@ export async function AddCard(userId: string, card: Omit<ICard, 'id'> & { price:
 }
 
 
-export async function DeleteCard() {
-
+export async function DeleteCard(userId: string, cardId: string) {
+    try {
+        await FetchMG.DELETE(`admin/cards/${cardId}?user_id=${userId}`,)
+        return true
+    }
+    catch (error) {
+        console.log(error)
+        return false
+    }
 }

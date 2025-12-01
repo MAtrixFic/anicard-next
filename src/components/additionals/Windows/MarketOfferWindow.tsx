@@ -20,8 +20,7 @@ const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProp
                         </div>
                         <div className="market-offer__info-list-container">
                             <CardDesctiption
-                                opts={card ? [{ key: 'Ранг', value: card.rarity }] : []}
-                                name={card?.character}
+                                {...card}
                             />
                         </div>
                         {/* <div className="market-offer__container market-offer__container-inp">
@@ -29,7 +28,7 @@ const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProp
                         </div> */}
                     </div>
                     <div className="market-offer__container market-offer__container-distance">
-                        <LightButton title='Выйти' additionStyle="purple" func={func}/>
+                        <LightButton title='Выйти' additionStyle="purple" func={func} />
                         <LightButton title='Выставить' additionStyle="green" />
                     </div>
                 </div>

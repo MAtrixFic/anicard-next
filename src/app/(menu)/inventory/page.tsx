@@ -11,6 +11,7 @@ import AdminPanel from "@/components/routes/inventory/AdminPanel"
 import { useEffect, useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
+import { useAdmin } from "@/devs/hooks/server/useAdmin"
 
 const Page = () => {
     const { user } = useUser()
@@ -22,15 +23,11 @@ const Page = () => {
 
     useEffect(() => {
         if (user)
-            getCards(user?.isAdmin ? 'adminCards' : 'allCards').then(data => {
+            getCards(user.isAdmin ? 'adminCards' : 'allCards').then(data => {
                 setInventoryCards(data);
                 setPreviewCards(data);
             })
-    }, [user])
-
-    useEffect(() => {
-        console.log(inventoryCards)
-    }, [inventoryCards])
+    }, [user?.id || 0])
 
 
     // function SetFilter(data: { search: string, rarity: string, attribute: string, category: string }) {
@@ -76,6 +73,7 @@ interface ICardPanelProps {
 export const CardPanel = ({ isAdmin, selectedCard }: ICardPanelProps) => {
     const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
     const [marketWindowStatus, _, setMarketWindowVisibility] = useOverWindowStatus(400);
+    const { RemoveAdminCard } = useAdmin()
     return (
         <>
             {isAdmin &&
@@ -85,8 +83,8 @@ export const CardPanel = ({ isAdmin, selectedCard }: ICardPanelProps) => {
             {
                 selectedCard && <div className="desc-panel">
                     {isAdmin && <div className="desc-panel__admin-logic">
-                        <LightButton title='Редактировать' additionStyle="green" func={() => setAdminMode('edit')} />
-                        <LightButton title='Удалить' additionStyle="purple" func={() => { }} />
+                        {/* <LightButton title='Редактировать' additionStyle="green" func={() => setAdminMode('edit')} /> */}
+                        <LightButton title='Удалить' additionStyle="purple" func={() => RemoveAdminCard(selectedCard.id.toString())} />
                     </div>}
                     <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />
                     {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&

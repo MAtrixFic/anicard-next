@@ -13,3 +13,37 @@ export async function GetInventoryCards(userId: string, cardType?: TCardType): P
         return { ok: false, cards: [] }
     }
 }
+
+export async function SetInventoryCards(userId: string, cardType: TCardType, cardsId: number[]): Promise<boolean> {
+    try {
+        const res = await FetchMG.POST(`inventory/${userId}/${cardType}`, {
+            cards_id: cardsId
+        })
+        console.log(res.data)
+        return true
+    }
+    catch (error) {
+        return false
+    }
+}
+
+export async function DeleteInventoryCards(userId: string, cardType: TCardType): Promise<boolean> {
+    try {
+        const res = await FetchMG.DELETE(`inventory/${userId}/${cardType}`)
+        return true
+    }
+    catch (error) {
+        return false
+    }
+}
+
+export async function AddTwistCard(userId: string, cardType: Omit<TCardType, 'favorite'>) {
+    try {
+        const res = await FetchMG.POST(`card/${userId}/${cardType}`)
+        console.log(res.data)
+        return res.data.card
+    }
+    catch (error) {
+        return false
+    }
+}

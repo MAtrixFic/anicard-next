@@ -12,12 +12,12 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
-        setIsSetCard(thisCard?.photo ? true : false)
+        setIsSetCard(thisCard?.id ? true : false)
     }, [thisCard])
 
     return (
         <li className={`card card-${thisCard?.rarity?.toLocaleLowerCase() || ''}`} onClick={func}>
-            <button className="card__active-container">
+            <div className="card__active-container">
                 {isSetCard ?
                     <div className="card__preview-container">
                         {deleteFunc && <div className="card__delete-container">
@@ -32,7 +32,7 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                                 height={140}
                                 width={100}
                                 quality={80}
-                                src={thisCard.photo}
+                                src={`https://obviously-vocal-seagull.cloudpub.ru${thisCard.photo}`}
                                 alt="card-preivew"
                                 className="card__preview"
                             />}
@@ -42,7 +42,7 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                         <Plus />
                     </div>
                 }
-            </button>
+            </div>
         </li>
     )
 }

@@ -3,13 +3,12 @@ import PreviewCard from '../cards/PreviewCard'
 import PreviewSelectionCard from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
 import { Arrow } from '../../icons/Cards'
-import Input from '../Input'
-import SearchFilter from '../../routes/profile/SearchFilter'
-import { useCardsStore, type ICardStore } from '../../../devs/store/CardsStore'
+import { type ICardStore } from '../../../devs/store/CardsStore'
 import useSelection from '@/devs/hooks/useSelection'
 import { createPortal } from 'react-dom'
 import Filter from '../form/Filter'
 import { useCards } from '@/devs/hooks/server/useCards'
+import { useUser } from '@/devs/hooks/server/useUser'
 
 export interface ICard extends IShortCardInfo { photo: string, id: number }
 export interface IShortCardInfo {
@@ -23,52 +22,71 @@ export interface IShortCardInfo {
 
 interface ICardGlobalChoiseList {
     choisenCardsNumber: number,
-    cardsRef: RefObject<ICard[]>,
+    cardsRef: RefObject<(ICard | null)[]>,
     cardsType: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>
 }
 
 const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICardGlobalChoiseList) => {
-    const { } = useCards();
-    const cards = useCardsStore(state => state.allCards)
-    const GetCards = useCardsStore(state => state.GetCards)
-    const favoridsPreview = useRef<ICard[]>(GetCards(cardsType))
-
-    const [favoriteCards, setFavoriteCards] = useState<(ICard | null)[]>(favoridsPreview.current.length > 0 ? favoridsPreview.current : new Array(choisenCardsNumber).fill(null))
+    const { user } = useUser();
+    const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelection<ICard>()
+
+    const [activeCards, setActiveCards] = useState<(ICard | null)[]>(new Array(choisenCardsNumber).fill(null))
+    const [inventoryCards, setInventoryCards] = useState<ICard[]>([]);
+    const [previewCards, setPreviewCards] = useState<ICard[]>([])
+
+    useEffect(() => {
+        if (user) {
+            getCards('allCards').then(data => {
+                const cards = data.length > 0 ? data.filter(v => cardsType !== 'favorite' ? v.category === cardsType : true) : []
+                setInventoryCards(cards);
+                setPreviewCards(cards);
+            })
+        }
+    }, [user?.id || 0])
+
+    useEffect(() => {
+        getCards(cardsType).then(data => {
+            let activeCells = activeCards
+            if (data.length > 0) {
+                activeCells = activeCells.map((v, i) => data[i] ? data[i] : v)
+                setActiveCards(activeCells)
+            }
+        })
+    }, [])
 
     function SetFavoriteCard(index: number) {
         if (selectedCard) {
-            const previewFavoriteCards = Object.create(favoriteCards)
+            const previewFavoriteCards = new Array(...activeCards)
             previewFavoriteCards[index] = selectedCard
-            setFavoriteCards(previewFavoriteCards);
+            setActiveCards(previewFavoriteCards);
             cardsRef.current = previewFavoriteCards
+            console.log(previewFavoriteCards)
             setSelectedCard(null);
         }
     }
 
     function DeleteFavoriteCard(index: number) {
-        const previewFavoriteCards = Object.create(favoriteCards)
+        const previewFavoriteCards = new Array(...activeCards)
         previewFavoriteCards[index] = null
-        setFavoriteCards(previewFavoriteCards);
+        setActiveCards(previewFavoriteCards);
+        console.log(previewFavoriteCards)
         cardsRef.current = previewFavoriteCards
     }
 
     return (
         <div className="cards-choise">
             {selectedCard && createPortal(<CardDesctiption
-                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rarity }] : []}
-                name={selectedCard?.character}
+                {...selectedCard}
             />, document.querySelector('.desc-panel')!)}
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
                     {new Array(choisenCardsNumber).fill(0).map((_, i) =>
                         <PreviewCard key={i}
-                            thisCard={favoriteCards[i]!}
+                            thisCard={activeCards[i]!}
                             func={() => SetFavoriteCard(i)}
                             deleteFunc={() => DeleteFavoriteCard(i)}
-                        // setSelection={() => setSelectedCard()}
                         />
-
                     )}
                 </ul>
             </div>
@@ -76,10 +94,10 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 <Filter style='cards-choise__filter' submit={() => console.log('filter')} />
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
-                        {cards.filter((v) => !favoriteCards.map(fv => fv?.id).includes(v.id))
-                            .map((v, i) =>
+                        {inventoryCards.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
+                            .map((v) =>
                                 <PreviewSelectionCard
-                                    key={v?.id + i}
+                                    key={v?.id}
                                     setSelection={setSelectedCard}
                                     selectedCard={selectedCard}
                                     thisCard={v}
@@ -126,7 +144,7 @@ export const CardDesctiption = (card: ICard) => {
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {Object.keys(card).filter(v => !['created', 'updated', 'photo'].includes(v)).map((v, i) =>
+                    {Object.keys(card).filter(v => !['created', 'updated', 'photo', 'id'].includes(v)).map((v, i) =>
                         <li className="card-desc__desc-element" key={i}>
                             <span className='card-desc__desc-key'>
                                 {`${v}:`}

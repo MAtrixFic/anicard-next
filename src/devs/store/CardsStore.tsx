@@ -3,6 +3,7 @@ import type { ICard } from "../../components/additionals/Windows/CardGlobalChois
 import { GetCards } from "@/components/server/comp/AdminApi";
 import { GetInventoryCards } from "@/components/server/comp/InventoryApi";
 import { CookieGet } from "@/components/server/CookieManager";
+import { useUserStore } from "./UserStore";
 
 export interface ICardStore {
     favorite: ICard[];

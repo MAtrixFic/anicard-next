@@ -17,6 +17,10 @@ class FetchMG {
     public static async POST(endpoint: string, params?: any) {
         return await FetchMG.api.post(endpoint, params);
     }
+
+    public static async DELETE(endpoint: string, params?: any) {
+        return await FetchMG.api.delete(endpoint, params);
+    }
 }
 
 export default FetchMG

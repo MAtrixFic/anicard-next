@@ -68,7 +68,7 @@ const AdminPanel = ({ setAdminMode, adminMode, card, method }: IAdminPanelProps)
                         </div>
                         <div className="admin-panel__card-options">
                             <div className="admin-panel__input-container">
-                                <AdminInput title="Название" titleKey="ср" />
+                                <AdminInput title="Название" titleKey="character" />
                             </div>
                             <div className="admin-panel__input-container">
                                 <AdminInput title="Цена" type="number" titleKey="price" />
@@ -80,7 +80,7 @@ const AdminPanel = ({ setAdminMode, adminMode, card, method }: IAdminPanelProps)
                             </div>
                             <BaseList naming={{ title: 'Вселенная', titleKey: 'universe' }} values={{ 'base': 'Нормисная' }} />
                             <BaseList naming={{ title: 'Редкость', titleKey: 'rarity' }} values={{ 'S': 'S', 'A': 'A', 'A+': 'A+' }} />
-                            <BaseList naming={{ title: 'Категория', titleKey: 'category' }} values={{ 'battle': 'battle', 'favorite': 'favorite' }} />
+                            <BaseList naming={{ title: 'Категория', titleKey: 'category' }} values={{ 'battle': 'battle', 'special': 'special' }} />
                             <BaseList naming={{ title: 'Атрибут', titleKey: 'attribute' }} values={{ 'Сила': 'Сила', 'Ловкость': 'Ловкость', 'Интеллекс': 'Интеллекс' }} />
                         </div>
                     </section>

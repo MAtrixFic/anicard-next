@@ -29,12 +29,12 @@ const Page = () => {
                             <div className="profile__user-nick-id">
                                 <div className="profile__user-id-container">
                                     <span className="profile__user-id">
-                                        {`UId: ${user.id}`}
+                                        {`UId: ${user?.id}`}
                                     </span>
                                 </div>
                                 <div className="profile__user-nick-container">
                                     <h2 className="profile__user-nick">
-                                        {user.nickname}
+                                        {user?.nickname}
                                     </h2>
                                 </div>
                             </div>
@@ -42,13 +42,13 @@ const Page = () => {
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
                                 {[{ score: '21', title: 'Количество карт' },
-                                { score: user.rating.toString(), title: 'Рейтин' }
+                                { score: user.rating.toString() || '100', title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />
                                 )}
                             </ul>
                         </section>
-                        <FavoriteCardsList />
+                        <FavoriteCardsList user={user} />
                     </BlurSpace>}
             </Suspense>
         </div >
