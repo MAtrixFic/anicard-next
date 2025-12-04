@@ -4,12 +4,15 @@ import { ICard } from "./CardGlobalChoiseList";
 import LightButton from "../buttons/LightButton";
 import { CardDesctiption } from "./CardGlobalChoiseList";
 import PreviewCard from "../cards/PreviewCard";
+import { useTrades } from "@/devs/hooks/server/useTrades";
 
 interface IMarketOfferWindowProps extends IForeignWindowProps {
     card: ICard;
 }
 
 const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProps) => {
+    const { createTrade } = useTrades()
+
     return (
         <OverBlackSpace additionStyle={additionStyle}>
             <div className="market-offer">
@@ -29,7 +32,7 @@ const MarketOfferWindow = ({ func, additionStyle, card }: IMarketOfferWindowProp
                     </div>
                     <div className="market-offer__container market-offer__container-distance">
                         <LightButton title='Выйти' additionStyle="purple" func={func} />
-                        <LightButton title='Выставить' additionStyle="green" />
+                        <LightButton title='Выставить' additionStyle="green" func={() => createTrade(card.id)} />
                     </div>
                 </div>
             </div>

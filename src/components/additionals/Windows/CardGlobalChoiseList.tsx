@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from 'react'
+import { useEffect, useState, type RefObject } from 'react'
 import PreviewCard from '../cards/PreviewCard'
 import PreviewSelectionCard from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
@@ -8,16 +8,17 @@ import useSelection from '@/devs/hooks/useSelection'
 import { createPortal } from 'react-dom'
 import Filter from '../form/Filter'
 import { useCards } from '@/devs/hooks/server/useCards'
-import { useUser } from '@/devs/hooks/server/useUser'
+import { useQuery } from '@tanstack/react-query'
 
 export interface ICard extends IShortCardInfo { photo: string, id: number }
 export interface IShortCardInfo {
     universe: string,
     rating: number,
-    character: string,
+    character?: string,
     rarity: 'A' | 'S' | 'C' | 'B' | 'D',
     attribute: string,
-    category: string
+    category: string,
+    price?: string
 }
 
 interface ICardGlobalChoiseList {
@@ -27,23 +28,21 @@ interface ICardGlobalChoiseList {
 }
 
 const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICardGlobalChoiseList) => {
-    const { user } = useUser();
-    const { getCards } = useCards()
+    const { getCards, setCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelection<ICard>()
+    const [updated, setUpdated] = useState<boolean>(false)
 
     const [activeCards, setActiveCards] = useState<(ICard | null)[]>(new Array(choisenCardsNumber).fill(null))
-    const [inventoryCards, setInventoryCards] = useState<ICard[]>([]);
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
-    useEffect(() => {
-        if (user) {
-            getCards('allCards').then(data => {
-                const cards = data.length > 0 ? data.filter(v => cardsType !== 'favorite' ? v.category === cardsType : true) : []
-                setInventoryCards(cards);
-                setPreviewCards(cards);
-            })
-        }
-    }, [user?.id || 0])
+    const query = useQuery({
+        queryKey: ['all-cards'],
+        queryFn: async () => getCards('allCards').then(data => {
+            const cards = data.length > 0 ? data.filter(v => cardsType !== 'favorite' ? v.category === cardsType : true) : []
+            setPreviewCards(cards);
+            return cards
+        }),
+    })
 
     useEffect(() => {
         getCards(cardsType).then(data => {
@@ -52,6 +51,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 activeCells = activeCells.map((v, i) => data[i] ? data[i] : v)
                 setActiveCards(activeCells)
             }
+            setUpdated(true)
         })
     }, [])
 
@@ -62,6 +62,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
             setActiveCards(previewFavoriteCards);
             cardsRef.current = previewFavoriteCards
             console.log(previewFavoriteCards)
+            setCards(cardsType, previewFavoriteCards.filter(v => v !== null));
             setSelectedCard(null);
         }
     }
@@ -71,6 +72,8 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
         previewFavoriteCards[index] = null
         setActiveCards(previewFavoriteCards);
         console.log(previewFavoriteCards)
+        console.log(activeCards.filter(v => v !== null))
+        setCards(cardsType, previewFavoriteCards.filter(v => v !== null));
         cardsRef.current = previewFavoriteCards
     }
 
@@ -94,7 +97,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 <Filter style='cards-choise__filter' submit={() => console.log('filter')} />
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
-                        {inventoryCards.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
+                        {query.data && updated && query.data.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
                             .map((v) =>
                                 <PreviewSelectionCard
                                     key={v?.id}

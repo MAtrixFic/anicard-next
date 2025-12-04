@@ -1060,6 +1060,59 @@ body {
     }
 }
 
+.message-controller {
+    &__list {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        gap: .4rem;
+        overflow: hidden;
+    }
+
+    z-index: 500;
+    padding: .4rem;
+    position: absolute;
+    top: 4rem;
+    right: 0;
+}
+
+.message {
+    background-color: white;
+    border-right: 2px solid white;
+    border-radius: 15px 0 0 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .4rem;
+    max-width: 300px;
+    width: fit-content;
+    animation: show-message .3s forwards;
+
+    &.message {
+        border-color: props.$green;
+    }
+
+    &.error {
+        border-color: props.$cuprum;
+    }
+
+    &__text {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: props.$body;
+    }
+}
+
+@keyframes show-message {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0%);
+    }
+}
+
 @media screen and (max-width: 340px) {
     .light-button {
         font-size: 1rem;

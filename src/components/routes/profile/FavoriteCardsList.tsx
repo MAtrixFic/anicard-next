@@ -9,19 +9,21 @@ import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import { IUser } from "@/devs/store/UserStore"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { useQuery } from "@tanstack/react-query"
 
 const FavoriteCardsList = ({ user }: { user?: IUser }) => {
     const [listMode, setListMode, setListWindowMode] = useOverWindowStatus(400);
     const [cardsSelection, setCardsSelection, setCardsWindowMode] = useOverWindowStatus(400);
     const { getCards } = useCards();
-    const [favoriteCards, setFavoriteCards] = useState<ICard[]>([])
 
-    useEffect(() => {
-        if (user)
-            getCards('favorite').then(data => {
-                setFavoriteCards(data);
-            })
-    }, [user?.id || 0])
+
+
+    const { data } = useQuery({
+        queryKey: ['favorite'],
+        queryFn: async () => getCards('favorite').then(data => {
+            return data
+        })
+    })
 
     return (
         <section className="profile__user-favorite-cards">
@@ -29,16 +31,16 @@ const FavoriteCardsList = ({ user }: { user?: IUser }) => {
                 <PurpleButton title="Избранные карты" additionStyle="tiny" func={setListWindowMode} />
             </div>
             <div className="pofile__favorite-cards-list-container">
-                {['to-hide', 'opened'].includes(listMode) &&
-                    <ul className={`cards-list ${listMode}`}>
-                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[0]} />
-                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[1]} />
-                        <PreviewCard func={setCardsWindowMode} thisCard={favoriteCards[2]} />
+                {['to-hide', 'opened'].includes(listMode) && data &&
+                    < ul className={`cards-list ${listMode}`}>
+                        <PreviewCard func={setCardsWindowMode} thisCard={data[0]} />
+                        <PreviewCard func={setCardsWindowMode} thisCard={data[1]} />
+                        <PreviewCard func={setCardsWindowMode} thisCard={data[2]} />
                     </ul>
                 }
                 {['to-hide', 'opened'].includes(cardsSelection) && createPortal(<FavoriteCardsSelectionPlace user={user} additionStyle={cardsSelection} func={setCardsWindowMode} />, document.body)}
             </div>
-        </section>
+        </section >
     )
 }
 

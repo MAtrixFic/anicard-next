@@ -2,16 +2,14 @@ import { create } from "zustand";
 import type { ICard } from "../../components/additionals/Windows/CardGlobalChoiseList";
 import { GetCards } from "@/components/server/comp/AdminApi";
 import { GetInventoryCards } from "@/components/server/comp/InventoryApi";
-import { CookieGet } from "@/components/server/CookieManager";
-import { useUserStore } from "./UserStore";
 
 export interface ICardStore {
     favorite: ICard[];
     battle: ICard[];
     allCards: ICard[];
     adminCards: ICard[];
-    SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => void;
-    GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>) => Promise<ICard[]>;
+    SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[], userId: string) => void;
+    GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, userId: string) => Promise<ICard[]>;
 }
 
 const useCardsStore = create<ICardStore>((set, get) => ({
@@ -23,23 +21,21 @@ const useCardsStore = create<ICardStore>((set, get) => ({
         ...state,
         [key]: cards
     })),
-    GetCards: async (key) => {
+    GetCards: async (key, userId) => {
         if (get()[key].length <= 0) {
             if (key === 'adminCards') {
-                const userId = await CookieGet('userId')
                 if (userId) {
-                    const data = await GetCards(userId.value)
+                    const data = await GetCards(userId)
                     if (data.ok) {
-                        get().SetCards(key, data.cards);
+                        get().SetCards(key, data.cards, userId);
                     }
                 }
             }
             else {
-                const userId = await CookieGet('userId')
                 if (userId) {
-                    const data = await GetInventoryCards(userId.value, key === 'allCards' ? undefined : key)
+                    const data = await GetInventoryCards(userId, key === 'allCards' ? undefined : key)
                     if (data.ok) {
-                        get().SetCards(key, data.cards);
+                        get().SetCards(key, data.cards, userId);
                     }
                 }
             }

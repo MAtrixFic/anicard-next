@@ -1,6 +1,6 @@
 export interface IPurpleButtonProps {
     title: React.ReactNode,
-    func?: () => void;
+    func?: () => void | Promise<void> | any;
     additionStyle?: string,
     active?: boolean,
     submit?: boolean

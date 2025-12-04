@@ -17,7 +17,7 @@ const Header = () => {
                 <div className="header__left-container">
                     <button className="header__btn header__btn-back"
                         disabled={pathname === '/'}
-                        onClick={() => router.back()}>
+                        onClick={() => router.replace('/')}>
                         <Back />
                     </button>
                 </div>

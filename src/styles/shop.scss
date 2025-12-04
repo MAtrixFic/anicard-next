@@ -135,7 +135,7 @@
     }
 
     &__view {
-        object-fit: cover;
+        object-fit: scale-down;
         height: 120px;
         border-radius: 15px;
         overflow: hidden;

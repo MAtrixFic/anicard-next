@@ -22,6 +22,30 @@
         // border-bottom-width: 4px;
     }
 
+    &__your-filter {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    &__your-f-element {
+        padding: .4rem .6rem;
+        background-color: props.$body;
+        border: 1px solid props.$purple;
+        border-radius: 100px;
+
+        &.active {
+            border-width: 2px;
+        }
+
+        button {
+            font-size: 1rem;
+            font-weight: 600;
+            color: props.$soLightGrey;
+        }
+    }
+
     &__bottom {
         border-radius: 20px;
         display: flex;
@@ -167,6 +191,26 @@
 
 .your-offer {
     height: 60px;
+
+    &.offer,
+    &.accepted {
+        .your-offer__left-block {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .your-offer__cards {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .your-offer__right-block {
+            display: none;
+        }
+    }
 
     &__right-block {
         flex-direction: row;

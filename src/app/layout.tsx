@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import QueryProvider from "@/components/server/QueryProvider";
+import MessageController from "@/components/additionals/messages/MessageController";
 
 import '@/styles/main.scss'
 import '@/styles/profile.scss'
@@ -29,6 +30,7 @@ export default function RootLayout({
             <body>
                 <QueryProvider>
                     {children}
+                    <MessageController />
                 </QueryProvider>
             </body>
         </html>

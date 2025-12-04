@@ -1,12 +1,11 @@
 'use client'
 
 import { useRef } from 'react'
-import { useCardsStore } from '../../../devs/store/CardsStore'
 import OverBlackSpace, { type IOverBlackSpaceProps } from '../../additionals/OverBlackSpace'
 import PurpleButton from '../../additionals/buttons/PurpleButton'
 import CardGlobalChoiseList, { type ICard } from '../../additionals/Windows/CardGlobalChoiseList'
 import { IUser } from '@/devs/store/UserStore'
-import { DeleteInventoryCards, SetInventoryCards } from '@/components/server/comp/InventoryApi'
+import { useCards } from '@/devs/hooks/server/useCards'
 
 export interface IForeignWindowProps extends IFavoriteCardsSelectionPlaceProps {
 }
@@ -18,23 +17,11 @@ interface IFavoriteCardsSelectionPlaceProps extends IOverBlackSpaceProps {
 
 const FavoriteCardsSelectionPlace = ({ func, additionStyle, user }: IFavoriteCardsSelectionPlaceProps) => {
     const favoriteCard = useRef<(ICard | null)[]>([]);
+    const { SetInvCards } = useCards()
 
     async function StoreFavoriteCards() {
-        if (favoriteCard.current.length > 0) {
-            console.log('length')
-            const userId = user?.id
-            console.log(user?.id)
-            if (userId) {
-                console.log('favorite send', favoriteCard.current.filter(v => v !== null).map(v => v.id))
-                const deleteRes = await DeleteInventoryCards(userId.toString(), 'favorite')
-                if (deleteRes) {
-                    const setRes = await SetInventoryCards(userId.toString(), 'favorite', favoriteCard.current.filter(v => v !== null).map(v => v.id))
-                    console.log(setRes)
-                }
-                else
-                    console.log('dont update cards')
-            }
-        }
+        const cards = favoriteCard.current.filter(v => v !== null)
+        SetInvCards('favorite', cards.length > 0 ? cards.map(v => v!.id) : [])
         func()
     }
 

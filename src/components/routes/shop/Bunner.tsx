@@ -1,11 +1,14 @@
+'use client'
+
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
+import { useShop } from "@/devs/hooks/server/useShop";
 
-interface IBannerProps {
+export interface IBannerProps {
     src: string,
     name: string,
-    card?: IShortCardInfo
+    card?: IShortCardInfo & { id: number }
     cost: {
         type: "rubles" | "pay-game-money" | "game-money";
         count: number
@@ -20,6 +23,13 @@ interface IBannerSectionProps {
 
 
 export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
+    const { TryBuyCards, TryBuyKeys } = useShop()
+
+    function BuyFunc() {
+        if (card) TryBuyCards(card.id)
+        else TryBuyKeys(count)
+    }
+
     return (
         <div className="banner">
             <div className="banner__view-block">
@@ -36,7 +46,7 @@ export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="green tiny" />
+                <LightButton title={'Купить'} additionStyle="green tiny" func={BuyFunc} />
             </div>
         </div>
     )
