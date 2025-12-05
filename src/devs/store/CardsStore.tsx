@@ -8,6 +8,7 @@ export interface ICardStore {
     battle: ICard[];
     allCards: ICard[];
     adminCards: ICard[];
+    special: ICard[],
     SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[], userId: string) => void;
     GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, userId: string) => Promise<ICard[]>;
 }
@@ -17,30 +18,29 @@ const useCardsStore = create<ICardStore>((set, get) => ({
     battle: [],
     allCards: [],
     adminCards: [],
+    special: [],
     SetCards: (key, cards) => set((state) => ({
         ...state,
         [key]: cards
     })),
     GetCards: async (key, userId) => {
-        if (get()[key].length <= 0) {
-            if (key === 'adminCards') {
-                if (userId) {
-                    const data = await GetCards(userId)
-                    if (data.ok) {
-                        get().SetCards(key, data.cards, userId);
-                    }
+        if (key === 'adminCards') {
+            if (userId) {
+                const data = await GetCards(userId)
+                if (data.ok) {
+                    get().SetCards(key, data.cards, userId);
                 }
             }
-            else {
-                if (userId) {
-                    const data = await GetInventoryCards(userId, key === 'allCards' ? undefined : key)
-                    if (data.ok) {
-                        get().SetCards(key, data.cards, userId);
-                    }
-                }
-            }
-
         }
+        else {
+            if (userId) {
+                const data = await GetInventoryCards(userId, key === 'allCards' ? undefined : key)
+                if (data.ok) {
+                    get().SetCards(key, data.cards, userId);
+                }
+            }
+        }
+
         return get()[key]
     }
 }));

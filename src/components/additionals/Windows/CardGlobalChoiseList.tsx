@@ -36,7 +36,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
     const query = useQuery({
-        queryKey: ['all-cards'],
+        queryKey: ['all-cards', cardsType],
         queryFn: async () => getCards('allCards').then(data => {
             const cards = data.length > 0 ? data.filter(v => cardsType !== 'favorite' ? v.category === cardsType : true) : []
             setPreviewCards(cards);
@@ -147,16 +147,18 @@ export const CardDesctiption = (card: ICard) => {
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {Object.keys(card).filter(v => !['created', 'updated', 'photo', 'id'].includes(v)).map((v, i) =>
-                        <li className="card-desc__desc-element" key={i}>
-                            <span className='card-desc__desc-key'>
-                                {`${v}:`}
-                            </span>
-                            <span className='card-desc__desc-value'>
-                                {card[v as keyof ICard]}
-                            </span>
-                        </li>
-                    )}
+                    {Object.keys(card).filter(v => !['created', 'updated', 'photo', 'id'].includes(v))
+                        .filter(v => card[v as keyof ICard] ? card[v as keyof ICard]!.toString().length > 0 : false)
+                        .map((v, i) =>
+                            <li className="card-desc__desc-element" key={i}>
+                                <span className='card-desc__desc-key'>
+                                    {`${v}:`}
+                                </span>
+                                <span className='card-desc__desc-value'>
+                                    {card[v as keyof ICard]}
+                                </span>
+                            </li>
+                        )}
                 </ul>
             </div>
             }

@@ -20,7 +20,7 @@ export async function GetCards(userId: string): Promise<IAdminCardsResponse> {
 }
 
 
-export async function AddCard(userId: string, card: Omit<ICard, 'id'> & { price: number }) {
+export async function AddCard(userId: string, card: Partial<Omit<ICard, 'id'>>) {
     try {
         await FetchMG.POST(`admin/cards?user_id=${userId}`, card)
         return true

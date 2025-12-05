@@ -15,7 +15,7 @@ export default function RootLayout({
                     <Link href={'/inventory/battle-cards'} className="inventory__link">
                         Боевые
                     </Link>
-                    <Link href={'#'} className="inventory__link">
+                    <Link href={'/inventory/special-cards'} className="inventory__link">
                         Специальные
                     </Link>
                 </nav>

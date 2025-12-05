@@ -1,23 +1,21 @@
-import BaseList from "@/components/additionals/BaseList";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import OverBlackSpace from "@/components/additionals/OverBlackSpace";
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
 import { ThrowFormContext } from "@/app/auth/page";
 import { useAdmin } from "@/devs/hooks/server/useAdmin";
+import FormCardFields from "@/components/additionals/form/FormCardFields";
 
 interface IAdminPanelProps {
     setAdminMode: (mode: 'no' | 'edit' | 'create') => void,
-    adminMode: 'no' | 'edit' | 'create',
+    // adminMode: 'no' | 'edit' | 'create',
     card?: ICard,
-    method?: <T>(args?: T) => void;
 }
 
 
-const AdminPanel = ({ setAdminMode, adminMode, card, method }: IAdminPanelProps) => {
+const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
     const { AddAdminCard, RemoveAdminCard } = useAdmin()
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
     const [loadedCard, setLoadedCard] = useState<string | null>(null);
@@ -33,27 +31,15 @@ const AdminPanel = ({ setAdminMode, adminMode, card, method }: IAdminPanelProps)
         }, 300);
     }
 
-    async function DoMethod(data: Omit<ICard, 'photo' | 'id'> & { price: number }) {
-        console.log(JSON.stringify({
-            photo: loadedCard || '',
-            price: data.price,
-            character: data.character,
-            attribute: data.attribute,
-            category: data.category,
-            rarity: data.rarity,
-            rating: data.rating,
-            universe: data.universe
-        }))
-        const res = await AddAdminCard({
-            photo: loadedCard || '',
-            price: data.price,
-            character: data.character,
-            attribute: data.attribute,
-            category: data.category,
-            rarity: data.rarity,
-            rating: data.rating,
-            universe: data.universe
-        })
+    async function DoMethod(data: ICard & { price: number }) {
+        const filteredResult = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) =>
+                value ? value.toString().length > 0 && value.toString() !== '0' : false
+            )
+        );
+        console.log(filteredResult)
+        // console.log(filteredKeys, loadedCard)
+        const res = await AddAdminCard(Object.assign(filteredResult, { photo: loadedCard || undefined }))
         console.log(res)
         CloseAdminPanel()
     }
@@ -61,52 +47,52 @@ const AdminPanel = ({ setAdminMode, adminMode, card, method }: IAdminPanelProps)
     return (
         <OverBlackSpace additionStyle={ws}>
             <div className="admin-panel" >
-                <ThrowFormContext formDefault={{ name: '', rarity: '', category: '', rating: '' }} submit={DoMethod} style="admin-panel__form">
-                    <section className="admin-panel__section admin-panel__section-card">
-                        <div className="admin-panel__card-preview">
-                            <ImageUploader preloadImage={card?.photo} loadBase64Image={setLoadedCard} />
-                        </div>
-                        <div className="admin-panel__card-options">
-                            <div className="admin-panel__input-container">
-                                <AdminInput title="Название" titleKey="character" />
-                            </div>
-                            <div className="admin-panel__input-container">
-                                <AdminInput title="Цена" type="number" titleKey="price" />
-                            </div>
-                            <div className="admin-panel__input-container">
-                            </div>
-                            <div className="admin-panel__input-container">
-                                <AdminInput title="Рейтинг" type="number" titleKey="rating" />
-                            </div>
-                            <BaseList naming={{ title: 'Вселенная', titleKey: 'universe' }} values={{ 'base': 'Нормисная' }} />
-                            <BaseList naming={{ title: 'Редкость', titleKey: 'rarity' }} values={{ 'S': 'S', 'A': 'A', 'A+': 'A+' }} />
-                            <BaseList naming={{ title: 'Категория', titleKey: 'category' }} values={{ 'battle': 'battle', 'special': 'special' }} />
-                            <BaseList naming={{ title: 'Атрибут', titleKey: 'attribute' }} values={{ 'Сила': 'Сила', 'Ловкость': 'Ловкость', 'Интеллекс': 'Интеллекс' }} />
-                        </div>
-                    </section>
-                    <section className="admin-panel__section admin-panel__section-logic">
-                        <LightButton title="Сохранить" additionStyle="green" submit={true} />
-                        <LightButton title="Отмена" additionStyle="purple" func={CloseAdminPanel} />
-                    </section>
+                <ThrowFormContext formDefault=
+                    {{
+                        character: '',
+                        rarity: '',
+                        category: 'battle',
+                        rating: '',
+                        price: '0',
+                        universe: '',
+                        attribute: ''
+                    }}
+                    submit={DoMethod}
+                    style="admin-panel__form"
+                >
+                    <AdminInputs
+                        setLoadedCardImg={setLoadedCard}
+                        closeAdminPanel={CloseAdminPanel}
+                        card={card}
+                    />
                 </ThrowFormContext>
             </div>
         </OverBlackSpace >
     )
 }
 
-interface IAdminInputProps {
-    titleKey: string,
-    title: string,
-    type?: 'number' | 'text'
+interface IAdminInputsProps {
+    setLoadedCardImg: (img: string | null) => void,
+    closeAdminPanel: () => void,
+    card?: ICard
 }
 
-const AdminInput = ({ title, titleKey, type = 'text' }: IAdminInputProps) => {
-    const formContext = useFormContext();
+const AdminInputs = ({ setLoadedCardImg, closeAdminPanel, card }: IAdminInputsProps) => {
     return (
-        <label className="admin-panel__input-label">
-            {title}
-            <input {...formContext.register(titleKey)} type={type} className="admin-panel__input-inpt" />
-        </label>
+        <>
+            <section className="admin-panel__section admin-panel__section-card">
+                <div className="admin-panel__card-preview">
+                    <ImageUploader preloadImage={card?.photo} loadBase64Image={setLoadedCardImg} />
+                </div>
+                <div className="admin-panel__card-options">
+                    <FormCardFields />
+                </div>
+            </section>
+            <section className="admin-panel__section admin-panel__section-logic">
+                <LightButton title="Сохранить" additionStyle="green" submit={true} />
+                <LightButton title="Отмена" additionStyle="purple" submit={false} func={closeAdminPanel} />
+            </section>
+        </>
     )
 }
 

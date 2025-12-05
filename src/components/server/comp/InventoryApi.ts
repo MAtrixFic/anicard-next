@@ -2,7 +2,7 @@
 import FetchMG from "../fetches/config"
 import { IAdminCardsResponse } from "./AdminApi"
 
-export type TCardType = 'favorite' | 'battle'
+export type TCardType = 'favorite' | 'battle' | 'special'
 export async function GetInventoryCards(userId: string, cardType?: TCardType): Promise<IAdminCardsResponse> {
     try {
         const res = await FetchMG.GET(`inventory/${userId}${cardType ? `/${cardType}` : ''}`)
@@ -16,6 +16,7 @@ export async function GetInventoryCards(userId: string, cardType?: TCardType): P
 
 export async function SetInventoryCards(userId: string, cardType: TCardType, cardsId: number[]): Promise<boolean> {
     try {
+        console.log(`inventory/${userId}/${cardType}`, cardsId)
         const res = await FetchMG.POST(`inventory/${userId}/${cardType}`, {
             cards_id: cardsId
         })

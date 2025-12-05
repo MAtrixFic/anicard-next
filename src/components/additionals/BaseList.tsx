@@ -5,9 +5,10 @@ import { useFormContext } from "react-hook-form";
 export interface IBaseListProps {
     naming: { title: string, titleKey: string },
     values: { [key: string]: string },
+    onChange?: () => void
 }
 
-const BaseList = ({ naming, values }: IBaseListProps) => {
+const BaseList = ({ naming, values, onChange }: IBaseListProps) => {
     const formContext = useFormContext();
     const [activeValueKey, setActiveValueKey] = useState<string>(formContext.getValues(naming.titleKey));
     const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -58,6 +59,7 @@ const BaseList = ({ naming, values }: IBaseListProps) => {
                                 formContext.setValue(naming.titleKey, v)
                                 setActiveValueKey(v)
                                 setIsOpened(false)
+                                if (onChange) onChange()
                             }}>
                                 <span className="base-list__value-title">
                                     {values[v]}

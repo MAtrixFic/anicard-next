@@ -13,21 +13,24 @@ import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useAdmin } from "@/devs/hooks/server/useAdmin"
 
+type TCardsMode = 'adminCards' | 'allCards'
+
 const Page = () => {
     const { user } = useUser()
     const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
+    const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')
 
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
     useEffect(() => {
         if (user)
-            getCards(user.isAdmin ? 'adminCards' : 'allCards').then(data => {
+            getCards(cardsMode).then(data => {
                 setInventoryCards(data);
                 setPreviewCards(data);
             })
-    }, [user?.id || 0])
+    }, [user?.id || 0, cardsMode])
 
 
     // function SetFilter(data: { search: string, rarity: string, attribute: string, category: string }) {
@@ -50,7 +53,7 @@ const Page = () => {
                     <ul className="cards-choise__list">
                         {inventoryCards.map((v, i) =>
                             <PreviewSelectionCard
-                                key={v?.id + i}
+                                key={v?.id}
                                 setSelection={setSelectedCard}
                                 selectedCard={selectedCard}
                                 thisCard={v}
@@ -59,7 +62,7 @@ const Page = () => {
                     </ul>
                 </section>
             </div>
-            <CardPanel isAdmin={user?.isAdmin} selectedCard={selectedCard} />
+            <CardPanel isAdmin={user?.isAdmin} setCardsMode={setCardsMode} cardsMode={cardsMode} selectedCard={selectedCard} />
         </div >
     )
 }
@@ -67,10 +70,11 @@ const Page = () => {
 interface ICardPanelProps {
     isAdmin?: boolean,
     selectedCard: ICard | null,
-
+    setCardsMode: (mode: TCardsMode) => void,
+    cardsMode: TCardsMode
 }
 
-export const CardPanel = ({ isAdmin, selectedCard }: ICardPanelProps) => {
+export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: ICardPanelProps) => {
     const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
     const [marketWindowStatus, _, setMarketWindowVisibility] = useOverWindowStatus(400);
     const { RemoveAdminCard } = useAdmin()
@@ -79,11 +83,11 @@ export const CardPanel = ({ isAdmin, selectedCard }: ICardPanelProps) => {
             {isAdmin &&
                 < div className="admin-logic">
                     <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="green" />
+                    <LightButton title={cardsMode} additionStyle="green" func={() => setCardsMode(cardsMode === 'adminCards' ? 'allCards' : 'adminCards')} />
                 </div>}
             {
                 selectedCard && <div className="desc-panel">
                     {isAdmin && <div className="desc-panel__admin-logic">
-                        {/* <LightButton title='Редактировать' additionStyle="green" func={() => setAdminMode('edit')} /> */}
                         <LightButton title='Удалить' additionStyle="purple" func={() => RemoveAdminCard(selectedCard.id.toString())} />
                     </div>}
                     <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />
@@ -95,7 +99,7 @@ export const CardPanel = ({ isAdmin, selectedCard }: ICardPanelProps) => {
                     />
                 </div>
             }
-            {['edit', 'create'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} adminMode={adminMode} card={selectedCard as ICard} />}
+            {['edit', 'create'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} card={selectedCard as ICard} />}
         </>
     )
 }

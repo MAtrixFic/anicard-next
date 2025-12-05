@@ -4,7 +4,7 @@ import { CookieGet } from "@/components/server/CookieManager"
 import { AddCard, DeleteCard } from "@/components/server/comp/AdminApi"
 
 export const useAdmin = () => {
-    async function AddAdminCard(card: Omit<ICard, 'id'> & { price: number }) {
+    async function AddAdminCard(card: Partial<Omit<ICard, 'id'>>) {
         const userId = await CookieGet('userId')
         if (userId) {
             return await AddCard(userId.value, card);

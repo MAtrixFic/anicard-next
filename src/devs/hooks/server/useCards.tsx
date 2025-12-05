@@ -14,16 +14,16 @@ export const useCards = () => {
     const GetCards = useCardsStore(state => state.GetCards)
 
     async function SetInvCards(cardsType: TCardType, cardsId: number[]) {
-        if (cardsId.length > 0) {
-            const deleteRes = await DeleteInventoryCards(await getValue('id'), cardsType)
-            if (deleteRes) {
-                const setRes = await SetInventoryCards(await getValue('id'), cardsType, cardsId)
-                if (setRes) addMessage({ text: 'Карты обновлены', type: 'message' })
-                else addMessage({ text: 'Ошибка обновления', type: 'error' })
-            }
+        const id = await getValue('id')
+        const deleteRes = await DeleteInventoryCards(id, cardsType)
+        if (deleteRes) {
+            const setRes = await SetInventoryCards(id, cardsType, cardsId)
+            if (setRes) addMessage({ text: 'Карты обновлены', type: 'message' })
             else addMessage({ text: 'Ошибка обновления', type: 'error' })
-            queryClient.invalidateQueries({ queryKey: [cardsType] })
         }
+
+        else addMessage({ text: 'Ошибка удаления', type: 'error' })
+        queryClient.invalidateQueries({ queryKey: [cardsType] })
 
     }
 
