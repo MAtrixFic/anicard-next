@@ -5,28 +5,46 @@ import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
+import useBattleSocket from "@/devs/hooks/server/useBattleSocket"
+import { EventTypes } from "@/devs/store/BattleSocketStore"
 
 const UserSearch = () => {
     const [windowStatus, setWindowsStatus, UpdateWindowStatusInTime] = useOverWindowStatus(400);
     const [fightIsFound, setFightIsFound] = useState<boolean>(false)
+    const { ws, CreateWS, CloseWS } = useBattleSocket()
     const router = useRouter()
 
     useEffect(() => {
         if (windowStatus === 'opened') {
-            const threadAnim = setTimeout(() => {
-                setFightIsFound(true);
-                setTimeout(()=> {
-                    router.push('/battles/1/prepare')
-                }, 2000)
-            }, 4000)
-
-            return () => clearTimeout(threadAnim);
+            CreateWS()
         }
-        else{
+        else {
             setFightIsFound(false)
         }
 
     }, [windowStatus])
+
+    useEffect(() => {
+        if (ws)
+            ws.onopen = () => {
+                ws.onmessage = (event) => {
+                    const jsonEvent = JSON.parse(event.data)
+                    console.log(jsonEvent)
+                    if (jsonEvent.type === EventTypes.BATTLE_STARTED) {
+                        setFightIsFound(true)
+                        setTimeout(() => {
+                            router.push('/battles/1/prepare')
+                        }, 2000)
+                    }
+                }
+            }
+        else return
+    }, [ws])
+
+    function CloseSearch() {
+        CloseWS()
+        UpdateWindowStatusInTime()
+    }
 
     return (
         <>
@@ -42,7 +60,7 @@ const UserSearch = () => {
                             </div>
                         </div>
                         <div className="user-search__container user-search__container-cancel">
-                            <LightButton title="Отмена" func={UpdateWindowStatusInTime} additionStyle="purple" />
+                            <LightButton title="Отмена" func={CloseSearch} additionStyle="purple" />
                         </div>
                     </div>
                 </div>, document.body)

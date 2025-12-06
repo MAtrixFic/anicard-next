@@ -82,15 +82,15 @@ export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: IC
         <>
             {isAdmin &&
                 < div className="admin-logic">
-                    <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="green" />
+                    {['adminCards'].includes(cardsMode) && <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="green" />}
                     <LightButton title={cardsMode} additionStyle="green" func={() => setCardsMode(cardsMode === 'adminCards' ? 'allCards' : 'adminCards')} />
                 </div>}
             {
                 selectedCard && <div className="desc-panel">
-                    {isAdmin && <div className="desc-panel__admin-logic">
+                    {isAdmin && ['adminCards'].includes(cardsMode) && <div className="desc-panel__admin-logic">
                         <LightButton title='Удалить' additionStyle="purple" func={() => RemoveAdminCard(selectedCard.id.toString())} />
                     </div>}
-                    <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />
+                    {['allCards'].includes(cardsMode) && <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />}
                     {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&
                         createPortal(<MarketOfferWindow card={selectedCard} func={setMarketWindowVisibility} additionStyle={marketWindowStatus} />, document.body)
                     }

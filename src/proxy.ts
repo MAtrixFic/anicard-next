@@ -4,14 +4,13 @@ import { cookies } from "next/headers";
 import { GetUser, IUserResponse } from "./components/server/comp/UserApi";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-import { CookieSet } from "./components/server/CookieManager";
-
 export const proxy = async (req: NextRequest) => {
     console.log('Enter to proxy')
     // await CookieSet('isAdmin', true)
     // await CookieSet('isAuth', true)
     // await CookieSet('userId', '1853332193')
     // return NextResponse.next()
+
     if (!req.url.includes('auth')) {
         const cookieStore = await cookies();
         if (cookieStore.has('isAuth')) {
