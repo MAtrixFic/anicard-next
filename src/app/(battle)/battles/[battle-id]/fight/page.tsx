@@ -1,6 +1,5 @@
 'use client'
-import { useCardsStore } from "@/devs/store/CardsStore"
-import { IBattleCard, useBattleStore } from "@/devs/store/BattleStore"
+import { IBattleCard } from "@/devs/store/BattleStore"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import { Cloudly } from "@/components/icons/Weathers"
 import { useEffect, useState, useRef, useCallback, useMemo } from "react"
@@ -13,27 +12,34 @@ import HealthBar from "@/components/routes/battleField/HealthBar"
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import OverBlackSpace from "@/components/additionals/OverBlackSpace"
 import { useRouter } from "next/navigation"
+import useBattleSocket from "@/devs/hooks/server/useBattleSocket"
+import { EventTypes } from "@/devs/store/BattleSocketStore"
+import { TCardRarity } from "@/components/additionals/Windows/CardGlobalChoiseList"
 
 export type TSelectedBattleCard = IBattleCard | null
 export type TSelectionCardsArr = [TSelectedBattleCard, TSelectedBattleCard, TSelectedBattleCard]
 
+interface IBatteResCard {
+    attribute: string,
+    damage: number,
+    health: number,
+    id: number,
+    max_health: number
+    photo: string,
+    rarity: TCardRarity,
+}
+
 const Fight = () => {
-    const battleCards = useCardsStore(state => state.battleCards)
-    const setCards = useBattleStore(state => state.setCards)
-    const rivalCards = useBattleStore(state => state.rivalBattleCards)
-    const userCards = useBattleStore(state => state.userBattleCards)
-    const battleState = useBattleStore(state => state.battleState)
-    const setBattleState = useBattleStore(state => state.setBattleState)
+    const { ws, players } = useBattleSocket()
 
     const portalContainer = usePortal()
-    const [defeatedCards, setDefeatedCards] = useState<IBattleCard[]>([])
     const [selectedCard, setSelectedCard] = useSelection<IBattleCard>(false, '.fight__inventory');
+    const [handCards, setHandCards] = useState<IBattleCard[]>([])
+    // const [rivalCards, setRivalCards] = useState<IBattleCard[]>([])
     const [selectionBattleCards, setSelectionBattleCards] = useState<TSelectionCardsArr>([null, null, null])
-
-    const [selectionRatingPreBattle, setSelectionRatingPreBattle] = useState<(number | null)[]>([])
-    const [rivalRatingPreBattle, setRivalRatingPreBattle] = useState<(number | null)[]>([])
-
     const [hps, setHps] = useState<{ rivalHP: number, yourHP: number }>({ rivalHP: 200, yourHP: 200 })
+
+    const [battleState, setBattleState] = useState<string>('deployment')
 
     const setBattleCard = useCallback((index: number) => {
         if (selectedCard) {
@@ -45,41 +51,6 @@ const Fight = () => {
     }, [selectedCard])
 
     useEffect(() => {
-        setCards('userBattleCards', userCards.filter(v => !selectionBattleCards.includes(v)))
-
-        selectionBattleCards.forEach((v) => {
-            if (v)
-                if (v!.hp <= 0) {
-                    setTimeout(() => {
-                        setDefeatedCards(prev => [...prev, v!])
-                        setSelectionBattleCards(prev => prev.map(val => val?.id === v!.id ? null : val) as TSelectionCardsArr);
-                    }, 2400)
-                }
-        })
-    }, [selectionBattleCards])
-
-    useEffect(() => {
-        setCards('userBattleCards', userCards.filter(v => !defeatedCards.includes(v!)))
-    }, [defeatedCards])
-
-    useEffect(() => {
-        rivalCards.forEach((v, i) => {
-            if (v)
-                if (v!.hp <= 0) {
-                    setTimeout(() => {
-                        const newRivalCards = rivalCards.map((val, index) => index === i ? null : val)
-                        setCards('rivalBattleCards', newRivalCards);
-                    }, 2400)
-                }
-        })
-    }, [rivalCards])
-
-    useEffect(() => {
-        setBattleState('waiting-battle')
-        setCards('userBattleCards', battleCards.map(v => ({ ...v, hp: v.options.rating })))
-    }, [])
-
-    useEffect(() => {
         setHps(prev => ({
             rivalHP: prev.rivalHP > 0 ? prev.rivalHP : 0,
             yourHP: prev.yourHP > 0 ? prev.yourHP : 0
@@ -87,96 +58,80 @@ const Fight = () => {
     }, [hps.rivalHP, hps.yourHP])
 
     useEffect(() => {
-        switch (battleState) {
-            case 'battle':
-                setRivalRatingPreBattle(rivalCards.map((v) => v ? v.options.rating : null));
-                setSelectionRatingPreBattle(selectionBattleCards.map((v) => v ? v.options.rating : null))
-                let rDamage = 0;
-                let yDamage = 0;
-                setTimeout(() => {
-                    console.log('Battle')
-                    const newYourBattleCards = selectionBattleCards.map((v, i) => {
-                        const damagePrev = v ? rivalCards[i] ? (v!.options.rating - rivalCards[i]?.hp) > 0 ? (v!.options.rating - rivalCards[i]?.hp) : 0 : v!.options.rating : 0
-                        rDamage += damagePrev
-                        return v ? ({
-                            ...v, hp: rivalCards[i] ? v!.hp - (rivalCards[i]?.options.rating || 0) : v.hp,
-                            options: {
-                                attribute: v.options.attribute,
-                                rating: damagePrev
-                            }
-                        }) : null
-                    })
-                    const newRivalCards = rivalCards.map((v, i) => {
-                        const damagePrev = v ? selectionBattleCards[i] ? (v!.options.rating - selectionBattleCards[i]?.hp) > 0 ? (v!.options.rating - selectionBattleCards[i]?.hp) : 0 : v!.options.rating : 0
-                        yDamage += damagePrev
-                        return v ? ({
-                            ...v, hp: selectionBattleCards[i] ?
-                                v!.hp - (selectionBattleCards[i]?.options.rating || 0) : v.hp,
-                            options: {
-                                attribute: v.options.attribute,
-                                rating: damagePrev
-                            }
-                        }) : null
-                    })
-                    console.log(rDamage, yDamage)
-                    setCards('rivalBattleCards', newRivalCards);
-                    setSelectionBattleCards(newYourBattleCards as TSelectionCardsArr);
-                    setTimeout(() => {
-                        setHps(prev => ({
-                            rivalHP: prev.rivalHP - rDamage,
-                            yourHP: prev.yourHP - yDamage
-                        }))
-                        setTimeout(() => {
-                            setBattleState('waiting-battle')
-                        }, 300)
-                    }, 2000)
-                }, 1000)
-                break;
-            case 'waiting-battle':
-                setSelectionBattleCards(selectionBattleCards.map((v, i) => v ? ({
-                    ...v, options: {
-                        rating: selectionRatingPreBattle[i] ? selectionRatingPreBattle[i] : v.options.rating,
-                        attribute: v.options.attribute
-                    }
-                }) : null) as TSelectionCardsArr)
-                setCards('rivalBattleCards', rivalCards.map((v, i) => v ? ({
-                    ...v, options: {
-                        rating: rivalRatingPreBattle[i] ? rivalRatingPreBattle[i] : v.options.rating,
-                        attribute: v.options.attribute
-                    }
-                }) : null) as TSelectionCardsArr)
-                if (hps.rivalHP <= 0 || hps.yourHP <= 0) {
-                    setBattleState('finished')
+        if (ws) ws.onmessage = (event) => {
+            const jsonEvent = JSON.parse(event.data)
+            if (jsonEvent.type === EventTypes.BATTLE_STATE) {
+                console.log(jsonEvent.state.phase, jsonEvent.state.player_hand)
+                if (jsonEvent.state.phase) {
+                    console.log(jsonEvent.state.player_hand)
+                    // if () {
+                    SetHandCards(jsonEvent.state.player_hand)
+                    setBattleState(jsonEvent.state.phase);
+                    setHps(() => ({
+                        rivalHP: jsonEvent.state.opponent_hp,
+                        yourHP: jsonEvent.state.player_hp
+                    }))
+                    // const rivalBattleCards: IBattleCard[] = (jsonEvent.state.opponent_field as IBatteResCard[]).map(v => ({
+                    //     attribute: v.attribute,
+                    //     damage: v.damage,
+                    //     health: v.health,
+                    //     id: v.id,
+                    //     maxHealth: v.max_health,
+                    //     photo: v.photo,
+                    //     rarity: v.rarity,
+                    // }))
+                    // setRivalCards(rivalBattleCards)
+                    // }
                 }
-                break;
+            }
         }
-    }, [battleState])
+    }, [ws])
+
+    function SetHandCards(cards: IBatteResCard[]) {
+        const handCards: IBattleCard[] = cards.map(v => ({
+            attribute: v.attribute,
+            damage: v.damage,
+            health: v.health,
+            id: v.id,
+            maxHealth: v.max_health,
+            photo: v.photo,
+            rarity: v.rarity,
+        }))
+        setHandCards(handCards)
+    }
+
+    useEffect(() => {
+        if (ws)
+            ws.send(JSON.stringify({
+                type: EventTypes.BATTLE_STATE
+            }))
+    }, [])
 
     return (
         <div className="fight">
             {portalContainer && createPortal(<FightHeader />, portalContainer)}
             <div className="fight__rival">
-                <HealthBar userName="CorpBros" health={hps.rivalHP / 2} additionalStyle="rival" />
+                <HealthBar userName={players[1]} health={hps.rivalHP / 2} additionalStyle="rival" />
             </div>
             <div className="fight__battle-scene">
-                <BattleScene
+                {/* <BattleScene
                     battleState={battleState}
                     rivalCards={rivalCards}
                     selectionBattleCards={selectionBattleCards}
                     setBattleCard={setBattleCard}
                     selectedCard={selectedCard}
-                    setSelectedCard={setSelectedCard} />
+                    setSelectedCard={setSelectedCard} /> */}
             </div>
             <div className="fight__user-manager">
-                <HealthBar userName="MAtrix" health={hps.yourHP / 2} additionalStyle="you" />
+                <HealthBar userName={players[0]} health={hps.yourHP / 2} additionalStyle="you" />
                 <section className="fight__card-inventory">
                     <ul className="fight__inventory">
-                        {userCards.map((v, i) =>
+                        {handCards.map((v, i) =>
                             <BattleCard
                                 key={v!.id + i}
-                                thisCard={v!}
+                                thisCard={v}
                                 selectedCard={selectedCard}
-                                setSelection={(card: IBattleCard | null) => setSelectedCard(battleState === 'waiting-battle' ? card : null)}
+                                setSelection={(card: IBattleCard | null) => setSelectedCard(battleState === 'deployment' ? card : null)}
                             />
                         )}
                     </ul>

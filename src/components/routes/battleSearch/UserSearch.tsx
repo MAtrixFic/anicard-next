@@ -11,7 +11,7 @@ import { EventTypes } from "@/devs/store/BattleSocketStore"
 const UserSearch = () => {
     const [windowStatus, setWindowsStatus, UpdateWindowStatusInTime] = useOverWindowStatus(400);
     const [fightIsFound, setFightIsFound] = useState<boolean>(false)
-    const { ws, CreateWS, CloseWS } = useBattleSocket()
+    const { ws, CreateWS, CloseWS, setWSValue } = useBattleSocket()
     const router = useRouter()
 
     useEffect(() => {
@@ -31,9 +31,14 @@ const UserSearch = () => {
                     const jsonEvent = JSON.parse(event.data)
                     console.log(jsonEvent)
                     if (jsonEvent.type === EventTypes.BATTLE_STARTED) {
+                        if (jsonEvent.phase === 'setup') {
+                            setWSValue('environment', jsonEvent.environment);
+                        }
+                        setWSValue('battleId', jsonEvent.battle_id);
+                        setWSValue('players', [jsonEvent.player_nickname, jsonEvent.opponent_nickname]);
                         setFightIsFound(true)
                         setTimeout(() => {
-                            router.push('/battles/1/prepare')
+                            router.push(`/battles/${jsonEvent.battle_id}/prepare`)
                         }, 2000)
                     }
                 }

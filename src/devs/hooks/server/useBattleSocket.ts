@@ -6,7 +6,9 @@ import useBattleSocketStore from "@/devs/store/BattleSocketStore"
 const useBattleSocket = () => {
     const getValue = useUserStore(state => state.getUserValues)
     const ws = useBattleSocketStore(state => state.WS);
-    const choise = useBattleSocketStore(state => state.choise)
+    const battleId = useBattleSocketStore(state => state.battleId);
+    const players = useBattleSocketStore(state => state.players);
+    const environment = useBattleSocketStore(state => state.environment);
     const setWSValue = useBattleSocketStore(state => state.setValue);
 
     const CreateWS = useCallback(async () => {
@@ -22,7 +24,7 @@ const useBattleSocket = () => {
         setWSValue('WS', undefined)
     }, [ws])
 
-    return { ws, CreateWS, CloseWS, setWSValue, choise }
+    return { ws, CreateWS, CloseWS, setWSValue, environment, players, battleId }
 }
 
 export default useBattleSocket

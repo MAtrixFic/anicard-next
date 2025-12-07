@@ -3,7 +3,6 @@ import LightButton from "@/components/additionals/buttons/LightButton";
 import BattleCard from "@/components/additionals/cards/BattleCard";
 import FlipCard from "@/components/additionals/cards/FlipCard";
 import PreviewBattleCard from "@/components/additionals/cards/PreviewBattleCard";
-import { useBattleStore } from "@/devs/store/BattleStore";
 
 export interface IBattleSceneProps {
     battleState: string,
@@ -15,7 +14,6 @@ export interface IBattleSceneProps {
 }
 
 const BattleScene = ({ battleState, rivalCards, selectionBattleCards, selectedCard, setSelectedCard, setBattleCard }: IBattleSceneProps) => {
-    const setBattleState = useBattleStore(state => state.setBattleState)
 
     return (
         <div className="battle-scene">
@@ -56,7 +54,7 @@ const BattleScene = ({ battleState, rivalCards, selectionBattleCards, selectedCa
                 </div>
             </div>
             <div className="battle-scene__container battle-scene__container-manage">
-                <LightButton active={battleState === 'waiting-battle'} title="Бой" additionStyle="green" func={() => setBattleState('battle')} />
+                <LightButton active={battleState === 'waiting-battle'} title="Бой" additionStyle="green" />
             </div>
         </div>
     )

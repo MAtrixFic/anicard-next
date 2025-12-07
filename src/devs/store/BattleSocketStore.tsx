@@ -2,8 +2,10 @@ import { create } from "zustand";
 
 interface IBattleSocketStore {
     WS?: WebSocket,
-    choise?: string,
-    setValue: (key: keyof Omit<IBattleSocketStore, 'setValue'>, value: any) => void
+    environment?: 'location' | 'weather',
+    battleId?: string,
+    players: [string, string];
+    setValue: (key: keyof Omit<IBattleSocketStore, 'setValue'>, value: any) => void,
 }
 
 export enum EventTypes {
@@ -13,12 +15,14 @@ export enum EventTypes {
     PHASE_CHANGED = 'phase_changed',
     TIMER_UPDATE = 'timer_update',
     ROUND_RESULT = 'round_result',
-    ERROR = 'error'
+    ERROR = 'error',
+    SUBMIT_SETTINGS = 'submit_settings',
 }
 
 const useBattleSocketStore = create<IBattleSocketStore>((set, get) => ({
     WS: undefined,
-    choise: undefined,
+    players: ['', ''],
+    environment: undefined,
     setValue: (key, value) => set(() => ({
         ...get(),
         [key]: value

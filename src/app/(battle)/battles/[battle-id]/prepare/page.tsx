@@ -6,10 +6,11 @@ import useSelection from "@/devs/hooks/useSelection";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import { useRouter } from "next/navigation";
 import useBattleSocket from "@/devs/hooks/server/useBattleSocket";
+import { EventTypes } from "@/devs/store/BattleSocketStore";
 
 const Prepare = () => {
-    const { ws, choise } = useBattleSocket();
-    const weather = useMemo(() => ({
+    const { ws, environment, setWSValue, battleId, players } = useBattleSocket();
+    const choises = useMemo(() => ({
         weather: [
             "sunny",
             "snowy",
@@ -24,17 +25,33 @@ const Prepare = () => {
         ]
     }), [])
 
+    const [points, setPoints] = useState<[TChoicePoint | undefined, TChoicePoint | undefined]>([undefined, undefined]);
+
     useEffect(() => {
         if (ws)
-            ws.onopen = () => {
-                ws.onmessage = (event) => {
-                    console.log(event.data)
+            ws.onmessage = (event) => {
+                const jsonEvent = JSON.parse(event.data);
+                console.log(jsonEvent);
+
+                if (jsonEvent.type === EventTypes.BATTLE_STATE) {
+                    if (jsonEvent.state.weather && jsonEvent.state.location) {
+                        setPoints([{ environment: 'location', name: jsonEvent.state.location, id: 0 }, { environment: 'weather', name: jsonEvent.state.weather, id: 1 }])
+                        setTimeout(() => {
+                            router.replace(`/battles/${battleId}/fight`)
+                        }, 3000)
+                    }
                 }
             }
     }, [ws])
 
-    const [timerStatus, setTimerStatus] = useState<'running' | 'finished'>('running');
+    useEffect(() => {
+        if (ws)
+            ws.send(JSON.stringify({
+                type: EventTypes.BATTLE_STATE
+            }))
+    }, [])
 
+    const [timerStatus, setTimerStatus] = useState<'running' | 'finished'>('running');
     const [choicePointStatus, _, setStatusInTime] = useOverWindowStatus(800);
 
     const router = useRouter();
@@ -63,9 +80,9 @@ const Prepare = () => {
             <section className="battle-choice__top-block">
                 <div className="battle-choice__rivals">
                     <h2 className="battle-choice__title">
-                        <span className="battle-choice__t-el battle-choice__t-el-you">ТЫ</span>
+                        <span className="battle-choice__t-el battle-choice__t-el-you">{players[0]}</span>
                         <span className="battle-choice__t-el battle-choice__t-el-vs">VS</span>
-                        <span className="battle-choice__t-el battle-choice__t-el-rival">ДРУГОЙ</span>
+                        <span className="battle-choice__t-el battle-choice__t-el-rival">{players[1]}</span>
                     </h2>
                 </div>
                 <div className="battle-choice__logs">
@@ -77,34 +94,16 @@ const Prepare = () => {
             <section className="battle-choice__middle-block">
                 <div className="battle-choice__container battle-choice__container-points">
                     {points.map((v, i) =>
-                        <BattlePoint name={v.name} id={i} key={v.key + i} />
+                        <BattlePoint name={v?.name} id={v?.id} environment={v?.environment} key={i} />
                     )}
                 </div>
                 {['to-hide', 'opened'].includes(choicePointStatus) &&
-                    <PointChoice points={[
-                        {
-                            name: "Пустыня",
-                            key: "location",
-                            id: 1
-                        },
-                        {
-                            name: "Снежные горы",
-                            key: "location",
-                            id: 2
-                        },
-                        {
-                            name: "Вулкан",
-                            key: "location",
-                            id: 3
-                        }
-                    ]}
-                        approveFunc={(choicePoint: TChoicePoint, index: number) => {
-                            setPoints(prev => prev.map((v, i) =>
-                                i === index ? choicePoint : v
-                            ))
-                            setStatusInTime();
-                        }}
-
+                    <PointChoice
+                        points={[...choises[environment as 'location' | 'weather'].map((v, i) => ({
+                            id: i,
+                            name: v,
+                            environment: environment as 'location' | 'weather'
+                        }))]}
                         windowStatus={choicePointStatus}
                     />}
             </section>
@@ -117,7 +116,7 @@ const Prepare = () => {
     )
 }
 
-interface IBattlePointProps extends TChoicePoint {
+interface IBattlePointProps extends Partial<TChoicePoint> {
     additionalStyle?: string;
     checkSelection?: {
         func: () => void;
@@ -126,36 +125,43 @@ interface IBattlePointProps extends TChoicePoint {
 }
 
 type TChoicePoint = {
-    key: string,
-    name: string,
-    id: number,
+    environment: string,
+    name: string
+    id: number
 }
 
-const BattlePoint = ({ name, additionalStyle, checkSelection, id, key }: IBattlePointProps) => {
+const BattlePoint = ({ name, additionalStyle, checkSelection, environment, id }: IBattlePointProps) => {
     return (
-        <section className={`battle-point ${additionalStyle} ${checkSelection?.selectedId === id ? 'selected' : 'deselected'} ${checkSelection && 'selectable'}`} onClick={checkSelection?.func}>
+        <section className={`battle-point ${additionalStyle} ${checkSelection?.selectedId === id ? 'selected' : 'deselected'
+            } ${checkSelection && 'selectable'}`} onClick={checkSelection?.func}>
             <div className="battle-point__container battle-point__container-preview">
-                {!name ? <span className="battle-point__preview-question">?</span> :
-                    <Image height={120} width={120} quality={60} alt='point-preview' src={`https://obviously-vocal-seagull.cloudpub.ru/images/${key}/${name}.jpg`} className="battle-point__preview" />
+                {!name && !environment ? <span className="battle-point__preview-question">?</span> :
+                    <Image height={120} width={120} quality={60} alt='point-preview' src={`https://obviously-vocal-seagull.cloudpub.ru/static/images/${environment}/${name}.png`} className="battle-point__preview" />
                 }
-            </div>
+            </div >
             <div className="battle-point__container battle-point__container-name">
                 <span className="battle-point__name">
                     {name}
                 </span>
             </div>
-        </section>
+        </section >
     )
 }
 
 interface IPointChoiceProps {
     points: TChoicePoint[],
-    approveFunc: (...arg: any) => void;
+    // approveFunc: (...arg: any) => void;
     windowStatus: string,
 }
 
-const PointChoice = ({ points, approveFunc, windowStatus }: IPointChoiceProps) => {
-    const [selected, setSelected] = useSelection<TChoicePoint>(false)
+const PointChoice = ({ points, windowStatus }: IPointChoiceProps) => {
+    const { ws } = useBattleSocket();
+    const [selected, setSelected] = useSelection<TChoicePoint>(false);
+
+    useEffect(() => {
+        setSelected(points[0])
+    }, [])
+
     return (
         <div className={`battle-choice__choice-point ${windowStatus}`}>
             <div className="battle-choice__choice">
@@ -165,14 +171,25 @@ const PointChoice = ({ points, approveFunc, windowStatus }: IPointChoiceProps) =
                             selectedId: selected?.id,
                             func: () => setSelected(v)
                         }}
-                        id={v.id}
+                        id={i}
                         name={v.name}
-                        key={v.key + i}
+                        environment={v.environment}
                         additionalStyle="selection" />
                 )}
             </div>
             <div className="battle-choice__container battle-choice__container-center">
-                <LightButton title='Выбрать' additionStyle="green tiny" func={() => approveFunc(selected, 0)} />
+                <LightButton title='Выбрать' additionStyle="green tiny" func={() => {
+                    console.log(JSON.stringify({
+                        type: EventTypes.SUBMIT_SETTINGS,
+                        [selected!.environment]: selected!.name
+                    }))
+                    if (ws) {
+                        ws.send(JSON.stringify({
+                            type: EventTypes.SUBMIT_SETTINGS,
+                            [selected!.environment]: selected!.name
+                        }))
+                    }
+                }} />
             </div>
         </div>
     )

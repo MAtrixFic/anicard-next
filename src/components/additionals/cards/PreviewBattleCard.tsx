@@ -10,7 +10,7 @@ interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'se
     setSelection?: (card: IBattleCard | null) => void,
 }
 
-const PreviewBattleCard = ({ func, thisCard, activeElemenet }: IPreviewCardProps) => {
+const PreviewBattleCard = ({ func, thisCard, activeElemenet }: Omit<IPreviewCardProps, 'thisCard'> & { thisCard: IBattleCard | undefined }) => {
     const [isSetCard, setIsSetCard] = useState<boolean>(false)
 
     useEffect(() => {
