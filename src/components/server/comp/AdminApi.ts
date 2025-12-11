@@ -9,7 +9,7 @@ export interface IAdminCardsResponse extends IResponse {
 
 export async function GetCards(userId: string): Promise<IAdminCardsResponse> {
     try {
-        const res = await FetchMG.GET(`admin/cards/?user_id=${userId}`)
+        const res = await FetchMG.GET(`admin/cards?user_id=${userId}`)
         console.log(res)
         return res.data
     }

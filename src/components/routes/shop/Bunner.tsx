@@ -13,23 +13,18 @@ export interface IBannerProps {
         type: "rubles" | "pay-game-money" | "game-money";
         count: number
     }
-    count: number
+    count: number,
+    buy?: (count: number, card?: IShortCardInfo & { id: number }) => void
 }
 
 interface IBannerSectionProps {
     banners: IBannerProps[],
     title: string;
+    buy: (count: number, card?: IShortCardInfo & { id: number }) => void
 }
 
 
-export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
-    const { TryBuyCards, TryBuyKeys } = useShop()
-
-    function BuyFunc() {
-        if (card) TryBuyCards(card.id)
-        else TryBuyKeys(count)
-    }
-
+export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
     return (
         <div className="banner">
             <div className="banner__view-block">
@@ -46,13 +41,13 @@ export const Bunner = ({ src, name, cost, card, count }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="green tiny" func={BuyFunc} />
+                <LightButton title={'Купить'} additionStyle="green tiny" func={() => buy!(count, card)} />
             </div>
         </div>
     )
 }
 
-export const BannerSection = ({ banners, title }: IBannerSectionProps) => {
+export const BannerSection = ({ banners, title, buy }: IBannerSectionProps) => {
     return (
         <section className="banner-section">
             <div className="banner-section__title-container">
@@ -62,7 +57,7 @@ export const BannerSection = ({ banners, title }: IBannerSectionProps) => {
             </div>
             <div className="banner-section__list">
                 {banners.map((v, i) =>
-                    <Bunner key={i + v.name} {...v} />
+                    <Bunner key={i + v.name} {...v} buy={buy} />
                 )}
             </div>
 

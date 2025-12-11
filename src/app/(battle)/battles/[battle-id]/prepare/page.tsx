@@ -38,7 +38,7 @@ const Prepare = () => {
                         setPoints([{ environment: 'location', name: jsonEvent.state.location, id: 0 }, { environment: 'weather', name: jsonEvent.state.weather, id: 1 }])
                         setTimeout(() => {
                             router.replace(`/battles/${battleId}/fight`)
-                        }, 3000)
+                        }, 1000)
                     }
                 }
             }
@@ -72,7 +72,7 @@ const Prepare = () => {
             //         router.replace('/battles/1/fight')
             //     }, 2000)
             // }, 10000)
-        }, 8000)
+        }, 1000)
     }, [])
 
     return (

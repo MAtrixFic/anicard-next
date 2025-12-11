@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Plus } from "../../icons/Cards"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard";
-import { IBattleCard } from "@/devs/store/BattleStore";
+import { IBattleCard } from "@/app/(battle)/battles/[battle-id]/fight/page";
 
 interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'selectedCard' | 'setSelection'>> {
     func?: () => void;

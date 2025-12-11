@@ -241,6 +241,7 @@ $maxBlockWidth: 400px;
 
         &.defeated {
             opacity: 0;
+            transition-delay: .5s;
 
             .card__stat:nth-child(1) {
                 .card__stat-text {
@@ -275,6 +276,19 @@ $maxBlockWidth: 400px;
         justify-content: space-between;
         align-items: center;
         flex-grow: 1;
+    }
+
+    &__right-block {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__timer {
+        &-text {
+            font-size: 1.2rem;
+            color: props.$purple;
+        }
     }
 }
 

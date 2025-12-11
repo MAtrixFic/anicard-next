@@ -2,8 +2,13 @@
 import { useMemo } from "react"
 import { BannerSection, IBannerProps } from "./Bunner"
 import { useShop } from "@/devs/hooks/server/useShop"
+import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList"
 
-const DynamicBanner = () => {
+interface IDynamicBannerProps {
+    buy: (count: number, card?: IShortCardInfo & { id: number }) => void
+}
+
+const DynamicBanner = ({ buy }: IDynamicBannerProps) => {
     const { offer } = useShop()
 
     const cards = useMemo(() => offer.data?.cards.map(v => ({
@@ -24,7 +29,7 @@ const DynamicBanner = () => {
     return (
         <>
             {cards &&
-                <BannerSection title="Специальные карты" banners={cards} />
+                <BannerSection buy={buy} title="Специальные карты" banners={cards} />
             }
         </>
     )

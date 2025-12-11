@@ -24,6 +24,7 @@ export async function SetInventoryCards(userId: string, cardType: TCardType, car
         return true
     }
     catch (error) {
+        console.log(error)
         return false
     }
 }

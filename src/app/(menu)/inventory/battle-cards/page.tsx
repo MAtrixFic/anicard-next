@@ -1,8 +1,6 @@
 'use client'
 import CardGlobalChoiseList, { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import LightButton from "@/components/additionals/buttons/LightButton"
-import { CookieGet } from "@/components/server/CookieManager"
-import { DeleteInventoryCards, SetInventoryCards } from "@/components/server/comp/InventoryApi"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useRef } from "react"
 

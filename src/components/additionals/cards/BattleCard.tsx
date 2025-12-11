@@ -1,7 +1,6 @@
-import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard"
-import { IBattleCard } from "@/devs/store/BattleStore"
+import { IBattleCard } from "@/app/(battle)/battles/[battle-id]/fight/page"
 
 const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelectionCardProps, 'setSelection' | 'thisCard' | 'selectedCard'> & { setSelection?: (card: IBattleCard | null) => void, thisCard: IBattleCard, selectedCard: IBattleCard | null }) => {
 
@@ -16,7 +15,6 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
         ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}
         ${thisCard.health > 0 ? 'alive' : 'defeated'}
         `}
-
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">

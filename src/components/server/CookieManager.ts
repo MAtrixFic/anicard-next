@@ -7,6 +7,7 @@ export const CookieSet = async (key: string, value: any) => {
 }
 
 export const CookieGet = async (key: string) => {
+    console.log('cookie')
     const cookieStore = await cookies()
     return cookieStore.get(key);
 }
