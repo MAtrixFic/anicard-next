@@ -9,7 +9,7 @@ class FetchMG {
         headers: {
             'Content-Type': 'application/json',
         }
-    });
+    })
 
     public static async GET(endpoint: string, params?: any) {
         return await FetchMG.api.get(endpoint, { params: params });
@@ -23,5 +23,10 @@ class FetchMG {
         return await FetchMG.api.delete(endpoint, params);
     }
 }
+
+FetchMG.api.interceptors.request.use((config) => {
+    config.headers['X-No-Proxy'] = 'true';
+    return config;
+});
 
 export default FetchMG

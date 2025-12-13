@@ -5,7 +5,7 @@ import DynamicBanner from "@/components/routes/shop/DynamicBanner"
 import { useShop } from "@/devs/hooks/server/useShop"
 
 const Page = () => {
-    const { TryBuyCards, TryBuyKeys } = useShop()
+    const { TryBuyCards, TryBuyKeys, offer } = useShop()
 
     function BuyFunc(count: number, card?: IShortCardInfo & { id: number }) {
         if (card) TryBuyCards(card.id)
@@ -20,7 +20,7 @@ const Page = () => {
                     { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'rubles', count: 600 }, count: 6 },
                     { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'rubles', count: 1200 }, count: 12 }
                 ]} />
-                <DynamicBanner buy={BuyFunc}/>
+                <DynamicBanner buy={BuyFunc} offer={offer} />
             </div>
         </div>
     )

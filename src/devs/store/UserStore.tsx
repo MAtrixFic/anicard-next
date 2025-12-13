@@ -9,10 +9,11 @@ export interface IUser {
     coin: number,
     battleCoin: number,
     rating: number,
+    keys: number
 }
 export interface IUserStore extends Partial<IUser> {
     setUserData: (arg: Omit<IUserStore, 'setUserData' | 'getUserValues'>) => void,
-    getUserValues: (key?: keyof IUser) => Promise<any>
+    getUserValues: (key?: keyof IUser, push?: boolean) => Promise<any>
 }
 
 const useUserStore = create<IUserStore>((set, get) => ({
@@ -22,6 +23,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
     coin: undefined,
     battleCoin: undefined,
     rating: undefined,
+    keys: undefined,
     setUserData: (arg) => set(state => ({
         ...state,
         nickname: arg.nickname,
@@ -29,9 +31,11 @@ const useUserStore = create<IUserStore>((set, get) => ({
         coin: arg.coin,
         isAdmin: arg.isAdmin,
         battleCoin: arg.battleCoin,
-        rating: arg.rating
+        rating: arg.rating,
+        keys: arg.keys
     })),
-    getUserValues: async (key) => {
+    getUserValues: async (key, push = false) => {
+        console.log('get user')
         if (key) {
             if (get()[key]) {
                 return get()[key]
@@ -42,13 +46,15 @@ const useUserStore = create<IUserStore>((set, get) => ({
                     const data = await GetUser(userId.value);
                     if (data) {
                         const resData = data as IUserResponse
+                        console.log('user_data', resData)
                         get().setUserData({
                             id: resData.user.user_id,
                             nickname: resData.user.nickname,
                             coin: resData.user.coin,
                             battleCoin: resData.user.battle_coin,
                             rating: resData.user.rating,
-                            isAdmin: resData.isAdmin
+                            isAdmin: resData.isAdmin,
+                            keys: resData.user.card_keys[0].key
                         })
                         return get()[key]
                     }
@@ -56,7 +62,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
             }
         }
         else {
-            if (Object.values(get()).includes(undefined)) {
+            if (push) {
                 const userId = await CookieGet('userId')
                 if (userId) {
                     const data = await GetUser(userId.value);
@@ -68,18 +74,39 @@ const useUserStore = create<IUserStore>((set, get) => ({
                             coin: resData.user.coin,
                             battleCoin: resData.user.battle_coin,
                             rating: resData.user.rating,
-                            isAdmin: resData.isAdmin
+                            isAdmin: resData.isAdmin,
+                            keys: resData.user.card_keys[0].key
                         })
                     }
                 }
             }
+            else
+                if (Object.values(get()).includes(undefined)) {
+                    const userId = await CookieGet('userId')
+                    if (userId) {
+                        const data = await GetUser(userId.value);
+                        if (data) {
+                            const resData = data as IUserResponse
+                            get().setUserData({
+                                id: resData.user.user_id,
+                                nickname: resData.user.nickname,
+                                coin: resData.user.coin,
+                                battleCoin: resData.user.battle_coin,
+                                rating: resData.user.rating,
+                                isAdmin: resData.isAdmin,
+                                keys: resData.user.card_keys[0].key
+                            })
+                        }
+                    }
+                }
             return {
                 id: get().id,
                 nickname: get().nickname,
                 coin: get().coin,
                 battleCoin: get().battleCoin,
                 rating: get().rating,
-                isAdmin: get().isAdmin
+                isAdmin: get().isAdmin,
+                keys: get().keys
             }
         }
     }

@@ -1,17 +1,19 @@
 'use client'
 import { useMemo } from "react"
 import { BannerSection, IBannerProps } from "./Bunner"
-import { useShop } from "@/devs/hooks/server/useShop"
-import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { ICard, IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList"
 
 interface IDynamicBannerProps {
-    buy: (count: number, card?: IShortCardInfo & { id: number }) => void
+    buy: (count: number, card?: IShortCardInfo & { id: number }) => void,
+    offer: any;
 }
 
-const DynamicBanner = ({ buy }: IDynamicBannerProps) => {
-    const { offer } = useShop()
 
-    const cards = useMemo(() => offer.data?.cards.map(v => ({
+
+const DynamicBanner = ({ buy, offer }: IDynamicBannerProps) => {
+    if (!offer.data) return
+
+    const cards = useMemo(() => (offer.data?.cards as ICard[]).map(v => ({
         src: `https://obviously-vocal-seagull.cloudpub.ru${v.photo}`,
         name: `Карта ${v.rarity}`,
         cost: { count: v!.price, type: 'rubles' },

@@ -46,8 +46,8 @@ export interface IBattleCard extends Omit<ICard, 'universe' | 'rating' | 'catego
 export type TSetResultCards = (cards: TSelectionCardsArr) => void
 export type TSetHandCards = (cards: IBattleCard[]) => void
 
-export function SetBattleCardsCards<T extends TSetResultCards>(cards: IBatteResCard[], func: T) {
-    const handCards: TSelectionCardsArr = cards.map(v => v ? ({
+export function SetBattleCardsCards<T extends TSetResultCards>(cards: IBatteResCard[], func: T, prevCards?: TSelectionCardsArr) {
+    const handCards: TSelectionCardsArr = cards.map((v, i) => v ? ({
         attribute: v.attribute,
         damage: v.damage,
         health: v.health,
@@ -55,7 +55,15 @@ export function SetBattleCardsCards<T extends TSetResultCards>(cards: IBatteResC
         maxHealth: v.max_health,
         photo: v.photo,
         rarity: v.rarity,
-    }) : null) as TSelectionCardsArr
+    }) : prevCards ? prevCards[i] ? ({
+        attribute: prevCards[i].attribute,
+        damage: prevCards[i].damage,
+        health: 0,
+        id: prevCards[i].id,
+        maxHealth: prevCards[i].maxHealth,
+        photo: prevCards[i].photo,
+        rarity: prevCards[i].rarity,
+    }) : null : null) as TSelectionCardsArr
     func(handCards)
 }
 
@@ -72,13 +80,13 @@ export function SetHandCards<T extends TSetHandCards>(cards: IBatteResCard[], fu
     func(handCards)
 }
 
-export function SetResult<T extends TSetResultCards, P extends TSetResultCards>(rival: IBatteResCard[], player: IBatteResCard[], setRival: T, setPlayer: P) {
-    SetBattleCardsCards(rival, setRival);
-    SetBattleCardsCards(player, setPlayer)
+export function SetResult<T extends TSetResultCards, P extends TSetResultCards>(rival: IBatteResCard[], player: IBatteResCard[], prevRival: TSelectionCardsArr, prevPlayer: TSelectionCardsArr, setRival: T, setPlayer: P) {
+    SetBattleCardsCards(rival, setRival, prevRival);
+    SetBattleCardsCards(player, setPlayer, prevPlayer)
 }
 
 const Fight = () => {
-    const { ws, players, environment } = useBattleSocket()
+    const { ws, players, environment, CloseWS } = useBattleSocket()
     const isYou = useMemo(() => environment === 'weather', [])
     const portalContainer = usePortal()
     const [selectedCard, setSelectedCard] = useSelection<IBattleCard>(false, '.fight__inventory');
@@ -116,6 +124,7 @@ const Fight = () => {
                 if (jsonEvent.state.phase) {
                     if (jsonEvent.state.phase === 'deployment') {
                         setBattleState('deployment')
+                        SetBattleCardsCards(jsonEvent.state.player_field, setSelectionBattleCards)
                     }
                 }
             }
@@ -123,21 +132,23 @@ const Fight = () => {
                 const result = jsonEvent.results as IBattleResult[];
                 const rival = result.map(v => isYou ? v.player2_card : v.player1_card)
                 const player = result.map(v => isYou ? v.player1_card : v.player2_card)
-                SetResult(rival, player, setRivalCards, setSelectionBattleCards)
                 setTimeout(() => {
-                    SetResult(jsonEvent.state.opponent_field, jsonEvent.state.player_field, setRivalCards, setSelectionBattleCards)
-                }, 2000)
-                setBattleState('battle')
-                setHps(() => ({
-                    rivalHP: isYou ? jsonEvent.player2_hp : jsonEvent.player1_hp,
-                    yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp
-                }))
-                ws.send(JSON.stringify({
-                    type: EventTypes.BATTLE_STATE
-                }))
+                    setBattleState('battle')
+                    setTimeout(() => {
+                        SetResult(rival, player, jsonEvent.state.opponent_field, jsonEvent.state.player_field, setRivalCards, setSelectionBattleCards)
+                        SetHandCards(jsonEvent.state.player_hand, setHandCards)
+                        setHps(() => ({
+                            rivalHP: isYou ? jsonEvent.player2_hp : jsonEvent.player1_hp,
+                            yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp
+                        }))
+                    }, 2000)
+                }, 200)
+                SetResult(jsonEvent.state.opponent_field, jsonEvent.state.player_field, rivalCards, selectionBattleCards, setRivalCards, setSelectionBattleCards)
             }
             if (jsonEvent.type === EventTypes.BATTLE_ENDED) {
-                setBattleState('ended')
+                setTimeout(() => {
+                    setBattleState('ended')
+                }, 6000)
                 setHps(() => ({
                     rivalHP: isYou ? jsonEvent.player2_hp : jsonEvent.player1_hp,
                     yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp
@@ -208,7 +219,7 @@ const Fight = () => {
                     </ul>
                 </section>
             </div>
-            {battleState === 'ended' && <FinishWindow hps={hps} />}
+            {battleState === 'ended' && <FinishWindow hps={hps} closeWS={CloseWS} />}
         </div>
     )
 }
@@ -217,10 +228,11 @@ interface IFinishWindowProps {
     hps: {
         rivalHP: number,
         yourHP: number
-    }
+    },
+    closeWS: () => void;
 }
 
-const FinishWindow = ({ hps }: IFinishWindowProps) => {
+const FinishWindow = ({ hps, closeWS }: IFinishWindowProps) => {
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
     const [winMode, setWinMode] = useState<'draw' | 'win' | 'loose' | 'no'>('no');
     const router = useRouter();
@@ -277,7 +289,10 @@ const FinishWindow = ({ hps }: IFinishWindowProps) => {
                     </section>
                     <section className="finish-window__section">
                         <div className="finish-window__container finish-window__container-logic">
-                            <LightButton title={"Выйти"} additionStyle="green" func={() => router.push('/')} />
+                            <LightButton title={"Выйти"} additionStyle="green" func={() => {
+                                closeWS()
+                                router.push('/')
+                            }} />
                         </div>
                     </section>
                 </div>

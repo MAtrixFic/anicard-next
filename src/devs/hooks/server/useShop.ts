@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetShopCards, BuyKeys, BuySpecialCards } from "@/components/server/comp/ShopApi"
-import { useUser } from "./useUser"
 import useMessageStore from "@/devs/store/MessageStore"
+import { CookieGet } from "@/components/server/CookieManager"
 
 export const useShop = () => {
-    const { user } = useUser()
     const addMessage = useMessageStore(state => state.addMessage)
     const { data, isLoading, isError } = useQuery({
         queryFn: GetShopCards,
@@ -13,7 +12,7 @@ export const useShop = () => {
 
     async function TryBuyCards(cardId: number) {
 
-        const res = await BuySpecialCards(user!.id, cardId);
+        const res = await BuySpecialCards(Number(await CookieGet('userId')), cardId);
         if (res)
             addMessage({ text: 'Оплатите карту в боте', type: 'message' })
         else
@@ -24,7 +23,7 @@ export const useShop = () => {
 
     async function TryBuyKeys(keysCount: number) {
 
-        const res = await BuyKeys(user!.id, keysCount);
+        const res = await BuyKeys(Number(await CookieGet('userId')), keysCount);
         if (res)
             addMessage({ text: 'Оплатите ключи в боте', type: 'message' })
         else

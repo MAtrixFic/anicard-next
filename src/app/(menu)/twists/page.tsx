@@ -10,6 +10,7 @@ import { AddTwistCard } from "@/components/server/comp/InventoryApi"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { useUser } from "@/devs/hooks/server/useUser"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Twists = () => {
     return (
@@ -25,11 +26,14 @@ const Twists = () => {
 export const TwistBanner = () => {
     const [openTwist, setOpenTwist, SetTimerOpenMode] = useOverWindowStatus(400);
     const [droppedCard, setDroppedCard] = useState<ICard | null>(null)
-    const { user } = useUser()
+    const { data: user } = useUser(true)
+    const client = useQueryClient()
 
-    function CreateTwist() {
-        if (user)
-            AddTwistCard(user.id.toString(), 'battle').then(data => data ? setDroppedCard(data) : undefined)
+    async function CreateTwist() {
+        if (user) {
+            await AddTwistCard(user.id.toString(), 'battle').then(data => data ? setDroppedCard(data) : undefined)
+            await client.invalidateQueries({ queryKey: ['user'] })
+        }
         SetTimerOpenMode()
     }
 

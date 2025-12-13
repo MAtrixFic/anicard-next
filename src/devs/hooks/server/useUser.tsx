@@ -1,12 +1,13 @@
-import { IUser, useUserStore } from "@/devs/store/UserStore";
-import { useEffect, useState } from "react";
+import { useUserStore } from "@/devs/store/UserStore";
+import { useQuery } from "@tanstack/react-query";
 
 
-export const useUser = () => {
+export const useUser = (push?: boolean) => {
     const getUserValues = useUserStore(state => state.getUserValues);
-    const [user, setUser] = useState<IUser>()
-    useEffect(() => {
-        getUserValues().then(data => setUser(data))
-    }, [])
-    return { user, setUser }
+
+    const { data } = useQuery({
+        queryKey: ['user'],
+        queryFn: () => getUserValues(undefined, push)
+    })
+    return { data }
 }

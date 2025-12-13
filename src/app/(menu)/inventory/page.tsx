@@ -16,7 +16,7 @@ import { useAdmin } from "@/devs/hooks/server/useAdmin"
 type TCardsMode = 'adminCards' | 'allCards'
 
 const Page = () => {
-    const { user } = useUser()
+    const { data: user } = useUser()
     const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
     const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')

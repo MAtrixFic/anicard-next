@@ -13,10 +13,9 @@ const nextConfig: NextConfig = {
     images: {
         domains: [
             'obviously-vocal-seagull.cloudpub.ru',
-            // добавьте другие домены по мере необходимости
+            'https://hdp6zjjk-3000.euw.devtunnels.ms/'
         ],
 
-        // Или используйте более гибкий подход с remotePatterns (рекомендуется):
         remotePatterns: [
             {
                 protocol: 'https',
@@ -28,7 +27,13 @@ const nextConfig: NextConfig = {
                 protocol: 'https',
                 hostname: 'obviously-vocal-seagull.cloudpub.ru',
                 port: '',
-                pathname: '/**', // если нужны все пути
+                pathname: '/**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'hdp6zjjk-3000.euw.devtunnels.ms/',
+                port: '',
+                pathname: '/**'
             },
         ],
     },

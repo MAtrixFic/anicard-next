@@ -3,7 +3,6 @@
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
-import { useShop } from "@/devs/hooks/server/useShop";
 
 export interface IBannerProps {
     src: string,

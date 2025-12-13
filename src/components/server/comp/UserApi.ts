@@ -16,7 +16,8 @@ export type TUserData = {
     nickname: string,
     coin: number,
     battle_coin: number,
-    rating: number
+    rating: number,
+    card_keys: { key: number }[]
 }
 
 export interface IRatingResponse extends IResponse {
