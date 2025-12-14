@@ -10,6 +10,8 @@ const useBattleSocket = () => {
     const players = useBattleSocketStore(state => state.players);
     const environment = useBattleSocketStore(state => state.environment);
     const setWSValue = useBattleSocketStore(state => state.setValue);
+    const weather = useBattleSocketStore(state => state.weather);
+    const location = useBattleSocketStore(state => state.location);
 
     const CreateWS = useCallback(async () => {
         if (ws) return
@@ -24,7 +26,7 @@ const useBattleSocket = () => {
         setWSValue('WS', undefined)
     }, [ws])
 
-    return { ws, CreateWS, CloseWS, setWSValue, environment, players, battleId }
+    return { ws, CreateWS, CloseWS, setWSValue, environment, players, battleId, weather, location }
 }
 
 export default useBattleSocket

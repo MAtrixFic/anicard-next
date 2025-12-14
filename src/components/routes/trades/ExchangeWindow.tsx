@@ -18,7 +18,7 @@ interface IExchangeWindowProps {
 }
 
 const ExchangeWindow = ({ exchangedTrade, setExchangedTrade }: IExchangeWindowProps) => {
-    const { user } = useUser()
+    const { data: user } = useUser()
     const { responsdToOffer } = useTrades()
     const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelection<ICard>()

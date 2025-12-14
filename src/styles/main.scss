@@ -152,11 +152,20 @@ body {
 
         &-logo {
             display: block;
-            width: 36px;
-            aspect-ratio: 1;
             border-radius: 100%;
             background-color: props.$body;
             outline: 2px solid white;
+            border: 1px solid props.$body;
+            height: 36px;
+            width: 36px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img {
+                object-fit: scale-down;
+            }
         }
     }
 
@@ -1098,6 +1107,16 @@ body {
         font-size: 1.2rem;
         font-weight: 600;
         color: props.$body;
+    }
+}
+
+.loading {
+    text-align: center;
+
+    span {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: props.$soLightGrey;
     }
 }
 

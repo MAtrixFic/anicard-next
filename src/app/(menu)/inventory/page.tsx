@@ -32,22 +32,22 @@ const Page = () => {
             })
     }, [user?.id || 0, cardsMode])
 
+    async function DoMethod(data: ICard) {
+        const filteredResult = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) =>
+                value ? value.toString().length > 0 && value.toString() !== '0' : false
+            )
+        );
+        setInventoryCards(previewCards.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
+        ))
+    }
 
-    // function SetFilter(data: { search: string, rarity: string, attribute: string, category: string }) {
-    //     console.log(data)
-    //     setInventoryCards(previewCards.filter(v =>
-    //         (data.search.length > 0 ? v.character.toLowerCase().includes(data.search.toLowerCase()) : true)
-    //         &&
-    //         (data.rarity.length > 0 ? v.rarity.toLowerCase().includes(data.rarity.toLowerCase()) : true)
-    //         &&
-    //         (data.attribute.length > 0 ? v.attribute.toLowerCase().includes(data.attribute.toLowerCase()) : true)))
-    // }
 
     return (
         <div className="cards-choise">
             <div className="cards-choise__list-container">
                 <section className="cards-choise__filter-container">
-                    <Filter style="cards-choise__filter pd" submit={() => ''} />
+                    <Filter style="cards-choise__filter pd" submit={DoMethod} />
                 </section>
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">

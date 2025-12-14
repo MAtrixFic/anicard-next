@@ -1,6 +1,6 @@
 'use client'
 import LightButton from "@/components/additionals/buttons/LightButton"
-import { Cloudly } from "@/components/icons/Weathers"
+import Image from "next/image"
 import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import { createPortal } from "react-dom"
 import usePortal from "@/devs/hooks/usePortal"
@@ -30,11 +30,13 @@ interface IBatteResCard {
 }
 
 interface IBattleResult {
+    card_damage1: number,
+    card_damage2: number,
     slot: number,
     damage_to_player2: number,
-    damage_to_player1: number
-    player1_card: IBatteResCard
-    player2_card: IBatteResCard
+    damage_to_player1: number,
+    player1_card: IBatteResCard,
+    player2_card: IBatteResCard,
 }
 
 export interface IBattleCard extends Omit<ICard, 'universe' | 'rating' | 'category'> {
@@ -86,7 +88,9 @@ export function SetResult<T extends TSetResultCards, P extends TSetResultCards>(
 }
 
 const Fight = () => {
-    const { ws, players, environment, CloseWS } = useBattleSocket()
+    const { ws, players, environment, CloseWS, location, weather } = useBattleSocket()
+    const router = useRouter()
+
     const isYou = useMemo(() => environment === 'weather', [])
     const portalContainer = usePortal()
     const [selectedCard, setSelectedCard] = useSelection<IBattleCard>(false, '.fight__inventory');
@@ -107,6 +111,11 @@ const Fight = () => {
             setSelectedCard(null);
         }
     }, [selectedCard])
+
+    async function ExitBattle() {
+        CloseWS()
+        router.push('/')
+    }
 
     useEffect(() => {
         setHps(prev => ({
@@ -130,11 +139,19 @@ const Fight = () => {
             }
             if (jsonEvent.type === EventTypes.ROUND_RESULT) {
                 const result = jsonEvent.results as IBattleResult[];
-                const rival = result.map(v => isYou ? v.player2_card : v.player1_card)
-                const player = result.map(v => isYou ? v.player1_card : v.player2_card)
+                let rival = result.map(v => isYou ? v.player2_card : v.player1_card)
+                let player = result.map(v => isYou ? v.player1_card : v.player2_card)
+                result.forEach((_, i) => {
+                    if (rival[i])
+                        rival[i].damage = isYou ? result[i].card_damage2 : result[i].card_damage1
+                    if (player[i])
+                        player[i].damage = isYou ? result[i].card_damage1 : result[i].card_damage2
+                    console.log(result[i].card_damage1, result[i].card_damage2)
+                })
                 setTimeout(() => {
                     setBattleState('battle')
                     setTimeout(() => {
+                        console.log(rival, player)
                         SetResult(rival, player, jsonEvent.state.opponent_field, jsonEvent.state.player_field, setRivalCards, setSelectionBattleCards)
                         SetHandCards(jsonEvent.state.player_hand, setHandCards)
                         setHps(() => ({
@@ -189,7 +206,7 @@ const Fight = () => {
 
     return (
         <div className="fight">
-            {portalContainer && createPortal(<FightHeader timer={timer} />, portalContainer)}
+            {portalContainer && createPortal(<FightHeader battleState={battleState} timer={timer} exit={ExitBattle} weather={weather} location={location} />, portalContainer)}
             <div className="fight__rival">
                 <HealthBar userName={players[1]} health={hps.rivalHP / 2} additionalStyle="rival" />
             </div>
@@ -219,7 +236,7 @@ const Fight = () => {
                     </ul>
                 </section>
             </div>
-            {battleState === 'ended' && <FinishWindow hps={hps} closeWS={CloseWS} />}
+            {battleState === 'ended' && <FinishWindow hps={hps} exit={ExitBattle} />}
         </div>
     )
 }
@@ -229,13 +246,12 @@ interface IFinishWindowProps {
         rivalHP: number,
         yourHP: number
     },
-    closeWS: () => void;
+    exit: () => void;
 }
 
-const FinishWindow = ({ hps, closeWS }: IFinishWindowProps) => {
+const FinishWindow = ({ hps, exit }: IFinishWindowProps) => {
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
     const [winMode, setWinMode] = useState<'draw' | 'win' | 'loose' | 'no'>('no');
-    const router = useRouter();
 
     useEffect(() => {
         setWSTimer();
@@ -263,9 +279,9 @@ const FinishWindow = ({ hps, closeWS }: IFinishWindowProps) => {
     }), [winMode])
 
     const finishScore = useMemo(() => ({
-        draw: 100,
-        win: 250,
-        loose: -140,
+        draw: 0,
+        win: +10,
+        loose: 0,
         no: 0
     }), [winMode])
 
@@ -289,10 +305,7 @@ const FinishWindow = ({ hps, closeWS }: IFinishWindowProps) => {
                     </section>
                     <section className="finish-window__section">
                         <div className="finish-window__container finish-window__container-logic">
-                            <LightButton title={"Выйти"} additionStyle="green" func={() => {
-                                closeWS()
-                                router.push('/')
-                            }} />
+                            <LightButton title={"Выйти"} additionStyle="green" func={exit} />
                         </div>
                     </section>
                 </div>
@@ -301,42 +314,20 @@ const FinishWindow = ({ hps, closeWS }: IFinishWindowProps) => {
     )
 }
 
-const WeatherElement = () => {
-    const [openDesc, setOpenDesc] = useState(false)
-    const weatherRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-        function CloseDescWindow(event: MouseEvent) {
-            if (weatherRef.current && !weatherRef.current.contains(event.target as Node))
-                setOpenDesc(false)
-        }
-        document.body.addEventListener('click', CloseDescWindow)
-
-        return () => document.body.removeEventListener('click', CloseDescWindow)
-    }, [])
-
+const FightElement = ({ element }: { element: string }) => {
     return (
-        <div className="weather-element" ref={weatherRef}>
-            <button className="weather-element__btn" onClick={() => setOpenDesc(prev => !prev)}>
-                <Cloudly />
-            </button>
-            {openDesc &&
-                < div className="weather-element__desc-block">
-                    <p className="weather-element__desc">
-                        Описание погоды
-                    </p>
-                </div>
-            }
+        <div className="weather-element">
+            <Image width={36} height={36} alt="element" src={`https://obviously-vocal-seagull.cloudpub.ru${element}.png`} />
         </div >
     )
 }
 
-const FightHeader = ({ timer }: { timer: number }) => {
+const FightHeader = ({ timer, exit, weather, location, battleState }: { timer: number, exit: () => void, weather: string, location: string, battleState: string }) => {
     return (
         <header className="fight-header">
             <div className="fight-header__container">
                 <div className="fight-header__left-block">
-                    <LightButton additionStyle="purple" title={'Выйти'} />
+                    <LightButton additionStyle="purple" title={'Выйти'} func={exit} />
                 </div>
                 <div className="fight-header__right-block">
                     <div className="fight-header__timer">
@@ -344,7 +335,13 @@ const FightHeader = ({ timer }: { timer: number }) => {
                             {timer}
                         </span>
                     </div>
-                    <WeatherElement />
+                    <div className="fight-header__state">
+                        <span className="fight-header__state-text">
+                            {battleState}
+                        </span>
+                    </div>
+                    <FightElement element={weather} />
+                    <FightElement element={location} />
                 </div>
             </div>
         </header>

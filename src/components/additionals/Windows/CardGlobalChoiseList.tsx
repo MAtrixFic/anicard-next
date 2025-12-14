@@ -56,6 +56,17 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
         })
     }, [])
 
+    async function DoMethod(data: ICard) {
+        const filteredResult = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) =>
+                value ? value.toString().length > 0 && value.toString() !== '0' : false
+            )
+        );
+        if (query.data)
+            setPreviewCards(query.data?.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
+            ))
+    }
+
     function SetFavoriteCard(index: number) {
         if (selectedCard) {
             const previewFavoriteCards = new Array(...activeCards)
@@ -95,10 +106,10 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </ul>
             </div>
             <div className="cards-choise__list-container">
-                <Filter style='cards-choise__filter' submit={() => console.log('filter')} />
+                <Filter style='cards-choise__filter' submit={DoMethod} />
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
-                        {query.data && updated && query.data.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
+                        {previewCards && updated && previewCards.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
                             .map((v) =>
                                 <PreviewSelectionCard
                                     key={v?.id}

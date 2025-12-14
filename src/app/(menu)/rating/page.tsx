@@ -1,6 +1,6 @@
 'use client'
 
-import { GetTopUsers, TRating } from "@/components/server/comp/UserApi"
+import { GetTopUsers, IRatingResponse } from "@/components/server/comp/UserApi"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect } from "react"
 
@@ -24,7 +24,7 @@ const Rating = () => {
                 </div>
                 <div className="rating__list-container">
                     <ul className="rating__list">
-                        {data && (data as TRating).top_users.map((v, i) =>
+                        {data && (data as IRatingResponse).top_users.map((v, i) =>
                             <RatingElement numberId={i + 1} key={v.user_id} username={v.nickname} score={v.rating} />
                         )}
                     </ul>

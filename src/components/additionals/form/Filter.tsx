@@ -10,7 +10,17 @@ interface IFilterProps {
 
 const Filter = ({ style, submit }: IFilterProps) => {
     return (
-        <ThrowFormContext style={style} formDefault={{ search: '', attribute: '', rarity: '', category: '' }} submit={submit}>
+        <ThrowFormContext style={style} formDefault=
+            {{
+                character: '',
+                rarity: '',
+                category: 'battle',
+                rating: '',
+                price: '0',
+                universe: '',
+                attribute: '',
+                search: ''
+            }} submit={submit}>
             <Input titleKey="search" />
             <SearchFilter />
         </ThrowFormContext>

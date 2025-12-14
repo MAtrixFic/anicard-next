@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import type { IBaseListProps } from './BaseList';
 import { Cross } from '../icons/Cards';
 
-const SmallList = ({ title, values }: IBaseListProps) => {
+const SmallList = ({ naming, values }: IBaseListProps) => {
     const [activeValueKey, setActiveValueKey] = useState<string>('');
     const [isOpened, setIsOpened] = useState<boolean>(false);
 
@@ -27,7 +27,7 @@ const SmallList = ({ title, values }: IBaseListProps) => {
             <div className="base-list__selection-container">
                 <div className="base-list__active-value-container">
                     <button className="base-list__btn" onClick={() => setIsOpened(!isOpened)}>
-                        {activeValueKey ? values[activeValueKey as keyof typeof values] : title}
+                        {activeValueKey ? values[activeValueKey as keyof typeof values] : naming.title}
                     </button>
                     <button disabled={!activeValueKey} className='base-list__btn' onClick={() => setActiveValueKey('')}>
                         <Cross />

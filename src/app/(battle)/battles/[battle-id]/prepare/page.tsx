@@ -9,7 +9,7 @@ import useBattleSocket from "@/devs/hooks/server/useBattleSocket";
 import { EventTypes } from "@/devs/store/BattleSocketStore";
 
 const Prepare = () => {
-    const { ws, environment, setWSValue, battleId, players } = useBattleSocket();
+    const { ws, environment, setWSValue, battleId, players, CloseWS } = useBattleSocket();
     const choises = useMemo(() => ({
         weather: [
             "sunny",
@@ -36,10 +36,20 @@ const Prepare = () => {
                 if (jsonEvent.type === EventTypes.BATTLE_STATE) {
                     if (jsonEvent.state.weather && jsonEvent.state.location) {
                         setPoints([{ environment: 'location', name: jsonEvent.state.location, id: 0 }, { environment: 'weather', name: jsonEvent.state.weather, id: 1 }])
+                        console.log(`/static/images/location/${jsonEvent.state.location}`, `/static/images/weather/${jsonEvent.state.weather}`)
+                        setWSValue('location', `/static/images/location/${jsonEvent.state.location}`)
+                        setWSValue('weather', `/static/images/weather/${jsonEvent.state.weather}`)
                         setTimeout(() => {
                             router.replace(`/battles/${battleId}/fight`)
                         }, 1000)
                     }
+                }
+                if (jsonEvent.type === EventTypes.BATTLE_ENDED) {
+                    alert("Соперник вышел")
+                    CloseWS();
+                    setTimeout(() => {
+                        router.replace('/')
+                    }, 3000)
                 }
             }
     }, [ws])
@@ -59,20 +69,7 @@ const Prepare = () => {
     useEffect(() => {
         setTimeout(() => {
             setStatusInTime();
-            // setTimeout(() => {
-            //     setPoints(prev => prev.map((v, i) =>
-            //         i === 1 ? {
-            //             key: "weather",
-            //             name: "Солнечно",
-            //             src: '/battle/weather/sunny.jpg',
-            //             id: 101
-            //         } : v
-            //     ))
-            //     setTimeout(() => {
-            //         router.replace('/battles/1/fight')
-            //     }, 2000)
-            // }, 10000)
-        }, 1000)
+        }, 8000)
     }, [])
 
     return (
@@ -87,7 +84,7 @@ const Prepare = () => {
                 </div>
                 <div className="battle-choice__logs">
                     <p className="battle-choice__log">
-                        Идет распределение выбора
+                        Идет распределение
                     </p>
                 </div>
             </section>
@@ -171,6 +168,7 @@ const PointChoice = ({ points, windowStatus }: IPointChoiceProps) => {
                             selectedId: selected?.id,
                             func: () => setSelected(v)
                         }}
+                        key={v.id}
                         id={i}
                         name={v.name}
                         environment={v.environment}

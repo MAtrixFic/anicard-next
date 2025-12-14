@@ -284,7 +284,7 @@ $maxBlockWidth: 400px;
         gap: 1rem;
     }
 
-    &__timer {
+    &__timer, &__state {
         &-text {
             font-size: 1.2rem;
             color: props.$purple;
@@ -293,29 +293,11 @@ $maxBlockWidth: 400px;
 }
 
 .weather-element {
-    position: relative;
-
-    &__btn {
-        svg {
-            height: 30px;
-            aspect-ratio: 1;
-        }
-    }
-
-    &__desc-block {
-        position: absolute;
-        right: calc(100%);
-        top: calc(100%);
-        background-color: white;
-        padding: .5rem;
-        border-radius: 15px;
-        min-width: max(40vw, 200px);
-
-        p {
-            color: props.$body;
-            font-size: 1rem;
-        }
-    }
+    overflow: hidden;
+    border-radius: 100%;
+    aspect-ratio: 1;
+    outline: 2px solid white;
+    border: 1px solid props.$body;
 }
 
 .finish-window {

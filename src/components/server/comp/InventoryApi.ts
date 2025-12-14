@@ -2,6 +2,14 @@
 import FetchMG from "../fetches/config"
 import { IAdminCardsResponse } from "./AdminApi"
 
+interface IError {
+    response: {
+        data: {
+            detail: string
+        }
+    }
+}
+
 export type TCardType = 'favorite' | 'battle' | 'special'
 export async function GetInventoryCards(userId: string, cardType?: TCardType): Promise<IAdminCardsResponse> {
     try {
@@ -43,9 +51,9 @@ export async function AddTwistCard(userId: string, cardType: Omit<TCardType, 'fa
     try {
         const res = await FetchMG.POST(`card/${userId}/${cardType}`)
         console.log(res.data)
-        return res.data.card
+        return { ok: true, data: res.data.card }
     }
     catch (error) {
-        return false
+        return { ok: false, data: (error as IError).response.data.detail }
     }
 }

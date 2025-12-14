@@ -50,6 +50,7 @@ async function CheckUser(req: NextRequest, cookieStore: ReadonlyRequestCookies) 
 }
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|api).*)',
+        // Исключаем все статические файлы, изображения, API и favicon
+        '/((?!_next/static|_next/image|images|_next/data|favicon.ico|api|.*\\.(?:ico|png|jpg|jpeg|gif|webp|svg|css|js|woff|woff2|ttf|eot)$).*)',
     ]
 }

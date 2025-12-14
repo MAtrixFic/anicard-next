@@ -9,7 +9,7 @@ import { useUser } from "@/devs/hooks/server/useUser"
 
 const YourBlock = () => {
     const { getMyTrades, deleteTrade, acceptOrNoTheOffer } = useTrades()
-    const { user } = useUser()
+    const { data: user } = useUser()
     const query = useQuery({
         queryFn: getMyTrades,
         queryKey: ['my-trades']

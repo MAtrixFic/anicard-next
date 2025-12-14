@@ -4,6 +4,7 @@ import FavoriteCardsList from "@/components/routes/profile/FavoriteCardsList"
 import UserAchivment from "@/components/routes/profile/UserAchivment"
 import { IUser, useUserStore } from "@/devs/store/UserStore"
 import { Suspense, useEffect, useState } from "react"
+import Image from "next/image"
 
 const Page = () => {
     const getValues = useUserStore(state => state.getUserValues)
@@ -24,7 +25,7 @@ const Page = () => {
                     <BlurSpace>
                         < section className="profile__user-label">
                             <div className="profile__logo-container">
-                                <img src="#" alt="user-logo" className="profile__logo" />
+                                <Image height={100} width={100} src="/avatar/default-avatar.jpg" alt="default-avatar" className="profile__logo" />
                             </div>
                             <div className="profile__user-nick-id">
                                 <div className="profile__user-id-container">

@@ -6,6 +6,8 @@ interface IBattleSocketStore {
     battleId?: string,
     players: [string, string];
     setValue: (key: keyof Omit<IBattleSocketStore, 'setValue'>, value: any) => void,
+    location: string,
+    weather: string
 }
 
 export enum EventTypes {
@@ -21,6 +23,8 @@ export enum EventTypes {
 
 const useBattleSocketStore = create<IBattleSocketStore>((set, get) => ({
     WS: undefined,
+    location: '',
+    weather: '',
     players: ['', ''],
     environment: undefined,
     setValue: (key, value) => set(() => ({

@@ -6,16 +6,15 @@ import useSwipeRight from "@/devs/hooks/useSwipe"
 import useOverWindowStatus, { type TWindowStatus } from "@/devs/hooks/useOverWindowStatus"
 import { Arrow } from "@/components/icons/Cards"
 import Image from "next/image"
-import { AddTwistCard } from "@/components/server/comp/InventoryApi"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import { useUser } from "@/devs/hooks/server/useUser"
-import { useQueryClient } from "@tanstack/react-query"
+import useTwists from "@/devs/hooks/server/useTwists"
 
 const Twists = () => {
     return (
         <div className="twists">
             <div className="twists__body">
+                <TwistBanner />
                 <TwistBanner />
             </div>
         </div>
@@ -25,37 +24,27 @@ const Twists = () => {
 
 export const TwistBanner = () => {
     const [openTwist, setOpenTwist, SetTimerOpenMode] = useOverWindowStatus(400);
-    const [droppedCard, setDroppedCard] = useState<ICard | null>(null)
-    const { data: user } = useUser(true)
-    const client = useQueryClient()
-
-    async function CreateTwist() {
-        if (user) {
-            await AddTwistCard(user.id.toString(), 'battle').then(data => data ? setDroppedCard(data) : undefined)
-            await client.invalidateQueries({ queryKey: ['user'] })
-        }
-        SetTimerOpenMode()
-    }
+    const { droppedCard, CreateBattleTwist, CreateCollectibleTwist, user } = useTwists();
 
     return (
         <section className="twist-banner">
             <div className="twist-banner__purchase-block">
-                <div className="twist-banner__free-container">
-                    <LightButton title='Открыть' additionStyle="green" func={CreateTwist} />
+                <div className="twist-banner__container">
+                    <LightButton title='Открыть' additionStyle="green" func={() => CreateBattleTwist(SetTimerOpenMode)} />
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info">
-                            Испытай удачу
+                            Боевые
                         </span>
                     </div>
                 </div>
-                {/* <div className="twist-banner__money-container">
-                    <LightButton title='Купить' additionStyle="purple" />
+                <div className="twist-banner__container">
+                    <LightButton title='Открыть' additionStyle="purple" func={() => CreateCollectibleTwist(SetTimerOpenMode)} />
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info">
-                            1 ключ
+                            Коллекционные
                         </span>
                     </div>
-                </div> */}
+                </div>
             </div>
             <div className="twist-banner__twist-container">
                 <Image height={600} priority width={800} src="/cards/cards-package.png" alt="" className={`twist-banner__twist ${openTwist == 'opened' ? 'stop' : 'play'}`} />

@@ -9,7 +9,7 @@ export interface ICardStore {
     allCards: ICard[];
     adminCards: ICard[];
     special: ICard[],
-    SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[], userId: string) => void;
+    SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => void;
     GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, userId: string) => Promise<ICard[]>;
 }
 
@@ -28,7 +28,7 @@ const useCardsStore = create<ICardStore>((set, get) => ({
             if (userId) {
                 const data = await GetCards(userId)
                 if (data.ok) {
-                    get().SetCards(key, data.cards, userId);
+                    get().SetCards(key, data.cards);
                 }
             }
         }
@@ -36,7 +36,7 @@ const useCardsStore = create<ICardStore>((set, get) => ({
             if (userId) {
                 const data = await GetInventoryCards(userId, key === 'allCards' ? undefined : key)
                 if (data.ok) {
-                    get().SetCards(key, data.cards, userId);
+                    get().SetCards(key, data.cards);
                 }
             }
         }

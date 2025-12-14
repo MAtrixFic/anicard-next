@@ -56,27 +56,27 @@
     }
 
     &__purchase-block {
+        background-color: white;
         display: flex;
-        width: 100%;
+        width: fit-content;
         padding-inline: 2rem;
         position: absolute;
         bottom: -80px;
-        left: 0;
+        left: 50%;
+        transform: translateX(-50%);
         justify-content: center;
+        border-bottom: 4px solid props.$purple;
+        border-radius: 25px;
+        padding: .4rem;
+        gap: 1rem;
     }
 
-    &__money-container,
-    &__free-container {
+    &__container {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: .6rem;
-        background-color: white;
-        padding-inline: .5rem;
-        padding-top: .5rem;
-        border-radius: 25px;
         padding-bottom: .4rem;
-        border-bottom: 4px solid props.$purple;
     }
 
     &__info-container {

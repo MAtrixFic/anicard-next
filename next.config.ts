@@ -6,34 +6,37 @@ const nextConfig: NextConfig = {
             allowedOrigins: [
                 'localhost:3000',
                 'hdp6zjjk-3000.euw.devtunnels.ms',
-                '*'
+                'obviously-vocal-seagull.cloudpub.ru'
             ]
         }
     },
     images: {
-        domains: [
-            'obviously-vocal-seagull.cloudpub.ru',
-            'https://hdp6zjjk-3000.euw.devtunnels.ms/'
-        ],
-
+        // Укажите домены для remotePatterns
         remotePatterns: [
             {
                 protocol: 'https',
                 hostname: 'obviously-vocal-seagull.cloudpub.ru',
                 port: '',
-                pathname: '/static/images/**',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'obviously-vocal-seagull.cloudpub.ru',
+                hostname: 'hdp6zjjk-3000.euw.devtunnels.ms',
                 port: '',
-                pathname: '/**'
+                pathname: '/**',
+            },
+            // Добавьте localhost для dev режима
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '3000',
+                pathname: '/**',
             },
             {
-                protocol: 'https',
-                hostname: 'hdp6zjjk-3000.euw.devtunnels.ms/',
-                port: '',
-                pathname: '/**'
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                port: '3000',
+                pathname: '/**',
             },
         ],
     },
