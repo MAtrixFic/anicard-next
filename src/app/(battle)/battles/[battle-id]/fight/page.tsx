@@ -1,7 +1,7 @@
 'use client'
 import LightButton from "@/components/additionals/buttons/LightButton"
 import Image from "next/image"
-import { useEffect, useState, useRef, useCallback, useMemo } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { createPortal } from "react-dom"
 import usePortal from "@/devs/hooks/usePortal"
 import BattleCard from "@/components/additionals/cards/BattleCard"

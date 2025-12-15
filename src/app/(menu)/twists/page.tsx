@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { createPortal } from "react-dom"
 import useSwipeRight from "@/devs/hooks/useSwipe"
 import useOverWindowStatus, { type TWindowStatus } from "@/devs/hooks/useOverWindowStatus"
@@ -15,7 +15,6 @@ const Twists = () => {
         <div className="twists">
             <div className="twists__body">
                 <TwistBanner />
-                <TwistBanner />
             </div>
         </div>
     )
@@ -26,23 +25,31 @@ export const TwistBanner = () => {
     const [openTwist, setOpenTwist, SetTimerOpenMode] = useOverWindowStatus(400);
     const { droppedCard, CreateBattleTwist, CreateCollectibleTwist, user } = useTwists();
 
+    const twists = useMemo(() => ({
+        'Боевые': CreateBattleTwist,
+        'Коллекционные': CreateCollectibleTwist
+    }), [])
+    const [openTwistChpice, setOpenTwistChoice] = useState<boolean>(false)
+    const [activeTwist, setActiveTwist] = useState<keyof typeof twists>('Боевые')
+
     return (
         <section className="twist-banner">
             <div className="twist-banner__purchase-block">
                 <div className="twist-banner__container">
-                    <LightButton title='Открыть' additionStyle="green" func={() => CreateBattleTwist(SetTimerOpenMode)} />
+                    <LightButton title='Открыть' additionStyle="green" func={() => twists[activeTwist](SetTimerOpenMode)} />
                     <div className="twist-banner__info-container">
-                        <span className="twist-banner__info">
-                            Боевые
+                        <span className="twist-banner__info" onClick={() => setOpenTwistChoice(!openTwistChpice)}>
+                            {activeTwist}
                         </span>
-                    </div>
-                </div>
-                <div className="twist-banner__container">
-                    <LightButton title='Открыть' additionStyle="purple" func={() => CreateCollectibleTwist(SetTimerOpenMode)} />
-                    <div className="twist-banner__info-container">
-                        <span className="twist-banner__info">
-                            Коллекционные
-                        </span>
+                        {openTwistChpice && <div className="twist-banner__choice">
+                            {Object.keys(twists).map(v =>
+                                <span className="twist-banner__choice-el" key={v} onClick={() => {
+                                    setActiveTwist(v as keyof typeof twists)
+                                    setOpenTwistChoice(false)
+                                }}>
+                                    {v}
+                                </span>)}
+                        </div>}
                     </div>
                 </div>
             </div>
