@@ -16,7 +16,7 @@ interface IAdminPanelProps {
 
 
 const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
-    const { AddAdminCard, RemoveAdminCard } = useAdmin()
+    const { AddAdminCard } = useAdmin()
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
     const [loadedCard, setLoadedCard] = useState<string | null>(null);
 

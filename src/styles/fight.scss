@@ -124,6 +124,7 @@ $maxBlockWidth: 400px;
     gap: 1rem;
     align-items: center;
 
+
     &.you {
         .health-bar__user-name {
             color: props.$blue;
@@ -138,20 +139,21 @@ $maxBlockWidth: 400px;
     }
 
     &__user-logo-container {
-        width: 40px;
-        aspect-ratio: 1;
         border-radius: 100%;
+        overflow: hidden;
         border: 2px solid white;
         background-color: props.$soLightGrey;
-        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        img {
+            object-fit: contain;
+        }
     }
 
-    &__user-name-container {
-        position: absolute;
-        top: -1.4rem;
-        right: 0;
-        transform: translateX(80%);
-    }
+    &__user-name-container {}
 
     &__user-name {
         font-size: 1.4rem;
@@ -160,13 +162,20 @@ $maxBlockWidth: 400px;
     }
 
     &__user-health-bar-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+
+    &__sl-container {
+        position: relative;
         flex-grow: 1;
         flex-shrink: 1;
         height: 10px;
         border-radius: 25px;
         border: 2px solid props.$body;
         outline: 1.4px solid white;
-        position: relative;
         overflow: hidden;
     }
 
@@ -284,7 +293,8 @@ $maxBlockWidth: 400px;
         gap: 1rem;
     }
 
-    &__timer, &__state {
+    &__timer,
+    &__state {
         &-text {
             font-size: 1.2rem;
             color: props.$purple;

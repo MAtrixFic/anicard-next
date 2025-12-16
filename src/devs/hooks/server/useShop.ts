@@ -12,7 +12,7 @@ export const useShop = () => {
 
     async function TryBuyCards(cardId: number) {
 
-        const res = await BuySpecialCards(Number(await CookieGet('userId')), cardId);
+        const res = await BuySpecialCards(Number((await CookieGet('userId'))?.value), cardId);
         if (res)
             addMessage({ text: 'Оплатите карту в боте', type: 'message' })
         else
@@ -23,7 +23,7 @@ export const useShop = () => {
 
     async function TryBuyKeys(keysCount: number) {
 
-        const res = await BuyKeys(Number(await CookieGet('userId')), keysCount);
+        const res = await BuyKeys(Number((await CookieGet('userId'))?.value), keysCount);
         if (res)
             addMessage({ text: 'Оплатите ключи в боте', type: 'message' })
         else

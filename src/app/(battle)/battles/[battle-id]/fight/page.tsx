@@ -279,10 +279,10 @@ const FinishWindow = ({ hps, exit }: IFinishWindowProps) => {
     }), [winMode])
 
     const finishScore = useMemo(() => ({
-        draw: 0,
-        win: +10,
-        loose: 0,
-        no: 0
+        draw: '0',
+        win: "+10",
+        loose: '0',
+        no: '0'
     }), [winMode])
 
     return (
@@ -298,7 +298,7 @@ const FinishWindow = ({ hps, exit }: IFinishWindowProps) => {
                         <div className="finish-window__container finish-window__container-score">
                             <div className="finish-window__score-container">
                                 <h2 className="finish-window__score-text">
-                                    {finishScore[winMode]}
+                                    {`Очков получено: ${finishScore[winMode]}`}
                                 </h2>
                             </div>
                         </div>
@@ -323,6 +323,13 @@ const FightElement = ({ element }: { element: string }) => {
 }
 
 const FightHeader = ({ timer, exit, weather, location, battleState }: { timer: number, exit: () => void, weather: string, location: string, battleState: string }) => {
+    const stateDict = {
+        'deployment': 'Приготовление',
+        'battle': 'Бой',
+        'ended': 'Конец боя',
+        'ready': 'Готов'
+    }
+
     return (
         <header className="fight-header">
             <div className="fight-header__container">
@@ -337,7 +344,7 @@ const FightHeader = ({ timer, exit, weather, location, battleState }: { timer: n
                     </div>
                     <div className="fight-header__state">
                         <span className="fight-header__state-text">
-                            {battleState}
+                            {stateDict[battleState as TBattleState]}
                         </span>
                     </div>
                     <FightElement element={weather} />

@@ -8,10 +8,11 @@ import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindo
 import { createPortal } from "react-dom"
 import Filter from "@/components/additionals/form/Filter"
 import AdminPanel from "@/components/routes/inventory/AdminPanel"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useAdmin } from "@/devs/hooks/server/useAdmin"
+import { useQuery } from "@tanstack/react-query"
 
 type TCardsMode = 'adminCards' | 'allCards'
 
@@ -24,13 +25,16 @@ const Page = () => {
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
-    useEffect(() => {
-        if (user)
-            getCards(cardsMode).then(data => {
-                setInventoryCards(data);
-                setPreviewCards(data);
-            })
-    }, [user?.id || 0, cardsMode])
+    useQuery({
+        queryKey: [cardsMode],
+        queryFn: async () => {
+            const data = await getCards(cardsMode)
+            setInventoryCards(data);
+            setPreviewCards(data);
+            return data
+        }
+    })
+
 
     async function DoMethod(data: ICard) {
         const filteredResult = Object.fromEntries(
