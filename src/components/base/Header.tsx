@@ -14,8 +14,6 @@ const Header = () => {
     const router = useRouter();
     const pathname = usePathname();
 
-    console.log(user)
-
     return (
         <header className={`header ${isVisible ? 'showen' : 'hidden'}`}>
             <div className="header__container header__container-blur">
