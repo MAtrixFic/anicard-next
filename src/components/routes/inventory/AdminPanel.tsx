@@ -40,7 +40,7 @@ const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
         console.log(filteredResult)
         const res = await AddAdminCard(Object.assign(filteredResult, { photo: loadedCard || undefined }))
         console.log(res)
-        CloseAdminPanel()
+        // CloseAdminPanel()
     }
 
     return (

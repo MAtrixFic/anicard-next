@@ -44,7 +44,7 @@ export async function CreateUser(nickname: string) {
 export async function GetUser(userId: string): Promise<IUserResponse | boolean> {
     try {
         const res = await FetchMG.GET(`user/${userId}`)
-        console.log(res.data)
+        // console.log(res.data)
         return res.data
     }
     catch (ex) {

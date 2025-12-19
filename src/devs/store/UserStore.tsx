@@ -46,7 +46,6 @@ const useUserStore = create<IUserStore>((set, get) => ({
                     const data = await GetUser(userId.value);
                     if (data) {
                         const resData = data as IUserResponse
-                        console.log('user_data', resData)
                         get().setUserData({
                             id: resData.user.user_id,
                             nickname: resData.user.nickname,

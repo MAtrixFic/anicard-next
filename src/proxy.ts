@@ -7,23 +7,23 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 export const proxy = async (req: NextRequest) => {
     console.log('Enter to proxy')
 
-    // if (!req.url.includes('auth')) {
-    //     const cookieStore = await cookies();
-    //     if (cookieStore.has('isAuth')) {
-    //         console.log('isAuth', cookieStore.get('isAuth')?.value == 'true')
-    //         if (cookieStore.get('isAuth')?.value == 'true') {
-    //             return NextResponse.next();
-    //         }
-    //         else {
-    //             const isUser = await CheckUser(req, cookieStore)
-    //             return isUser ? NextResponse.next() : NextResponse.redirect(new URL('auth', req.url))
-    //         }
-    //     }
-    //     else {
-    //         const isUser = await CheckUser(req, cookieStore)
-    //         return isUser ? NextResponse.next() : NextResponse.redirect(new URL('auth', req.url))
-    //     }
-    // }
+    if (!req.url.includes('auth')) {
+        const cookieStore = await cookies();
+        if (cookieStore.has('isAuth')) {
+            console.log('isAuth', cookieStore.get('isAuth')?.value == 'true')
+            if (cookieStore.get('isAuth')?.value == 'true') {
+                return NextResponse.next();
+            }
+            else {
+                const isUser = await CheckUser(req, cookieStore)
+                return isUser ? NextResponse.next() : NextResponse.redirect(new URL('auth', req.url))
+            }
+        }
+        else {
+            const isUser = await CheckUser(req, cookieStore)
+            return isUser ? NextResponse.next() : NextResponse.redirect(new URL('auth', req.url))
+        }
+    }
 
 }
 
