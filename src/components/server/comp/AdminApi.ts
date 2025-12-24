@@ -7,6 +7,20 @@ export interface IAdminCardsResponse extends IResponse {
     cards: ICard[]
 }
 
+export interface IError {
+    response: {
+        data: {
+            detail: string
+        }
+    }
+}
+
+export interface IRespone<T> {
+    ok: boolean,
+    data: T
+}
+
+
 export async function GetCards(userId: string): Promise<IAdminCardsResponse> {
     try {
         const res = await FetchMG.GET(`admin/cards?user_id=${userId}`)

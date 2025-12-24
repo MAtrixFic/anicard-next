@@ -1,4 +1,5 @@
 import Header from "@/components/base/Header";
+import Navigation from "@/components/base/Navigation";
 
 export default function RootLayout({
   children,
@@ -11,6 +12,7 @@ export default function RootLayout({
       <main className="main">
         {children}
       </main>
+      <Navigation />
     </>
   );
 }

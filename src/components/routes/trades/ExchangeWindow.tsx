@@ -87,7 +87,7 @@ const ExchangeWindow = ({ exchangedTrade, setExchangedTrade }: IExchangeWindowPr
                             <ul className="cards-choise__list">
                                 {inventoryCards.map((v, i) =>
                                     <PreviewSelectionCard
-                                        key={v?.id + i}
+                                        key={v?.id}
                                         setSelection={setSelectedCard}
                                         selectedCard={selectedCard}
                                         thisCard={v}
@@ -98,10 +98,6 @@ const ExchangeWindow = ({ exchangedTrade, setExchangedTrade }: IExchangeWindowPr
                     </div>
                     <div className="exchange-window__logic-block">
                         {selectedCard && <div className="exchange-window__card-selection">
-                            {/* <CardDesctiption
-                                opts={selectedCard ? [{ key: 'Ранг', value: selectedCard.rarity }] : []}
-                                name={selectedCard?.character}
-                            /> */}
                             <LightButton title='Обменять' additionStyle="green" func={ResponseToOffer} />
                         </div>}
                         <LightButton title='Выйти' additionStyle="purple" func={ExitExchangeWindow} />

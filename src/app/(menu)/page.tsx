@@ -5,7 +5,7 @@ import UserSearch from "@/components/routes/battleSearch/UserSearch"
 const Page = () => {
     return (
         <div className="home">
-            <BlurSpace additionStyle="main">
+            {/* <BlurSpace additionStyle="main">
                 <section className="table__top">
                     <div className="table__title-container">
                         <h1 className="table__title">
@@ -23,7 +23,7 @@ const Page = () => {
                         <PurpleLink additionStyle="huge" title="Рейтинг" to={'rating'} />
                     </nav>
                 </section>
-            </BlurSpace>
+            </BlurSpace> */}
         </div>
     )
 }

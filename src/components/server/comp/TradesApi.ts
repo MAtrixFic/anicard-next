@@ -2,6 +2,7 @@
 
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import FetchMG from "../fetches/config"
+import { IError, IRespone } from "./AdminApi";
 
 export type TTradeStatus = 'pending' | 'waiting_approval' | 'accepted' | 'declined';
 
@@ -33,7 +34,8 @@ interface IMyTradeRepsonse extends ITradePesponse {
     target_card: null | ICard
 }
 
-export async function GetActiveTrades(userId: number): Promise<{ ok: boolean, trades: ITrade[] }> {
+
+export async function GetActiveTrades(userId: number): Promise<IRespone<ITrade[]>> {
     try {
         const res = await FetchMG.GET(`trades/${userId}`)
         const tradesRes = (res.data as { trades: ITradePesponse[] }).trades.map(v => ({
@@ -44,11 +46,11 @@ export async function GetActiveTrades(userId: number): Promise<{ ok: boolean, tr
             status: v.status
         }) as ITrade)
         console.log(JSON.stringify(res.data.trades))
-        return { ok: true, trades: tradesRes }
+        return { ok: true, data: tradesRes }
     }
     catch (error) {
         console.log(error)
-        return { ok: false, trades: [] }
+        return { ok: false, data: [] }
     }
 }
 
@@ -82,20 +84,18 @@ export async function CreateTrade(userId: number, cardId: number) {
         return true
     }
     catch (error) {
-        // console.log(error)
         return false
     }
 }
 
-export async function ResponsdToOffer(userId: number, tradeId: number, cardId: number) {
+export async function ResponsdToOffer(userId: number, tradeId: number, cardId: number): Promise<IRespone<string>> {
     try {
         console.log(`trades/${tradeId}/${userId}/${cardId}/offer`)
         await FetchMG.POST(`trades/${tradeId}/${userId}/${cardId}/offer`)
-        return true
+        return { ok: true, data: "Ответ на трейд успешен" }
     }
     catch (error) {
-        console.log(error)
-        return false
+        return { ok: false, data: (error as IError).response.data.detail }
     }
 }
 

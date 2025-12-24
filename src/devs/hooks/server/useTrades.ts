@@ -16,7 +16,7 @@ export const useTrades = () => {
 
     async function getActiveTrades() {
         const res = await GetActiveTrades(await getValue('id'));
-        return res.trades
+        return res.data
     }
 
     async function createTrade(cardId: number) {
@@ -36,9 +36,8 @@ export const useTrades = () => {
 
     async function responsdToOffer(tradeId: number, cardId: number) {
         const res = await ResponsdToOffer(await getValue('id'), tradeId, cardId);
-        console.log(res)
-        if (res) addMessage({ text: 'Ответ на трейд успешно отправлен', type: 'message' })
-        else addMessage({ text: 'Ошибка отправки ответа на трейд', type: 'error' })
+        if (res.ok) addMessage({ text: res.data, type: 'message' })
+        else addMessage({ text: res.data, type: 'error' })
         queryClient.invalidateQueries({ queryKey: ['my-trades'] })
         queryClient.invalidateQueries({ queryKey: ['other-trades'] })
     }

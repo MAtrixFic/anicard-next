@@ -57,8 +57,7 @@ main {
     flex-grow: 1;
     min-height: 1px;
     box-sizing: border-box;
-    padding-top: 4rem;
-    padding-bottom: 1rem;
+    padding-block: 4rem;
 }
 
 body {
@@ -296,23 +295,23 @@ body {
     }
 }
 
-.table {
-    &__title {
-        color: white;
-        font-weight: bold;
-        text-align: center;
-        font-family: "Wadik";
-        padding-block: 2rem;
+// .table {
+//     &__title {
+//         color: white;
+//         font-weight: bold;
+//         text-align: center;
+//         font-family: "Wadik";
+//         padding-block: 2rem;
 
-    }
+//     }
 
-    &__start-menu {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        gap: .6rem;
-    }
-}
+//     &__start-menu {
+//         display: grid;
+//         grid-template-columns: repeat(2, 1fr);
+//         grid-template-rows: repeat(3, 1fr);
+//         gap: .6rem;
+//     }
+// }
 
 .blur-space {
     background:
@@ -1117,6 +1116,54 @@ body {
         font-size: 1.2rem;
         font-weight: 600;
         color: props.$soLightGrey;
+    }
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.navigation {
+    display: flex;
+    width: 100%;
+    background-color: rgba(props.$purple, .4);
+    border-top: 1.2px solid props.$purple;
+    backdrop-filter: blur(4px);
+    height: 50px;
+
+    &__nav {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    &__list {
+        display: flex;
+        flex-grow: 1;
+    }
+}
+
+.main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+
+    &.active {
+        .main-nav__link {
+            background-color: props.$purple;
+        }
+    }
+
+    &__link {
+        font-size: 1.1rem;
+        color: white;
+        font-weight: 600;
+        padding: .2rem .6rem;
+        background-color: transparent;
+        border-radius: 10px;
     }
 }
 

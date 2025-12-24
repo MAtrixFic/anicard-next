@@ -36,7 +36,7 @@ export const TwistBanner = () => {
         <section className="twist-banner">
             <div className="twist-banner__purchase-block">
                 <div className="twist-banner__container">
-                    <LightButton title='Открыть' additionStyle="green" func={() => twists[activeTwist](SetTimerOpenMode)} />
+                    <LightButton title='Открыть' additionStyle="green" func={() => { twists[activeTwist](SetTimerOpenMode) }} />
                     <div className="twist-banner__info-container">
                         <span className="twist-banner__info" onClick={() => setOpenTwistChoice(!openTwistChpice)}>
                             {activeTwist}

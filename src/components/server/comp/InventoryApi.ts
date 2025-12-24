@@ -1,14 +1,6 @@
 'use server'
 import FetchMG from "../fetches/config"
-import { IAdminCardsResponse } from "./AdminApi"
-
-interface IError {
-    response: {
-        data: {
-            detail: string
-        }
-    }
-}
+import { IAdminCardsResponse, IError } from "./AdminApi"
 
 export type TCardType = 'favorite' | 'battle' | 'special'
 export async function GetInventoryCards(userId: string, cardType?: TCardType): Promise<IAdminCardsResponse> {
