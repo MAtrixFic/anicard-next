@@ -10,7 +10,7 @@ const useTwists = () => {
     const addMessage = useMessageStore(state => state.addMessage)
     const [droppedCard, setDroppedCard] = useState<ICard | null>(null)
     const { data: user } = useUser()
-
+    console.log(user, 'user in twists hook')
 
 
     async function CreateBattleTwist(onGetTwist: () => void) {

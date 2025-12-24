@@ -103,7 +103,6 @@ export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: IC
                     />
                 </div>
             }
-            {/* {<AdminPanel setAdminMode={setAdminMode} card={selectedCard as ICard} />} */}
             {['edit', 'create'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} card={selectedCard as ICard} />}
         </>
     )

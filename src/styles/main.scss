@@ -657,6 +657,12 @@ body {
         color: white;
     }
 
+    &__desc-key, &__desc-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+    }
+
     &__desc-element {
         display: flex;
         gap: 1rem;
@@ -1119,7 +1125,7 @@ body {
     }
 }
 
-footer{
+footer {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -1158,7 +1164,7 @@ footer{
     }
 
     &__link {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         color: white;
         font-weight: 600;
         padding: .2rem .6rem;

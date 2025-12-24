@@ -29,7 +29,7 @@ export const useCards = () => {
 
 
     return {
-        setCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => await SetCards(key, cards, await getValue('id')),
+        setCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => await SetCards(key, cards),
         getCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>) => await GetCards(key, await getValue('id')),
         SetInvCards
     }

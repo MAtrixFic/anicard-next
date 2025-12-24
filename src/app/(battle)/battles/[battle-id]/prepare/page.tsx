@@ -7,6 +7,7 @@ import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import { useRouter } from "next/navigation";
 import useBattleSocket from "@/devs/hooks/server/useBattleSocket";
 import { EventTypes } from "@/devs/store/BattleSocketStore";
+import BattleRival from "@/components/routes/battleRival/BattleRival";
 
 const Prepare = () => {
     const { ws, environment, setWSValue, battleId, players, CloseWS } = useBattleSocket();
@@ -69,7 +70,7 @@ const Prepare = () => {
     useEffect(() => {
         setTimeout(() => {
             setStatusInTime();
-        }, 8000)
+        }, 100000000)
     }, [])
 
     return (
@@ -79,7 +80,9 @@ const Prepare = () => {
                     <h2 className="battle-choice__title">
                         <span className="battle-choice__t-el battle-choice__t-el-you">{players[0]}</span>
                         <span className="battle-choice__t-el battle-choice__t-el-vs">VS</span>
-                        <span className="battle-choice__t-el battle-choice__t-el-rival">{players[1]}</span>
+                        <BattleRival userId={1853332193}>42314
+                            <span className="battle-choice__t-el battle-choice__t-el-rival">{players[1]}</span>
+                        </BattleRival>
                     </h2>
                 </div>
                 <div className="battle-choice__logs">
