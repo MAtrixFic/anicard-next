@@ -46,6 +46,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
                     const data = await GetUser(userId.value);
                     if (data) {
                         const resData = data as IUserResponse
+                        console.log("key user", data)
                         get().setUserData({
                             id: resData.user.user_id,
                             nickname: resData.user.nickname,
@@ -53,7 +54,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
                             battleCoin: resData.user.battle_coin,
                             rating: resData.user.rating,
                             isAdmin: resData.isAdmin,
-                            keys: resData.user.card_keys[0].key
+                            keys: resData.user.card_keys?.[0]?.key ?? 0
                         })
                         return get()[key]
                     }
@@ -66,6 +67,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
                 if (userId) {
                     const data = await GetUser(userId.value);
                     if (data) {
+                        console.log("all user", data)
                         const resData = data as IUserResponse
                         get().setUserData({
                             id: resData.user.user_id,
@@ -74,7 +76,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
                             battleCoin: resData.user.battle_coin,
                             rating: resData.user.rating,
                             isAdmin: resData.isAdmin,
-                            keys: resData.user.card_keys[0].key
+                            keys: resData.user.card_keys?.[0]?.key ?? 0
                         })
                     }
                 }
@@ -93,7 +95,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
                                 battleCoin: resData.user.battle_coin,
                                 rating: resData.user.rating,
                                 isAdmin: resData.isAdmin,
-                                keys: resData.user.card_keys[0].key
+                                keys: resData.user.card_keys?.[0]?.key ?? 0
                             })
                         }
                     }

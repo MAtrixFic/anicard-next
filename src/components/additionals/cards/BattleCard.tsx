@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard"
 import { IBattleCard } from "@/app/(battle)/battles/[battle-id]/fight/page"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelectionCardProps, 'setSelection' | 'thisCard' | 'selectedCard'> & { setSelection?: (card: IBattleCard | null) => void, thisCard: IBattleCard, selectedCard: IBattleCard | null }) => {
 
@@ -18,7 +19,7 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <Image height={140} width={60} quality={80} preload src={`https://obviously-vocal-seagull.cloudpub.ru${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
+                    <Image height={140} width={60} quality={80} preload src={`${BACK_ORIGIN}${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
                 </div>
                 <div className="card__stats-container">
                     {thisCard &&

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Plus, Delete } from "../../icons/Cards"
 import Image from "next/image";
 import { IPreviewSelectionCardProps } from "./PreviewSelectionCard";
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config";
 
 interface IPreviewCardProps extends Partial<Omit<IPreviewSelectionCardProps, 'selectedCard'>> {
     func?: () => void;
@@ -32,7 +33,7 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                                 height={140}
                                 width={100}
                                 quality={80}
-                                src={`https://obviously-vocal-seagull.cloudpub.ru${thisCard.photo}`}
+                                src={`${BACK_ORIGIN}${thisCard.photo}`}
                                 alt="card-preivew"
                                 className="card__preview"
                             />}

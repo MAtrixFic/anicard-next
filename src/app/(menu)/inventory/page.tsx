@@ -8,7 +8,7 @@ import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindo
 import { createPortal } from "react-dom"
 import Filter from "@/components/additionals/form/Filter"
 import AdminPanel from "@/components/routes/inventory/AdminPanel"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useAdmin } from "@/devs/hooks/server/useAdmin"
@@ -18,23 +18,22 @@ type TCardsMode = 'adminCards' | 'allCards'
 
 const Page = () => {
     const { data: user } = useUser()
-    const { getCards } = useCards()
+    // const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
     const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')
 
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
-    useQuery({
-        queryKey: [cardsMode],
-        queryFn: async () => {
-            const data = await getCards(cardsMode)
-            setInventoryCards(data);
-            setPreviewCards(data);
-            return data
-        }
-    })
-
+    // useQuery({
+    //     queryKey: [cardsMode],
+    //     queryFn: async () => {
+    //         const data = await getCards(cardsMode)
+    //         setInventoryCards(data);
+    //         setPreviewCards(data);
+    //         return data
+    //     }
+    // })
 
     async function DoMethod(data: ICard) {
         const filteredResult = Object.fromEntries(

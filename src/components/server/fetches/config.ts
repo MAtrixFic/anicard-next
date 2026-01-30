@@ -1,8 +1,9 @@
 'use server'
 import axios from "axios";
+import { BACK_ORIGIN } from "./env.config";
 
 class FetchMG {
-    public static origin: string = process.env.BACK_ORIGIN || 'https://obviously-vocal-seagull.cloudpub.ru';
+    public static origin: string = BACK_ORIGIN + '/';
     public static api = axios.create({
         baseURL: FetchMG.origin,
         timeout: 5000,

@@ -1,0 +1,1 @@
+export const BACK_ORIGIN = "https://communally-lovable-pointer.cloudpub.ru"

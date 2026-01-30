@@ -23,7 +23,7 @@ const AuthPage = () => {
                             <PInput />
                         </div>
                         <div className="auth__bottom-block">
-                            <LightButton title={'Зарегистрироваться'} additionStyle="green" />
+                            <LightButton title={'Зарегистрироваться'} additionStyle="green" submit />
                         </div>
                     </>
                 </ ThrowFormContext >

@@ -1,6 +1,7 @@
 "use"
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 export interface IPreviewSelectionCardProps {
     setSelection: (card: ICard | null) => void,
@@ -19,7 +20,7 @@ const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard }: IPreview
         >
             <button className="card__active-container" onClick={SetStateOfCard}>
                 <div className="card__preview-container">
-                    <Image height={140} width={60} quality={80} src={`https://obviously-vocal-seagull.cloudpub.ru${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
+                    <Image height={140} width={60} quality={80} src={`${BACK_ORIGIN}${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
                 </div>
             </button>
         </li>

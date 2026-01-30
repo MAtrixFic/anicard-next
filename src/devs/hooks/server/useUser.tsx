@@ -10,5 +10,7 @@ export const useUser = (push: boolean = true) => {
         queryFn: () => getUserValues(undefined, push)
     })
 
+    console.log('store',data)
+
     return { data }
 }
