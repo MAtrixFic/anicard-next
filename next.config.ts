@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'obviously-vocal-seagull.cloudpub.ru',
+                hostname: 'communally-lovable-pointer.cloudpub.ru',
                 port: '',
                 pathname: '/**',
             },

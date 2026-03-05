@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import useBattleSocket from "@/devs/hooks/server/useBattleSocket";
 import { EventTypes } from "@/devs/store/BattleSocketStore";
 import BattleRival from "@/components/routes/battleRival/BattleRival";
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config";
 
 const Prepare = () => {
     const { ws, environment, setWSValue, battleId, players, CloseWS } = useBattleSocket();
@@ -70,7 +71,7 @@ const Prepare = () => {
     useEffect(() => {
         setTimeout(() => {
             setStatusInTime();
-        }, 100000000)
+        }, 8000)
     }, [])
 
     return (
@@ -80,7 +81,7 @@ const Prepare = () => {
                     <h2 className="battle-choice__title">
                         <span className="battle-choice__t-el battle-choice__t-el-you">{players[0]}</span>
                         <span className="battle-choice__t-el battle-choice__t-el-vs">VS</span>
-                        <BattleRival userId={1853332193}>42314
+                        <BattleRival userId={1853332193}>
                             <span className="battle-choice__t-el battle-choice__t-el-rival">{players[1]}</span>
                         </BattleRival>
                     </h2>
@@ -136,7 +137,7 @@ const BattlePoint = ({ name, additionalStyle, checkSelection, environment, id }:
             } ${checkSelection && 'selectable'}`} onClick={checkSelection?.func}>
             <div className="battle-point__container battle-point__container-preview">
                 {!name && !environment ? <span className="battle-point__preview-question">?</span> :
-                    <Image height={120} width={120} quality={60} alt='point-preview' src={`https://obviously-vocal-seagull.cloudpub.ru/static/images/${environment}/${name}.png`} className="battle-point__preview" />
+                    <Image height={120} width={120} quality={60} alt='point-preview' src={`${BACK_ORIGIN}/static/images/${environment}/${name}.png`} className="battle-point__preview" />
                 }
             </div >
             <div className="battle-point__container battle-point__container-name">

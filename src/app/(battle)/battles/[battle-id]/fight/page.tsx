@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import useBattleSocket from "@/devs/hooks/server/useBattleSocket"
 import { EventTypes } from "@/devs/store/BattleSocketStore"
 import { ICard, TCardRarity } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 export type TSelectedBattleCard = IBattleCard | null
 export type TSelectionCardsArr = [TSelectedBattleCard, TSelectedBattleCard, TSelectedBattleCard]
@@ -317,7 +318,7 @@ const FinishWindow = ({ hps, exit }: IFinishWindowProps) => {
 const FightElement = ({ element }: { element: string }) => {
     return (
         <div className="weather-element">
-            <Image width={36} height={36} alt="element" src={`https://obviously-vocal-seagull.cloudpub.ru${element}.png`} />
+            <Image width={36} height={36} alt="element" src={`${BACK_ORIGIN}${element}.png`} />
         </div >
     )
 }

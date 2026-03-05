@@ -9,6 +9,7 @@ import Image from "next/image"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import useTwists from "@/devs/hooks/server/useTwists"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 const Twists = () => {
     return (
@@ -96,7 +97,7 @@ const TwistWindow = ({ setOpenWindow, windowMode, card }: ITwistWindowProps) => 
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
                             <div className={`twist__dropped-card twist__dropped-card-${card.rarity.toLocaleLowerCase()}`}>
-                                <Image height={300} width={180} src={`https://obviously-vocal-seagull.cloudpub.ru${card.photo}`} alt="dropped-card" className="twist__card-img" />
+                                <Image height={300} width={180} src={`${BACK_ORIGIN}${card.photo}`} alt="dropped-card" className="twist__card-img" />
                             </div>
                         </div>
                     </div>

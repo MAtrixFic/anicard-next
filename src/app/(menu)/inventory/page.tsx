@@ -18,22 +18,22 @@ type TCardsMode = 'adminCards' | 'allCards'
 
 const Page = () => {
     const { data: user } = useUser()
-    // const { getCards } = useCards()
+    const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
     const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')
 
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
     const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
-    // useQuery({
-    //     queryKey: [cardsMode],
-    //     queryFn: async () => {
-    //         const data = await getCards(cardsMode)
-    //         setInventoryCards(data);
-    //         setPreviewCards(data);
-    //         return data
-    //     }
-    // })
+    useQuery({
+        queryKey: [cardsMode],
+        queryFn: async () => {
+            const data = await getCards(cardsMode)
+            setInventoryCards(data);
+            setPreviewCards(data);
+            return data
+        }
+    })
 
     async function DoMethod(data: ICard) {
         const filteredResult = Object.fromEntries(

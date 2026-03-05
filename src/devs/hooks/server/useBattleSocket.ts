@@ -2,6 +2,7 @@
 import { useUserStore } from "@/devs/store/UserStore"
 import { useCallback } from "react"
 import useBattleSocketStore from "@/devs/store/BattleSocketStore"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 const useBattleSocket = () => {
     const getValue = useUserStore(state => state.getUserValues)
@@ -16,7 +17,7 @@ const useBattleSocket = () => {
     const CreateWS = useCallback(async () => {
         if (ws) return
         else {
-            const localWS = new WebSocket(`https://obviously-vocal-seagull.cloudpub.ru/battle/ws/${await getValue('id')}`)
+            const localWS = new WebSocket(`${BACK_ORIGIN}/battle/ws/${await getValue('id')}`)
             setWSValue('WS', localWS)
         }
     }, [ws])
