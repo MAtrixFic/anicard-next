@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
         serverActions: {
             allowedOrigins: [
                 'localhost:3000',
-                'hdp6zjjk-3000.euw.devtunnels.ms',
-                'obviously-vocal-seagull.cloudpub.ru'
+                '74h98gnp-3000.euw.devtunnels.ms',
+                'communally-lovable-pointer.cloudpub.ru'
             ]
         }
     },
@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'hdp6zjjk-3000.euw.devtunnels.ms',
+                hostname: '74h98gnp-3000.euw.devtunnels.ms',
                 port: '',
                 pathname: '/**',
             },

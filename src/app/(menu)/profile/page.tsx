@@ -11,7 +11,7 @@ const Page = () => {
     const [user, setUser] = useState<IUser>()
 
     useEffect(() => {
-        getValues().then(data => setUser(data))
+        getValues().then(data => getValues('avatar').then(ava => setUser({ ...data, avatar: ava })))
     }, [])
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const Page = () => {
                     <BlurSpace>
                         < section className="profile__user-label">
                             <div className="profile__logo-container">
-                                <Image height={100} width={100} src="/avatar/default-avatar.jpg" alt="default-avatar" className="profile__logo" />
+                                <Image height={100} width={100} src={user.avatar} alt="default-avatar" className="profile__logo" />
                             </div>
                             <div className="profile__user-nick-id">
                                 <div className="profile__user-id-container">
@@ -43,7 +43,7 @@ const Page = () => {
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
                                 {[{ score: '21', title: 'Количество карт' },
-                                { score: user.rating.toString() || '100', title: 'Рейтин' }
+                                { score: user.rating?.toString() || '100', title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />
                                 )}

@@ -14,6 +14,25 @@
         flex-direction: column;
         gap: 3rem;
     }
+
+    &-top {
+        display: flex;
+
+        &__link {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.4rem;
+            background-color: rgba(props.$purple, .4);
+            padding: .8rem 1rem;
+            border-radius: 20px;
+            border: 1px solid props.$purple;
+            border-bottom-width: 4px;
+        }
+    }
 }
 
 .keys {
@@ -75,7 +94,38 @@
     }
 }
 
+@keyframes border-anim {
+    0% {
+        outline-color: props.$green;
+    }
+
+    50% {
+        outline-color: props.$cuprum;
+    }
+
+    100% {
+        outline-color: props.$green;
+    }
+
+}
+
+@keyframes text-anim {
+    0% {
+        color: props.$green;
+    }
+
+    50% {
+        color: props.$cuprum;
+    }
+
+    100% {
+        color: props.$green;
+    }
+
+}
+
 .banner {
+    corner-shape: bevel;
     background-color: white;
     border-radius: 15px;
     box-shadow: 0px 0px 33px 7px rgba(25, 63, 92, 0.2);
@@ -87,7 +137,9 @@
     display: flex;
     flex-direction: column;
     gap: .2rem;
-    border-bottom: 4px solid props.$purple;
+    box-sizing: content-box;
+    outline: 5px double props.$green;
+    animation: border-anim 3s linear infinite;
 
     &__view-block {
         display: flex;
@@ -96,8 +148,12 @@
     }
 
     &__name {
-        font-weight: 500;
-        font-size: 1rem;
+        font-weight: 600;
+        animation: text-anim 3s linear infinite;
+        font-family: "Tik Tok";
+
+        font-size: 1.2rem;
+        letter-spacing: .2rem;
         text-wrap: wrap;
         display: block;
         text-align: center;
@@ -118,9 +174,10 @@
         }
     }
 
+
     &__count {
         color: props.$body;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 1rem;
         display: block;
         width: 100%;
@@ -135,9 +192,9 @@
     }
 
     &__view {
-        object-fit: scale-down;
-        height: 120px;
-        border-radius: 15px;
+        object-fit: contain;
+        height: 200px;
+        width: 100%;
         overflow: hidden;
 
         &.card-s {

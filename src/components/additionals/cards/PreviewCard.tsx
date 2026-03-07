@@ -33,6 +33,7 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                                 height={140}
                                 width={100}
                                 quality={80}
+                                unoptimized
                                 src={`${BACK_ORIGIN}${thisCard.photo}`}
                                 alt="card-preivew"
                                 className="card__preview"

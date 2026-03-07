@@ -13,8 +13,6 @@ export const useRivalStats = (rivalId: number) => {
     useEffect(() => {
         GetScore()
         GetCards()
-
-
     }, [])
 
     async function GetScore() {

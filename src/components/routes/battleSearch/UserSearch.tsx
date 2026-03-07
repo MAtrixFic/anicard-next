@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import useBattleSocket from "@/devs/hooks/server/useBattleSocket"
 import { EventTypes } from "@/devs/store/BattleSocketStore"
 
+
 const UserSearch = () => {
     const [windowStatus, setWindowsStatus, UpdateWindowStatusInTime] = useOverWindowStatus(400);
     const [fightIsFound, setFightIsFound] = useState<boolean>(false)
@@ -69,6 +70,7 @@ const UserSearch = () => {
                         </div>
                     </div>
                 </div>, document.body)
+
             }
         </>
     )

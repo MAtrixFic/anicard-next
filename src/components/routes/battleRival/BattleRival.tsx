@@ -47,6 +47,9 @@ const BattleRival = ({ children, userId }: IBattleRivalProps) => {
                     <div className="rival-stats__main">
                         {pages[page]}
                     </div>
+                    <div className="rival-stats__other">
+                        <LightButton additionStyle="purple" title={"Выйти"} func={() => setWS("to-hide")} />
+                    </div>
                 </div>
             </OverBlackSpace>
         </>

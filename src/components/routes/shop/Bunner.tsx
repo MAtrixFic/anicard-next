@@ -28,7 +28,7 @@ export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
         <div className="banner">
             <div className="banner__view-block">
                 <div className="banner__view-container">
-                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className={`banner__view card-${card?.rarity.toLocaleLowerCase()}`} />
+                    <Image height={80} width={80} quality={60} preload src={src} alt="banner" className={`banner__view`} />
                 </div>
                 <div className="banner__name-container">
                     <span className="banner__name">
@@ -40,7 +40,7 @@ export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="green tiny" func={() => buy!(count, card)} />
+                <LightButton title={'Купить'} additionStyle="green-bevel tiny" func={() => buy!(count, card)} />
             </div>
         </div>
     )

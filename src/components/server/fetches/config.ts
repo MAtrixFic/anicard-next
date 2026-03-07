@@ -9,11 +9,12 @@ class FetchMG {
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
+        withCredentials: true,
     })
 
-    public static async GET(endpoint: string, params?: any) {
-        return await FetchMG.api.get(endpoint, { params: params });
+    public static async GET(endpoint: string, params?: any, headers?: any) {
+        return await FetchMG.api.get(endpoint, { params: params, headers });
     }
 
     public static async POST(endpoint: string, params?: any) {

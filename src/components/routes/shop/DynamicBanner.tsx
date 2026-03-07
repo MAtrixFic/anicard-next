@@ -2,6 +2,7 @@
 import { useMemo } from "react"
 import { BannerSection, IBannerProps } from "./Bunner"
 import { ICard, IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 interface IDynamicBannerProps {
     buy: (count: number, card?: IShortCardInfo & { id: number }) => void,
@@ -14,7 +15,7 @@ const DynamicBanner = ({ buy, offer }: IDynamicBannerProps) => {
     if (!offer.data) return
 
     const cards = useMemo(() => (offer.data?.cards as ICard[]).map(v => ({
-        src: `https://obviously-vocal-seagull.cloudpub.ru${v.photo}`,
+        src: `${BACK_ORIGIN}${v.photo}`,
         name: `Карта ${v.rarity}`,
         cost: { count: v!.price, type: 'rubles' },
         card: {

@@ -9,14 +9,17 @@ export interface IUser {
     coin: number,
     battleCoin: number,
     rating: number,
-    keys: number
+    keys: number,
+    avatar: string,
 }
 export interface IUserStore extends Partial<IUser> {
-    setUserData: (arg: Omit<IUserStore, 'setUserData' | 'getUserValues'>) => void,
-    getUserValues: (key?: keyof IUser, push?: boolean) => Promise<any>
+    setUserData: (arg: Omit<IUserStore, 'setUserData' | 'getUserValues' | 'setUserValue'>) => void,
+    getUserValues: (key?: keyof IUser, push?: boolean) => Promise<any>,
+    setUserValue: (key: keyof IUser, value: any) => void;
 }
 
 const useUserStore = create<IUserStore>((set, get) => ({
+    avatar: undefined,
     nickname: undefined,
     id: undefined,
     isAdmin: undefined,
@@ -24,6 +27,10 @@ const useUserStore = create<IUserStore>((set, get) => ({
     battleCoin: undefined,
     rating: undefined,
     keys: undefined,
+    setUserValue: (key, value) => set(state => ({
+        ...state,
+        [key]: value
+    })),
     setUserData: (arg) => set(state => ({
         ...state,
         nickname: arg.nickname,

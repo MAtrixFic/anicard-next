@@ -3,6 +3,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { CreateUser } from "@/components/server/comp/UserApi";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import { useRouter } from "next/navigation";
+import TelegramInit from "@/components/telegram/Client";
 
 
 const AuthPage = () => {
