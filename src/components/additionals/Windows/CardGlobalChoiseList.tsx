@@ -11,7 +11,7 @@ import { useCards } from '@/devs/hooks/server/useCards'
 import { useQuery } from '@tanstack/react-query'
 
 export interface ICard extends IShortCardInfo { photo: string, id: number }
-export type TCardRarity = 'A' | 'S' | 'C' | 'B' | 'D'
+export type TCardRarity = 'A' | 'S' | 'C' | 'B'
 export interface IShortCardInfo {
     universe: string,
     rating: number,

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { GetUser, IUserResponse } from "@/components/server/comp/UserApi";
-import { CookieGet } from "@/components/server/CookieManager";
+import { IUserResponse } from "@/components/server/comp/UserApi";
+import { GetUser } from "@/components/server/comp/Apis";
 
 export interface IUser {
     nickname: string,
@@ -48,33 +48,44 @@ const useUserStore = create<IUserStore>((set, get) => ({
                 return get()[key]
             }
             else {
-                const userId = await CookieGet('userId')
-                if (userId) {
-                    const data = await GetUser(userId.value);
-                    if (data) {
-                        const resData = data as IUserResponse
-                        console.log("key user", data)
-                        get().setUserData({
-                            id: resData.user.user_id,
-                            nickname: resData.user.nickname,
-                            coin: resData.user.coin,
-                            battleCoin: resData.user.battle_coin,
-                            rating: resData.user.rating,
-                            isAdmin: resData.isAdmin,
-                            keys: resData.user.card_keys?.[0]?.key ?? 0
-                        })
-                        return get()[key]
-                    }
+                const data = await GetUser();
+                if (data) {
+                    const resData = data as IUserResponse
+                    console.log("key user", data)
+                    get().setUserData({
+                        id: resData.user.user_id,
+                        nickname: resData.user.nickname,
+                        coin: resData.user.coin,
+                        battleCoin: resData.user.battle_coin,
+                        rating: resData.user.rating,
+                        isAdmin: resData.isAdmin,
+                        keys: resData.user.card_keys?.[0]?.key ?? 0
+                    })
+                    return get()[key]
                 }
             }
         }
         else {
             if (push) {
-                const userId = await CookieGet('userId')
-                if (userId) {
-                    const data = await GetUser(userId.value);
+                const data = await GetUser();
+                if (data) {
+                    console.log("all user", data)
+                    const resData = data as IUserResponse
+                    get().setUserData({
+                        id: resData.user.user_id,
+                        nickname: resData.user.nickname,
+                        coin: resData.user.coin,
+                        battleCoin: resData.user.battle_coin,
+                        rating: resData.user.rating,
+                        isAdmin: resData.isAdmin,
+                        keys: resData.user.card_keys?.[0]?.key ?? 0
+                    })
+                }
+            }
+            else
+                if (Object.values(get()).includes(undefined)) {
+                    const data = await GetUser();
                     if (data) {
-                        console.log("all user", data)
                         const resData = data as IUserResponse
                         get().setUserData({
                             id: resData.user.user_id,
@@ -85,26 +96,6 @@ const useUserStore = create<IUserStore>((set, get) => ({
                             isAdmin: resData.isAdmin,
                             keys: resData.user.card_keys?.[0]?.key ?? 0
                         })
-                    }
-                }
-            }
-            else
-                if (Object.values(get()).includes(undefined)) {
-                    const userId = await CookieGet('userId')
-                    if (userId) {
-                        const data = await GetUser(userId.value);
-                        if (data) {
-                            const resData = data as IUserResponse
-                            get().setUserData({
-                                id: resData.user.user_id,
-                                nickname: resData.user.nickname,
-                                coin: resData.user.coin,
-                                battleCoin: resData.user.battle_coin,
-                                rating: resData.user.rating,
-                                isAdmin: resData.isAdmin,
-                                keys: resData.user.card_keys?.[0]?.key ?? 0
-                            })
-                        }
                     }
                 }
             return {

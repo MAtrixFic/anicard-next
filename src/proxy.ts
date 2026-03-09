@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { GetUser, IUserResponse } from "./components/server/comp/UserApi";
+import { IUserResponse } from "./components/server/comp/UserApi";
+import { GetUser } from "./components/server/comp/Apis";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export const proxy = async (req: NextRequest) => {
@@ -32,16 +33,13 @@ export const proxy = async (req: NextRequest) => {
 async function CheckUser(req: NextRequest, cookieStore: ReadonlyRequestCookies) {
     console.log(req.nextUrl.search)
     if (req.nextUrl.search.length === 0) return true
-    const userId = cookieStore.get('userId')
-    if (userId && userId.value.length > 0) {
-        const user = await GetUser(userId.value)
-        if (user) {
-            cookieStore.set('isAuth', JSON.stringify(true), { httpOnly: true })
-            cookieStore.set('isAdmin', JSON.stringify((user as IUserResponse).isAdmin), { httpOnly: true })
-            return true
-        }
-        else return false
+    const user = await GetUser()
+    if (user) {
+        cookieStore.set('isAuth', JSON.stringify(true), { httpOnly: true })
+        cookieStore.set('isAdmin', JSON.stringify((user as IUserResponse).isAdmin), { httpOnly: true })
+        return true
     }
+    else return false
 }
 export const config = {
     matcher: [

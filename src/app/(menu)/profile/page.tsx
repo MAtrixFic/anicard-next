@@ -2,54 +2,47 @@
 import BlurSpace from "@/components/additionals/BlurSpace"
 import FavoriteCardsList from "@/components/routes/profile/FavoriteCardsList"
 import UserAchivment from "@/components/routes/profile/UserAchivment"
-import { IUser, useUserStore } from "@/devs/store/UserStore"
-import { Suspense, useEffect, useState } from "react"
+import { Suspense, lazy } from "react"
+import { useUser } from "@/devs/hooks/server/useUser"
 import Image from "next/image"
 
+// const lazyStats = lazy(()=> import(''))
+
 const Page = () => {
-    const getValues = useUserStore(state => state.getUserValues)
-    const [user, setUser] = useState<IUser>()
-
-    useEffect(() => {
-        getValues().then(data => getValues('avatar').then(ava => setUser({ ...data, avatar: ava })))
-    }, [])
-
-    useEffect(() => {
-        console.log(user)
-    }, [user])
-
+    const { data } = useUser()
+    console.log(data)
     return (
         <div className="profile">
             <Suspense fallback={<div className="profile__loading">Загрузка...</div>}>
-                {user &&
+                {data &&
                     <BlurSpace>
                         < section className="profile__user-label">
                             <div className="profile__logo-container">
-                                <Image height={100} width={100} src={user.avatar} alt="default-avatar" className="profile__logo" />
+                                <Image height={100} width={100} src={sessionStorage.getItem('avatar') || '/avatar/default-avatar.jpg'} alt="default-avatar" className="profile__logo" />
                             </div>
                             <div className="profile__user-nick-id">
                                 <div className="profile__user-id-container">
                                     <span className="profile__user-id">
-                                        {`UId: ${user?.id}`}
+                                        {`UId: ${data?.id}`}
                                     </span>
                                 </div>
                                 <div className="profile__user-nick-container">
                                     <h2 className="profile__user-nick">
-                                        {user?.nickname}
+                                        {data?.nickname}
                                     </h2>
                                 </div>
                             </div>
                         </section>
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
-                                {[{ score: '21', title: 'Количество карт' },
-                                { score: user.rating?.toString() || '100', title: 'Рейтин' }
+                                {[{ score: `${21}`, title: 'Количество карт' },
+                                { score: data.rating?.toString() || '100', title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />
                                 )}
                             </ul>
                         </section>
-                        <FavoriteCardsList user={user} />
+                        <FavoriteCardsList user={data} />
                     </BlurSpace>}
             </Suspense>
         </div >

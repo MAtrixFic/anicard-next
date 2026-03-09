@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ICard } from "../../components/additionals/Windows/CardGlobalChoiseList";
-import { GetCards } from "@/components/server/comp/AdminApi";
-import { GetInventoryCards } from "@/components/server/comp/InventoryApi";
+import { GetCards } from "@/components/server/comp/Apis";
+import { GetInventoryCards } from "@/components/server/comp/Apis";
 
 export interface ICardStore {
     favorite: ICard[];
@@ -10,7 +10,7 @@ export interface ICardStore {
     adminCards: ICard[];
     special: ICard[],
     SetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => void;
-    GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, userId: string) => Promise<ICard[]>;
+    GetCards: (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>) => Promise<ICard[]>;
 }
 
 const useCardsStore = create<ICardStore>((set, get) => ({
@@ -23,21 +23,18 @@ const useCardsStore = create<ICardStore>((set, get) => ({
         ...state,
         [key]: cards
     })),
-    GetCards: async (key, userId) => {
+    GetCards: async (key) => {
         if (key === 'adminCards') {
-            if (userId) {
-                const data = await GetCards(userId)
-                if (data.ok) {
-                    get().SetCards(key, data.cards);
-                }
+            const data = await GetCards()
+            if (data.ok) {
+                get().SetCards(key, data.cards);
             }
+
         }
         else {
-            if (userId) {
-                const data = await GetInventoryCards(userId, key === 'allCards' ? undefined : key)
-                if (data.ok) {
-                    get().SetCards(key, data.cards);
-                }
+            const data = await GetInventoryCards(key === 'allCards' ? undefined : key)
+            if (data.ok) {
+                get().SetCards(key, data.cards);
             }
         }
 

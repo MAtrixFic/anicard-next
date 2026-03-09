@@ -8,7 +8,7 @@ import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindo
 import { createPortal } from "react-dom"
 import Filter from "@/components/additionals/form/Filter"
 import AdminPanel from "@/components/routes/inventory/AdminPanel"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useAdmin } from "@/devs/hooks/server/useAdmin"

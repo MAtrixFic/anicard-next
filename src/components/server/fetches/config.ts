@@ -17,12 +17,12 @@ class FetchMG {
         return await FetchMG.api.get(endpoint, { params: params, headers });
     }
 
-    public static async POST(endpoint: string, params?: any) {
-        return await FetchMG.api.post(endpoint, params);
+    public static async POST(endpoint: string, params?: any, headers?: any) {
+        return await FetchMG.api.post(endpoint, params, { headers });
     }
 
-    public static async DELETE(endpoint: string, params?: any) {
-        return await FetchMG.api.delete(endpoint, params);
+    public static async DELETE(endpoint: string, params?: any, headers?: any) {
+        return await FetchMG.api.delete(endpoint, { params: params, headers });
     }
 }
 

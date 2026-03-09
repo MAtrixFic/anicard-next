@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query"
 import useMessageStore from "@/devs/store/MessageStore";
 import { useUser } from "./useUser";
-import { AddTwistCard } from "@/components/server/comp/InventoryApi";
+import { AddTwistsCard } from "@/components/server/comp/Apis";
 import { useState } from "react";
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 
@@ -15,7 +15,7 @@ const useTwists = () => {
 
     async function CreateBattleTwist(onGetTwist: () => void) {
         if (user) {
-            const res = await AddTwistCard(user.id.toString(), 'battle')
+            const res = await AddTwistsCard('battle')
             if (res.ok) {
                 await queryClient.invalidateQueries({ queryKey: ['user'] })
                 setDroppedCard(res.data)
@@ -27,7 +27,7 @@ const useTwists = () => {
 
     async function CreateCollectibleTwist(onGetTwist: () => void) {
         if (user) {
-            const res = await AddTwistCard(user.id.toString(), 'collectible')
+            const res = await AddTwistsCard('collectible')
             if (res.ok) {
                 setDroppedCard(res.data)
                 onGetTwist()

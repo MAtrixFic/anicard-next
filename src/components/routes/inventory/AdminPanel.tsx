@@ -2,7 +2,7 @@ import LightButton from "@/components/additionals/buttons/LightButton";
 import OverBlackSpace from "@/components/additionals/OverBlackSpace";
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useEffect, useState } from "react";
 import { ThrowFormContext } from "@/app/auth/page";
 import { useAdmin } from "@/devs/hooks/server/useAdmin";
@@ -103,12 +103,83 @@ interface IImageUploaderProps {
 const ImageUploader = ({ preloadImage, loadBase64Image }: IImageUploaderProps) => {
     const [image, setImage] = useState<string | null>(null);
 
-    const fileToBase64 = (file: File): Promise<string> => {
+    const fileToBase64 = async (
+        file: File,
+        options?: {
+            maxWidth?: number;
+            maxHeight?: number;
+            quality?: number;
+        }
+    ): Promise<string> => {
+        // Настройки по умолчанию
+        const {
+            maxWidth = 256,
+            maxHeight = 256,
+            quality = 0.8
+        } = options || {};
+
         return new Promise((resolve, reject) => {
+            // Проверяем тип файла
+            if (!file.type.startsWith('image/')) {
+                reject(new Error('File is not an image'));
+                return;
+            }
+
             const reader = new FileReader();
 
-            reader.onload = () => {
-                resolve(reader.result as string);
+            reader.onload = (e) => {
+                const img = new Image();
+
+                img.onload = () => {
+                    // Создаем canvas для оптимизации
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Ресайз изображения если нужно
+                    if (width > maxWidth || height > maxHeight) {
+                        if (width > height) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        } else {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        reject(new Error('Failed to get canvas context'));
+                        return;
+                    }
+
+                    // Рисуем изображение с высоким качеством
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Проверяем поддержку WebP
+                    const isWebPSupported = canvas.toDataURL('image/webp').indexOf('image/webp') === 5;
+
+                    // Конвертируем в WebP или JPEG если WebP не поддерживается
+                    const format = isWebPSupported ? 'image/webp' : 'image/jpeg';
+                    const base64 = canvas.toDataURL(format, quality);
+
+                    // Логируем результат
+                    const base64Size = Math.round((base64.length * 3) / 4 / 1024);
+                    console.log(`Image optimized: ${width}x${height}, Format: ${format}, Size: ${base64Size}KB`);
+
+                    resolve(base64);
+                };
+
+                img.onerror = () => {
+                    reject(new Error('Failed to load image'));
+                };
+
+                img.src = e.target?.result as string;
             };
 
             reader.onerror = (error) => {
@@ -118,6 +189,7 @@ const ImageUploader = ({ preloadImage, loadBase64Image }: IImageUploaderProps) =
             reader.readAsDataURL(file);
         });
     };
+
 
     async function GetImage(file: File) {
         const image = await fileToBase64(file);
@@ -132,7 +204,7 @@ const ImageUploader = ({ preloadImage, loadBase64Image }: IImageUploaderProps) =
         <div className="image-uploader">
             <label className="image-uploader__label">
                 {(image || preloadImage) ? <div className="image-uploader__preview">
-                    <Image src={image ? image : preloadImage ? preloadImage : ''} alt="card-preview" height={160} width={112} />
+                    <NextImage src={image ? image : preloadImage ? preloadImage : ''} alt="card-preview" height={160} width={112} />
                 </div>
                     :
                     <div className="image-uploader__preview" />

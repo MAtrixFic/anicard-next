@@ -1,18 +1,14 @@
 'use client'
 
-import { GetTopUsers, IRatingResponse } from "@/components/server/comp/UserApi"
+import { IRatingResponse } from "@/components/server/comp/UserApi"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect } from "react"
+import { GetTopUsers } from "@/components/server/comp/Apis"
 
 const Rating = () => {
     const { data, isLoading } = useQuery({
         queryKey: ['rating'],
         queryFn: () => GetTopUsers()
     })
-
-    useEffect(() => {
-        console.log(data)
-    }, [data])
 
     return (
         <div className="rating">
