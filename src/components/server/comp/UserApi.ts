@@ -71,6 +71,32 @@ export default class UserApi {
         }
     }
 
+    @WithCookies()
+    static async RefreshToken() {
+        try {
+            const res = await FetchMG.POST('user/refresh')
+            return res
+        }
+        catch (error) {
+            return false
+        }
+    }
+
+
+    @WithCookies()
+    static async GetUserKeys(): Promise<any | boolean> {
+        try {
+
+            const res = await FetchMG.GET(`user/keys`)
+            console.log('keys:', res.data)
+            return res.data
+        }
+        catch (ex) {
+            console.log('keys error', ex)
+            return false
+        }
+    }
+
     static async GetTopUsers(): Promise<IRatingResponse | boolean> {
         try {
             const res = await FetchMG.GET(`rating/top`)

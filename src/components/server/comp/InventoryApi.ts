@@ -1,8 +1,14 @@
 import { WithCookies } from "@/devs/decorators/serverDec"
 import FetchMG from "../fetches/config"
 import { IAdminCardsResponse, IError } from "./AdminApi"
+import { IPets } from "@/devs/store/PetsStore"
+import { IResponse } from "./UserApi"
 
 export type TCardType = 'favorite' | 'battle' | 'special'
+
+interface IPetsResponse extends IResponse {
+    pets: IPets[]
+}
 
 export class InventoryApi {
     @WithCookies()
@@ -14,6 +20,18 @@ export class InventoryApi {
         }
         catch (error) {
             return { ok: false, cards: [] }
+        }
+    }
+
+    @WithCookies()
+    static async GetAdminPets(): Promise<IPetsResponse> {
+        try {
+            const res = await FetchMG.GET('admin/pets')
+            console.log(res.data)
+            return res.data
+        }
+        catch (error) {
+            return { ok: false, pets: [] }
         }
     }
 

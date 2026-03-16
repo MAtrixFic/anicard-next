@@ -15,13 +15,14 @@
 
     &__title-container {
         height: 40px;
+        border-inline: 1px solid props.$newGreenDark;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     &__title {
-        color: white;
+        color: props.$newGreenDark;
     }
 
     &__list-container {
@@ -44,8 +45,10 @@
     align-items: center;
     padding: .5rem 1rem;
     border-radius: 15px;
-    backdrop-filter: blur(6px);
-    border-inline: 1.2px solid props.$purple;
+    background: white;
+    border: 2px solid white;
+    outline: 1px solid props.$labelColor;
+
 
     &__left {
         display: flex;
@@ -54,39 +57,39 @@
     }
 
     &__text {
-        color: white;
+        color: props.$bodyColor;
+
+        &-username {
+            padding: .2rem .6rem;
+            border-radius: 20px;
+            background-color: white;
+            border: 2px solid props.$labelColor;
+        }
 
         &-number {
             font-size: 1.6rem;
             font-weight: 800;
 
             &.prize {
-                color: props.$purple;
+                color: props.$bodyColor;
             }
         }
 
         &-score {
+            padding: .2rem .4rem;
+            border-radius: 10px;
+            background-color: props.$bodyColor;
+            color: white;
+
             &.rating-1 {
-                padding: .2rem .4rem;
-                border-radius: 10px;
-                background-color: rgba(props.$yellow, .4);
-                border: 1px solid props.$yellow;
                 color: props.$yellow;
             }
 
             &.rating-2 {
-                padding: .2rem .4rem;
-                border-radius: 10px;
-                background-color: rgba(props.$soLightGrey, .4);
-                border: 1px solid props.$soLightGrey;
                 color: props.$soLightGrey;
             }
 
             &.rating-3 {
-                padding: .2rem .4rem;
-                border-radius: 10px;
-                background-color: rgba(props.$cuprum, .4);
-                border: 1px solid props.$cuprum;
                 color: props.$cuprum;
             }
         }

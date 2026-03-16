@@ -22,7 +22,6 @@ export default function TelegramInit() {
                 sessionStorage.setItem('avatar', parseInitData.user?.photo_url)
                 setUserValue("avatar", parseInitData.user?.photo_url)
             }
-            console.log(sessionStorage.getItem('userId'))
             if (sessionStorage.getItem('userId') == null) {
                 sessionStorage.setItem('userId', parseInitData.user?.id.toString() || JSON.stringify(null))
                 CookieSet('userId', parseInitData.user?.id)

@@ -40,7 +40,7 @@ export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="green-bevel tiny" func={() => buy!(count, card)} />
+                <LightButton title={'Купить'} additionStyle="dark tiny" func={() => buy!(count, card)} />
             </div>
         </div>
     )

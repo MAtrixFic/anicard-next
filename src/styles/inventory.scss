@@ -5,45 +5,44 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    height: calc(100vh - 8rem);
+    flex-grow: 1;
 
     &__navigation {
         padding-inline: 1rem;
-        height: 45px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: rgba(props.$purple, .4);
-        backdrop-filter: blur(6px);
-        border-block: 1px solid props.$purple;
-
+        justify-content: flex-end;
+        gap: .4rem;
+        padding-right: 2rem;
+        align-items: start;
     }
 
     &__link {
-        color: white;
+        color: props.$labelColor;
         font-weight: 500;
         font-size: 1.1rem;
-        background-color: props.$purple;
+        background-color: white;
         padding: .2rem .6rem;
-        border-radius: 15px;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid props.$labelColor;
     }
 }
 
 .desc-panel {
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    bottom: 60px;
     left: 0;
     width: 100%;
     height: fit-content;
     min-height: 40px;
     backdrop-filter: blur(6px);
-    padding-inline: 1rem;
     flex-direction: column-reverse;
     align-items: stretch;
-    border-radius: 20px 20px 0 0;
-    background-color: rgba(props.$body, .6);
+    padding: .4rem;
+    background-color: rgba(props.$labelColor, .4);
+    border-block: 1px solid props.$labelBorder;
     gap: 1rem;
     display: flex;
+    z-index: 130;
 
     &.pg {
         bottom: 1rem;
@@ -134,6 +133,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
     flex-grow: 1;
 
     &__form {
@@ -167,7 +167,7 @@
         display: flex;
 
         label {
-            font-weight: 800;
+            font-weight: 500;
             flex-grow: 1;
             display: flex;
             justify-content: space-between;
@@ -182,8 +182,8 @@
 
     &__input-inpt {
         color: #fff;
-        background-color: #833e9666;
-        border: 1px solid #833e96;
+        border: 1px solid props.$labelColor;
+        background-color: props.$bodyColor;
         border-radius: 10px;
         flex-grow: 1;
         text-align: center;
@@ -196,6 +196,36 @@
         &::placeholder {
             color: props.$soLightGrey;
         }
+    }
+
+    &__top {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__mode {
+        &-list {
+            background-color: props.$labelBorder;
+            padding: .4rem;
+            border: 2px solid props.$labelColor;
+            border-radius: 15px;
+            gap: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &-element {}
+
+    }
+
+    &__btn {
+        background-color: white;
+        padding: .4rem .8rem;
+        border-radius: 10px;
+        border: 2px solid props.$labelColor;
+        color: props.$bodyColor;
+        font-size: 1rem;
     }
 }
 
@@ -217,7 +247,7 @@
             object-fit: cover;
         }
 
-        background-color: props.$soLightGrey;
+        background-color: props.$bodyColor;
     }
 
     &__label {
@@ -228,7 +258,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 15px;
-        border: 2px solid props.$purple;
+        border: 2px dashed props.$labelColor;
 
         &::after {
             position: absolute;
@@ -258,8 +288,9 @@
 }
 
 .admin-logic {
-    position: absolute;
-    bottom: 4px;
+    z-index: 110;
+    position: fixed;
+    bottom: 70px;
     left: 0;
     width: 100%;
     display: flex;

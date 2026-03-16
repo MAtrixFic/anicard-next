@@ -2,23 +2,31 @@
 import { Back } from "@/components/icons/Base"
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import useHeaderScroll from "../../devs/hooks/useHeaderScroll"
 import { ValueInfo } from "../routes/shop/ValueInfo";
 import { useUser } from "@/devs/hooks/server/useUser";
-
+import { GetUserKeys } from "../server/comp/Apis";
+import { useEffect } from "react";
 const Avatar = dynamic(() => import('@/devs/browserStorages/SessionAvatar'), { ssr: false })
 
 const Header = () => {
     const { data: user } = useUser()
-    const isVisible = useHeaderScroll();
+    // const isVisible = useHeaderScroll();
     const router = useRouter();
     const pathname = usePathname();
 
+    async function GetKeys() {
+        await GetUserKeys()
+    }
+
+    useEffect(() => {
+        GetKeys()
+    }, [])
+
     return (
-        <header className={`header ${isVisible ? 'showen' : 'hidden'}`}>
-            <div className="header__container header__container-blur">
+        <header className={`header`}>
+            <div className="header__container">
                 <div className="header__left-container">
                     <button className="header__btn header__btn-back"
                         disabled={pathname === '/'}
@@ -37,10 +45,6 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className="header__middle">
-                <div className="header__middle-container" />
-                <div className="header__cards-container" />
-            </div> */}
         </header>
     )
 }

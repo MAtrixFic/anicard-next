@@ -5,6 +5,7 @@ import UserAchivment from "@/components/routes/profile/UserAchivment"
 import { Suspense, lazy } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import Image from "next/image"
+import { useCards } from "@/devs/hooks/server/useCards"
 
 // const lazyStats = lazy(()=> import(''))
 
@@ -15,7 +16,7 @@ const Page = () => {
         <div className="profile">
             <Suspense fallback={<div className="profile__loading">Загрузка...</div>}>
                 {data &&
-                    <BlurSpace>
+                    <div className="profile-container">
                         < section className="profile__user-label">
                             <div className="profile__logo-container">
                                 <Image height={100} width={100} src={sessionStorage.getItem('avatar') || '/avatar/default-avatar.jpg'} alt="default-avatar" className="profile__logo" />
@@ -35,15 +36,15 @@ const Page = () => {
                         </section>
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
-                                {[{ score: `${21}`, title: 'Количество карт' },
-                                { score: data.rating?.toString() || '100', title: 'Рейтин' }
+                                {[{ score: `${data.total_cards || '4'}`, title: 'Количество карт' },
+                                { score: data.rating?.toString() || '0', title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />
                                 )}
                             </ul>
                         </section>
                         <FavoriteCardsList user={data} />
-                    </BlurSpace>}
+                    </div>}
             </Suspense>
         </div >
     )

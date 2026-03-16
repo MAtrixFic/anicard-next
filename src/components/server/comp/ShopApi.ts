@@ -28,7 +28,7 @@ export default class ShopApi {
     @WithCookies()
     static async BuyKeys(keysCount: number) {
         try {
-            await FetchMG.POST(`shop/keys/${keysCount}`)
+            await FetchMG.POST(`shop/keys`, { keys: keysCount })
             return true
         }
         catch (error) {

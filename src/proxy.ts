@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { IUserResponse } from "./components/server/comp/UserApi";
 import { GetUser } from "./components/server/comp/Apis";
@@ -8,12 +8,10 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 export const proxy = async (req: NextRequest) => {
     console.log('Enter to proxy')
 
-    console.log(req.cookies.getAll())
 
     if (!req.url.includes('auth')) {
         const cookieStore = await cookies();
         if (cookieStore.has('isAuth')) {
-            console.log('isAuth', cookieStore.get('isAuth')?.value == 'true')
             if (cookieStore.get('isAuth')?.value == 'true') {
                 return NextResponse.next();
             }
@@ -31,7 +29,6 @@ export const proxy = async (req: NextRequest) => {
 }
 
 async function CheckUser(req: NextRequest, cookieStore: ReadonlyRequestCookies) {
-    console.log(req.nextUrl.search)
     if (req.nextUrl.search.length === 0) return true
     const user = await GetUser()
     if (user) {

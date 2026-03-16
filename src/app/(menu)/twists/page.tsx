@@ -11,6 +11,7 @@ import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import useTwists from "@/devs/hooks/server/useTwists"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
+
 const Twists = () => {
     return (
         <div className="twists">
@@ -97,15 +98,13 @@ const TwistWindow = ({ setOpenWindow, windowMode, card }: ITwistWindowProps) => 
                         </div>}
                         <div className={`twist__card-container ${openCardMode}`}>
                             <div className={`twist__dropped-card twist__dropped-card-${card.rarity.toLocaleLowerCase()}`}>
-                                <Image height={300} width={180} src={`${BACK_ORIGIN}${card.photo}`} alt="dropped-card" className="twist__card-img" />
+                                <Image height={300} width={180} src={`${BACK_ORIGIN}/${card.photo}`} alt="dropped-card" className="twist__card-img" />
                             </div>
                         </div>
                     </div>
                 </div>
                 {openCardMode === 'hidden' && <div className="twist__panel">
-                    <button className="twist__btn" onClick={setOpenWindow}>
-                        Забрать
-                    </button>
+                    <LightButton title={"Забрать"} additionStyle="dark" func={setOpenWindow} />
                 </div>}
             </div>
         </div>

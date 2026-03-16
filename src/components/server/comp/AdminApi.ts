@@ -20,12 +20,15 @@ export interface IRespone<T> {
     data: T
 }
 
+export type TCardAdd = Omit<ICard, 'photo' | 'id'>
+export type TCardWithPhoto = TCardAdd & { photo: File }
 
 export default class AdminApi {
     @WithCookies()
     static async GetCards(): Promise<IAdminCardsResponse> {
         try {
             const res = await FetchMG.GET(`admin/cards`)
+            console.log(res.data)
             return res.data
         }
         catch (error) {
@@ -34,17 +37,33 @@ export default class AdminApi {
         }
     }
 
-    @WithCookies()
-    static async AddCard(card: Partial<Omit<ICard, 'id'>>) {
+    static async AddCard(card: TCardWithPhoto): Promise<ICard | boolean> {
         try {
-            await FetchMG.POST(`admin/cards`, card)
-            return true
+            const res = await FetchMG.POST(`admin/cards`, card)
+            return res.data.card
         }
         catch (error) {
-            console.log(error)
+            // console.log(error.toJSON())
             return false
         }
     }
+
+
+    // @WithCookies()
+    // static async SetAvatarForCard(photoData: FormData) {
+    //     try {
+    //         const data = new FormData()
+    //         data.append('photo', photoData.get('photo') as File)
+    //         console.log(photoData)
+    //         const res = await FetchMG.POST(`admin/cards/${photoData.get('id')?.toString()}/upload-photo`, data)
+    //         console.log(res.data)
+    //         return true
+    //     }
+    //     catch (error) {
+    //         console.log(error.toJSON())
+    //         return false
+    //     }
+    // }
 
     @WithCookies()
     static async DeleteCard(cardId: string) {

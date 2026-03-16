@@ -10,13 +10,13 @@ export default function RootLayout({
             <div className="inventory__top">
                 <nav className="inventory__navigation">
                     <Link href={'/inventory'} className="inventory__link">
-                        Инвентарь
+                        ИВ
                     </Link>
                     <Link href={'/inventory/battle-cards'} className="inventory__link">
-                        Боевые
+                        БК
                     </Link>
-                    <Link href={'/inventory/special-cards'} className="inventory__link">
-                        Специальные
+                    <Link href={'/inventory/pets'} className="inventory__link">
+                        ПК
                     </Link>
                 </nav>
             </div>

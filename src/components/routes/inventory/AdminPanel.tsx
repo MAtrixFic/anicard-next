@@ -4,21 +4,19 @@ import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import NextImage from "next/image";
 import { useEffect, useState } from "react";
-import { ThrowFormContext } from "@/app/auth/page";
 import { useAdmin } from "@/devs/hooks/server/useAdmin";
-import FormCardFields from "@/components/additionals/form/FormCardFields";
-
+import CardsPanel from "./CardsPanel";
+import PetsPanel from "./PetsPanel";
 interface IAdminPanelProps {
     setAdminMode: (mode: 'no' | 'edit' | 'create') => void,
-    // adminMode: 'no' | 'edit' | 'create',
     card?: ICard,
 }
 
+type TAdminManage = 'cards' | 'pets'
 
 const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
-    const { AddAdminCard } = useAdmin()
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
-    const [loadedCard, setLoadedCard] = useState<string | null>(null);
+    const [ctype, setCType] = useState<TAdminManage>('cards')
 
     useEffect(() => {
         setWSTimer();
@@ -31,40 +29,28 @@ const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
         }, 300);
     }
 
-    async function DoMethod(data: ICard & { price: number }) {
-        const filteredResult = Object.fromEntries(
-            Object.entries(data).filter(([_, value]) =>
-                value ? value.toString().length > 0 && value.toString() !== '0' : false
-            )
-        );
-        console.log(filteredResult)
-        const res = await AddAdminCard(Object.assign(filteredResult, { photo: loadedCard || undefined }))
-        console.log(res)
-        // CloseAdminPanel()
-    }
-
     return (
         <OverBlackSpace additionStyle={ws}>
             <div className="admin-panel" >
-                <ThrowFormContext formDefault=
-                    {{
-                        character: '',
-                        rarity: '',
-                        category: 'battle',
-                        rating: '',
-                        price: '0',
-                        universe: '',
-                        attribute: ''
-                    }}
-                    submit={DoMethod}
-                    style="admin-panel__form"
-                >
-                    <AdminInputs
-                        setLoadedCardImg={setLoadedCard}
-                        closeAdminPanel={CloseAdminPanel}
-                        card={card}
-                    />
-                </ThrowFormContext>
+                <section className="admin-panel__top">
+                    <ul className="admin-panel__mode-list">
+                        <li className="admin-panel__mode-element">
+                            <button className="admin-panel__btn" onClick={() => setCType('cards')}>
+                                Карты
+                            </button>
+                        </li>
+                        <li className="admin-panel__mode-element">
+                            <button className="admin-panel__btn" onClick={() => setCType('pets')}>
+                                Питомцы
+                            </button>
+                        </li>
+                    </ul>
+                </section>
+                <>
+                    {ctype == 'cards' ? <CardsPanel closeAdminPanel={CloseAdminPanel} /> :
+                        <PetsPanel closeAdminPanel={CloseAdminPanel} />
+                    }
+                </>
             </div>
         </OverBlackSpace >
     )
@@ -73,145 +59,48 @@ const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
 interface IAdminInputsProps {
     setLoadedCardImg: (img: string | null) => void,
     closeAdminPanel: () => void,
-    card?: ICard
+    children: React.ReactNode
 }
 
-const AdminInputs = ({ setLoadedCardImg, closeAdminPanel, card }: IAdminInputsProps) => {
+export const AdminInputs = ({ setLoadedCardImg, closeAdminPanel, children }: IAdminInputsProps) => {
     return (
         <>
             <section className="admin-panel__section admin-panel__section-card">
                 <div className="admin-panel__card-preview">
-                    <ImageUploader preloadImage={card?.photo} loadBase64Image={setLoadedCardImg} />
+                    <ImageUploader LoadImage={setLoadedCardImg} />
                 </div>
                 <div className="admin-panel__card-options">
-                    <FormCardFields />
+                    {children}
                 </div>
             </section>
             <section className="admin-panel__section admin-panel__section-logic">
-                <LightButton title="Сохранить" additionStyle="green" submit={true} />
-                <LightButton title="Отмена" additionStyle="purple" submit={false} func={closeAdminPanel} />
+                <LightButton title="Сохранить" submit={true} />
+                <LightButton title="Отмена" submit={false} func={closeAdminPanel} />
             </section>
         </>
     )
 }
 
 interface IImageUploaderProps {
-    preloadImage?: string,
-    loadBase64Image: (image: string) => void
+    LoadImage: (image: string) => void
 }
 
-const ImageUploader = ({ preloadImage, loadBase64Image }: IImageUploaderProps) => {
-    const [image, setImage] = useState<string | null>(null);
+const ImageUploader = ({ LoadImage }: IImageUploaderProps) => {
+    const [previewImage, setPreviewImage] = useState<string>('');
 
-    const fileToBase64 = async (
-        file: File,
-        options?: {
-            maxWidth?: number;
-            maxHeight?: number;
-            quality?: number;
-        }
-    ): Promise<string> => {
-        // Настройки по умолчанию
-        const {
-            maxWidth = 256,
-            maxHeight = 256,
-            quality = 0.8
-        } = options || {};
-
-        return new Promise((resolve, reject) => {
-            // Проверяем тип файла
-            if (!file.type.startsWith('image/')) {
-                reject(new Error('File is not an image'));
-                return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                const img = new Image();
-
-                img.onload = () => {
-                    // Создаем canvas для оптимизации
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-
-                    // Ресайз изображения если нужно
-                    if (width > maxWidth || height > maxHeight) {
-                        if (width > height) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        } else {
-                            width = Math.round((width * maxHeight) / height);
-                            height = maxHeight;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    if (!ctx) {
-                        reject(new Error('Failed to get canvas context'));
-                        return;
-                    }
-
-                    // Рисуем изображение с высоким качеством
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    // Проверяем поддержку WebP
-                    const isWebPSupported = canvas.toDataURL('image/webp').indexOf('image/webp') === 5;
-
-                    // Конвертируем в WebP или JPEG если WebP не поддерживается
-                    const format = isWebPSupported ? 'image/webp' : 'image/jpeg';
-                    const base64 = canvas.toDataURL(format, quality);
-
-                    // Логируем результат
-                    const base64Size = Math.round((base64.length * 3) / 4 / 1024);
-                    console.log(`Image optimized: ${width}x${height}, Format: ${format}, Size: ${base64Size}KB`);
-
-                    resolve(base64);
-                };
-
-                img.onerror = () => {
-                    reject(new Error('Failed to load image'));
-                };
-
-                img.src = e.target?.result as string;
-            };
-
-            reader.onerror = (error) => {
-                reject(error);
-            };
-
-            reader.readAsDataURL(file);
-        });
-    };
-
-
-    async function GetImage(file: File) {
-        const image = await fileToBase64(file);
-        setImage(image);
-    }
-
-    useEffect(() => {
-        if (image)
-            loadBase64Image(image)
-    }, [image])
     return (
         <div className="image-uploader">
             <label className="image-uploader__label">
-                {(image || preloadImage) ? <div className="image-uploader__preview">
-                    <NextImage src={image ? image : preloadImage ? preloadImage : ''} alt="card-preview" height={160} width={112} />
+                {(previewImage) ? <div className="image-uploader__preview">
+                    <NextImage src={previewImage} alt="card-preview" height={160} width={112} />
                 </div>
                     :
                     <div className="image-uploader__preview" />
                 }
                 <input onChange={async (e) => {
                     if (e.target.files && e.target.files[0]) {
-                        await GetImage(e.target.files[0]);
+                        setPreviewImage(URL.createObjectURL(e.target.files[0]))
+                        LoadImage((await fileToBase64Extended(e.target.files[0])).base64)
                     }
                 }} type="file" className="image-uploader__input" />
             </label>
@@ -221,3 +110,52 @@ const ImageUploader = ({ preloadImage, loadBase64Image }: IImageUploaderProps) =
 
 export default AdminPanel
 export { ImageUploader }
+
+
+type Base64Result = {
+    base64: string;
+    content: string;
+    mimeType: string;
+    fileName: string;
+    size: number;
+};
+
+async function fileToBase64Extended(file: File): Promise<Base64Result> {
+    return new Promise((resolve, reject) => {
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            reject(new Error(`File size exceeds ${maxSize / 1024 / 1024}MB limit`));
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                const base64String = reader.result;
+                // Извлекаем только содержимое base64 (без префикса)
+                const base64Content = base64String.split(',')[1] || '';
+
+                resolve({
+                    base64: base64String,
+                    content: base64Content,
+                    mimeType: file.type,
+                    fileName: file.name,
+                    size: file.size
+                });
+            } else {
+                reject(new Error('Failed to convert file to base64'));
+            }
+        };
+
+        reader.onerror = () => {
+            reject(new Error(`Error reading file: ${reader.error?.message || 'Unknown error'}`));
+        };
+
+        reader.onabort = () => {
+            reject(new Error('File reading was aborted'));
+        };
+
+        reader.readAsDataURL(file);
+    });
+}

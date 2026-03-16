@@ -23,14 +23,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-weight: 800;
+            color: props.$labelColor;
+            font-weight: 500;
             font-size: 1.4rem;
-            background-color: rgba(props.$purple, .4);
+            background-color: white;
+            border: 2px solid props.$labelColor;
+            border-bottom-width: 4px;
             padding: .8rem 1rem;
             border-radius: 20px;
-            border: 1px solid props.$purple;
-            border-bottom-width: 4px;
         }
     }
 }
@@ -60,29 +60,42 @@
 .banner-section {
     display: flex;
     flex-direction: column;
-    border: 1px solid props.$purple;
-    border-bottom: 4px solid props.$purple;
-    padding: 2rem 1rem 1rem 1rem;
+    padding: 1.2rem;
     width: 100%;
+    background-color: props.$bodyColor;
     border-radius: 25px;
-    // background-color: props.$body;
-    backdrop-filter: blur(4px);
+    border: 2px solid props.$labelColor;
     position: relative;
 
+    // &::after {
+    //     background-color: white;
+    //     background: linear-gradient(60deg, props.$labelBorder 1%, props.$labelColor 60%);
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     width: calc(100% - 10px);
+    //     height: calc(100% - 10px);
+    //     transform: translateX(-50%) translateY(-50%);
+    //     border-radius: 22px;
+    //     pointer-events: none;
+    //     content: " ";
+    //     border: 2px solid props.$darkerSkin;
+    //     z-index: 10;
+    // }
+
     &__title-container {
+        z-index: 30;
         position: absolute;
-        top: -16px;
+        top: -18px;
         left: 40px;
-        background-color: props.$body;
+        background-color: white;
         padding: .4rem .8rem;
-        border: 1px solid props.$purple;
-        border-radius: 15px;
+        border-radius: 30px;
     }
 
     &__title {
-        color: white;
+        color: props.$labelColor;
         font-weight: 500;
-        font-weight: 600;
     }
 
     &__list {
@@ -94,52 +107,21 @@
     }
 }
 
-@keyframes border-anim {
-    0% {
-        outline-color: props.$green;
-    }
-
-    50% {
-        outline-color: props.$cuprum;
-    }
-
-    100% {
-        outline-color: props.$green;
-    }
-
-}
-
-@keyframes text-anim {
-    0% {
-        color: props.$green;
-    }
-
-    50% {
-        color: props.$cuprum;
-    }
-
-    100% {
-        color: props.$green;
-    }
-
-}
-
 .banner {
-    corner-shape: superellipse(-0.5);
     background-color: white;
     border-radius: 15px;
-    box-shadow: 0px 0px 33px 7px rgba(25, 63, 92, 0.2);
     width: fit-content;
     padding: .4rem;
     max-width: 140px;
     width: 100%;
     flex-shrink: 1;
     display: flex;
+    z-index: 20;
     flex-direction: column;
     gap: .2rem;
     box-sizing: content-box;
-    outline: 5px double props.$green;
-    animation: border-anim 3s linear infinite;
+    outline: 1px solid white;
+    border: 2px dashed props.$labelColor;
 
     &__view-block {
         display: flex;
@@ -149,10 +131,9 @@
 
     &__name {
         font-weight: 600;
-        animation: text-anim 3s linear infinite;
         font-family: "Tik Tok";
 
-        font-size: 1.2rem;
+        font-size: 1rem;
         letter-spacing: .2rem;
         text-wrap: wrap;
         display: block;
@@ -177,7 +158,7 @@
 
     &__count {
         color: props.$body;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 1rem;
         display: block;
         width: 100%;

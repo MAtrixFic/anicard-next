@@ -3,9 +3,27 @@ $darkGrey: #666666;
 $soLightGrey: #DADADA;
 $purple: #833E96;
 $green: #5BE98B;
-$yellow: #FFD400;
+$yellow: #f0b411;
 $blue: #00F7FF;
 $cuprum: #C76666;
+$pastelLight: #EDD4C2;
+$pasteDark: #CFB59E;
+
+// $newGreenLight: #6287A2;
+// $newGreenDark: #404D5F;
+// $lightSkin: #EDE5D8;
+// $darkerSkin: #DAC8A4;
+// $darkestSkin: #D0BC8C;
+
+$bodyColor: #271c3a;
+$labelColor: #a476ea;
+$labelBorder: #473664;
+
+$newGreenLight: #0d283c;
+$newGreenDark: #041023;
+$lightSkin: #e891f6;
+$darkerSkin: #8c3086;
+$darkestSkin: #630f59;
 
 @mixin MainBack() {
     background: #DADADA;

@@ -8,17 +8,20 @@ import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindo
 import { createPortal } from "react-dom"
 import Filter from "@/components/additionals/form/Filter"
 import AdminPanel from "@/components/routes/inventory/AdminPanel"
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
 import { useAdmin } from "@/devs/hooks/server/useAdmin"
 import { useQuery } from "@tanstack/react-query"
+import { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard"
+import usePets from "@/devs/hooks/server/usePets"
 
 type TCardsMode = 'adminCards' | 'allCards'
 
 const Page = () => {
     const { data: user } = useUser()
     const { getCards } = useCards()
+    const { getPets } = usePets()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
     const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')
 
@@ -35,22 +38,29 @@ const Page = () => {
         }
     })
 
-    async function DoMethod(data: ICard) {
-        const filteredResult = Object.fromEntries(
-            Object.entries(data).filter(([_, value]) =>
-                value ? value.toString().length > 0 && value.toString() !== '0' : false
-            )
-        );
-        setInventoryCards(previewCards.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
-        ))
-    }
+    useEffect(() => {
+        getPets('allPets').then(data => console.log('pets:', data));
+    }, [])
+
+
+    console.log(inventoryCards)
+
+    // async function DoMethod(data: ICard) {
+    //     const filteredResult = Object.fromEntries(
+    //         Object.entries(data).filter(([_, value]) =>
+    //             value ? value.toString().length > 0 && value.toString() !== '0' : false
+    //         )
+    //     );
+    //     setInventoryCards(previewCards.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
+    //     ))
+    // }
 
 
     return (
         <div className="cards-choise">
             <div className="cards-choise__list-container">
                 <section className="cards-choise__filter-container">
-                    <Filter style="cards-choise__filter pd" submit={DoMethod} />
+                    {/* <Filter style="cards-choise__filter pd" submit={DoMethod} /> */}
                 </section>
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
@@ -60,7 +70,10 @@ const Page = () => {
                                 setSelection={setSelectedCard}
                                 selectedCard={selectedCard}
                                 thisCard={v}
-                            />
+
+                            >
+                                <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                            </PreviewSelectionCard>
                         )}
                     </ul>
                 </section>
@@ -85,8 +98,8 @@ export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: IC
         <>
             {isAdmin &&
                 < div className="admin-logic">
-                    {['adminCards'].includes(cardsMode) && <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="green" />}
-                    <LightButton title={cardsMode} additionStyle="green" func={() => setCardsMode(cardsMode === 'adminCards' ? 'allCards' : 'adminCards')} />
+                    {['adminCards'].includes(cardsMode) && <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="dark" />}
+                    <LightButton title={cardsMode} func={() => setCardsMode(cardsMode === 'adminCards' ? 'allCards' : 'adminCards')} />
                 </div>}
             {
                 selectedCard && <div className="desc-panel">

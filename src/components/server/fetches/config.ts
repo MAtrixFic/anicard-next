@@ -18,7 +18,7 @@ class FetchMG {
     }
 
     public static async POST(endpoint: string, params?: any, headers?: any) {
-        return await FetchMG.api.post(endpoint, params, { headers });
+        return await FetchMG.api.post(endpoint, params, { ...headers });
     }
 
     public static async DELETE(endpoint: string, params?: any, headers?: any) {

@@ -13,11 +13,11 @@ const Rating = () => {
     return (
         <div className="rating">
             <div className="rating__rb">
-                <div className="rating__title-container">
+                {/* <div className="rating__title-container">
                     <h2 className="rating__title">
                         Рейтинг
                     </h2>
-                </div>
+                </div> */}
                 <div className="rating__list-container">
                     <ul className="rating__list">
                         {data && (data as IRatingResponse).top_users.map((v, i) =>

@@ -15,7 +15,7 @@ const DynamicBanner = ({ buy, offer }: IDynamicBannerProps) => {
     if (!offer.data) return
 
     const cards = useMemo(() => (offer.data?.cards as ICard[]).map(v => ({
-        src: `${BACK_ORIGIN}${v.photo}`,
+        src: `${BACK_ORIGIN}/${v.photo}`,
         name: `Карта ${v.rarity}`,
         cost: { count: v!.price, type: 'rubles' },
         card: {

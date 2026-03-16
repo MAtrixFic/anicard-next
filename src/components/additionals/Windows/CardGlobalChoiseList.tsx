@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from 'react'
 import PreviewCard from '../cards/PreviewCard'
-import PreviewSelectionCard from '../cards/PreviewSelectionCard'
+import PreviewSelectionCard, { BaseFrame } from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
 import { Arrow } from '../../icons/Cards'
 import { type ICardStore } from '../../../devs/store/CardsStore'
@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom'
 import Filter from '../form/Filter'
 import { useCards } from '@/devs/hooks/server/useCards'
 import { useQuery } from '@tanstack/react-query'
+import LightButton from '../buttons/LightButton'
 
 export interface ICard extends IShortCardInfo { photo: string, id: number }
 export type TCardRarity = 'A' | 'S' | 'C' | 'B'
@@ -106,7 +107,7 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                 </ul>
             </div>
             <div className="cards-choise__list-container">
-                <Filter style='cards-choise__filter' submit={DoMethod} />
+                {/* <Filter style='cards-choise__filter' submit={DoMethod} /> */}
                 <section className="cards-choise__cards-list">
                     <ul className="cards-choise__list">
                         {previewCards && updated && previewCards.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
@@ -116,7 +117,9 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
                                     setSelection={setSelectedCard}
                                     selectedCard={selectedCard}
                                     thisCard={v}
-                                />
+                                >
+                                    <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                                </PreviewSelectionCard>
                             )}
                     </ul>
                 </section>
@@ -152,7 +155,7 @@ export const CardDesctiption = (card: ICard) => {
                                 title={<Arrow />}
                                 func={() => setIsOpen(prev => !prev)}
                                 additionStyle={`tiny arrow arrow-${isOpen ? 'opened' : 'hidden'}`}
-                            />
+                            />         
                         </div>
                     </>
                 }

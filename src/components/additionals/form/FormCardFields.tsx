@@ -30,7 +30,7 @@ interface IAdminInputProps {
     type?: 'number' | 'text'
 }
 
-const AdminInput = ({ title, titleKey, type = 'text' }: IAdminInputProps) => {
+export const AdminInput = ({ title, titleKey, type = 'text' }: IAdminInputProps) => {
     const formContext = useFormContext();
     return (
         <label className="admin-panel__input-label">
