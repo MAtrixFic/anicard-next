@@ -10,8 +10,10 @@ import Filter from '../form/Filter'
 import { useCards } from '@/devs/hooks/server/useCards'
 import { useQuery } from '@tanstack/react-query'
 import LightButton from '../buttons/LightButton'
+import { IElement, IPet } from '@/devs/store/PetsStore'
 
-export interface ICard extends IShortCardInfo { photo: string, id: number }
+export interface ICard extends IShortCardInfo, IElement { }
+
 export type TCardRarity = 'A' | 'S' | 'C' | 'B'
 export interface IShortCardInfo {
     universe: string,
@@ -128,49 +130,49 @@ const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICard
     )
 }
 
-export const CardDesctiption = (card: ICard) => {
+export const CardDesctiption = (element: IElement) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, isSelected] = useState(false);
 
     useEffect(() => {
-        if (card) {
+        if (element) {
             isSelected(true)
         }
         else isSelected(false);
-    }, [card.id])
+    }, [element.id])
 
     return (
         <section className="card-desc__description">
             <div className="card-desc__top-block">
                 {selected &&
                     <>
-                        <div className="card-desc__top-container">
+                        {/* <div className="card-desc__top-container">
                             <h4 className='card-desc__name'>
                                 {card.character ? card.character : 'Карта'}
                             </h4>
-                        </div>
+                        </div> */}
                         <div className="card-desc__top-container">
                             <PurpleButton
                                 active={selected}
                                 title={<Arrow />}
                                 func={() => setIsOpen(prev => !prev)}
                                 additionStyle={`tiny arrow arrow-${isOpen ? 'opened' : 'hidden'}`}
-                            />         
+                            />
                         </div>
                     </>
                 }
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {Object.keys(card).filter(v => !['created', 'updated', 'photo', 'id'].includes(v))
-                        .filter(v => card[v as keyof ICard] ? card[v as keyof ICard]!.toString().length > 0 : false)
+                    {Object.keys(element).filter(v => !['created', 'updated', 'photo', 'id'].includes(v))
+                        .filter(v => element[v as keyof IElement] ? element[v as keyof IElement]!.toString().length > 0 : false)
                         .map((v, i) =>
                             <li className="card-desc__desc-element" key={i}>
                                 <span className='card-desc__desc-key'>
                                     {`${v}:`}
                                 </span>
                                 <span className='card-desc__desc-value'>
-                                    {card[v as keyof ICard]}
+                                    {element[v as keyof IElement]}
                                 </span>
                             </li>
                         )}

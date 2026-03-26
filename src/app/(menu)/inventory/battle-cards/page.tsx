@@ -17,8 +17,10 @@ const Page = () => {
     return (
         <div className="battle-cards">
             <CardGlobalChoiseList cardsRef={battleCardsRef} cardsType='battle' choisenCardsNumber={6} />
-            <div className="desc-panel reverse">
-                <LightButton title='Сохранить' additionStyle="green" func={StoreBattleCards} />
+            <div className="admin-logic">
+                <div className="desc-panel reverse">
+                    <LightButton title='Сохранить' additionStyle="green" func={StoreBattleCards} />
+                </div>
             </div>
         </div>
     )

@@ -1,0 +1,148 @@
+@use './props.scss';
+
+$mainBorderRad: 60px;
+
+
+.farm {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    &__place-selector {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    &__selector {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    &__all-pets-list {
+        display: flex;
+        flex-grow: 1;
+        gap: 1rem;
+    }
+
+    &__all-pets-logic {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__casts-list {
+        display: flex;
+        gap: .2rem;
+        background-color: white;
+        padding: .2rem .4rem;
+        border-radius: 30px;
+        width: fit-content;
+    }
+
+    &__pets-list {
+        background-color: rgba(props.$bodyColor, 0.6);
+        backdrop-filter: blur(4px);
+        min-height: 200px;
+        padding: 1rem;
+        border: 2px solid props.$labelColor;
+        border-radius: $mainBorderRad;
+        width: inherit;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: .5rem;
+        row-gap: 1rem;
+    }
+
+    &__logic {
+        justify-self: flex-end;
+        padding-inline: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__timer {
+        span {
+            color: props.$labelColor;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+    }
+
+    &__result {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        align-items: center;
+        background-color: rgba(props.$bodyColor, 0.6);
+        backdrop-filter: blur(4px);
+        padding: .5rem;
+        border-radius: $mainBorderRad;
+        border: 2px solid props.$labelColor;
+    }
+
+    &__rt {
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: white;
+    }
+
+    &__result-text {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    &__result-counter {
+        padding: .2rem .6rem;
+        background-color: white;
+        border-radius: 25px;
+        border: 2px solid props.$labelColor;
+    }
+}
+
+.pet-preview {
+    width: 100px;
+    height: 100px;
+    background-color: props.$labelBorder;
+    border-radius: 100%;
+    border: 2px dashed props.$labelColor;
+    overflow: hidden;
+
+    &__func {
+        width: inherit;
+        height: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__null {
+        font-size: 2rem;
+        color: white;
+    }
+}
+
+.cast {
+    height: 25px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+
+    &__preview{
+        img{
+            object-fit: cover;
+        }
+    }
+
+    &__text {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+}

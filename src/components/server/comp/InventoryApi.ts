@@ -1,20 +1,20 @@
 import { WithCookies } from "@/devs/decorators/serverDec"
 import FetchMG from "../fetches/config"
 import { IAdminCardsResponse, IError } from "./AdminApi"
-import { IPets } from "@/devs/store/PetsStore"
+import { IPet } from "@/devs/store/PetsStore"
 import { IResponse } from "./UserApi"
 
 export type TCardType = 'favorite' | 'battle' | 'special'
 
 interface IPetsResponse extends IResponse {
-    pets: IPets[]
+    pets: IPet[]
 }
 
 export class InventoryApi {
     @WithCookies()
     static async GetInventoryCards(cardType?: TCardType): Promise<IAdminCardsResponse> {
         try {
-            const res = await FetchMG.GET(`inventory${cardType ? `/${cardType}` : ''}`)
+            const res = await FetchMG.GET(`inventory/cards`)
             console.log(res.data)
             return res.data
         }

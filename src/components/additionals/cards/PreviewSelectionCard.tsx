@@ -34,7 +34,7 @@ const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard, children }
 }
 
 
-interface IBaseFrameProps {
+export interface IBaseFrameProps {
     name: string,
     rating: string,
     attribute: string,
@@ -44,9 +44,9 @@ export const BaseFrame = ({ name, rating, rarity, attribute }: IBaseFrameProps) 
     return (
         <div className="card-frame">
             <section className="card-frame__top">
-                <div className="card-frame__rarity-block">
+                {/* <div className="card-frame__rarity-block">
                     <p className="card-frame__text card-frame__text-rarity">{rarity}</p>
-                </div>
+                </div> */}
             </section>
             <section className="card-frame__bottom">
                 <div className="card-frame__group">

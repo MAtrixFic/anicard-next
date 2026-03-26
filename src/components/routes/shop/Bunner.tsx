@@ -3,6 +3,7 @@
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
+import { IPet } from "@/devs/store/PetsStore";
 
 export interface IBannerProps {
     src: string,
@@ -19,7 +20,7 @@ export interface IBannerProps {
 interface IBannerSectionProps {
     banners: IBannerProps[],
     title: string;
-    buy: (count: number, card?: IShortCardInfo & { id: number }) => void
+    buy: (count: number, pet?: IPet & { id: number }) => void
 }
 
 

@@ -8,42 +8,31 @@ import MarketOfferWindow from "@/components/additionals/Windows/MarketOfferWindo
 import { createPortal } from "react-dom"
 import Filter from "@/components/additionals/form/Filter"
 import AdminPanel from "@/components/routes/inventory/AdminPanel"
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import { useCards } from "@/devs/hooks/server/useCards"
-import { useAdmin } from "@/devs/hooks/server/useAdmin"
 import { useQuery } from "@tanstack/react-query"
 import { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard"
-import usePets from "@/devs/hooks/server/usePets"
+import CardsChoise from "@/components/additionals/cardsList/CardsChoise"
+import { IPet } from "@/devs/store/PetsStore"
 
 type TCardsMode = 'adminCards' | 'allCards'
 
 const Page = () => {
-    const { data: user } = useUser()
     const { getCards } = useCards()
-    const { getPets } = usePets()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
-    const [cardsMode, setCardsMode] = useState<TCardsMode>('allCards')
 
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
-    const [previewCards, setPreviewCards] = useState<ICard[]>([])
+    // const [previewCards, setPreviewCards] = useState<ICard[]>([])
 
     useQuery({
-        queryKey: [cardsMode],
+        queryKey: ['allCards'],
         queryFn: async () => {
-            const data = await getCards(cardsMode)
+            const data = await getCards('allCards')
             setInventoryCards(data);
-            setPreviewCards(data);
             return data
         }
     })
-
-    useEffect(() => {
-        getPets('allPets').then(data => console.log('pets:', data));
-    }, [])
-
-
-    console.log(inventoryCards)
 
     // async function DoMethod(data: ICard) {
     //     const filteredResult = Object.fromEntries(
@@ -57,48 +46,33 @@ const Page = () => {
 
 
     return (
-        <div className="cards-choise">
-            <div className="cards-choise__list-container">
-                <section className="cards-choise__filter-container">
-                    {/* <Filter style="cards-choise__filter pd" submit={DoMethod} /> */}
-                </section>
-                <section className="cards-choise__cards-list">
-                    <ul className="cards-choise__list">
-                        {inventoryCards.map((v, i) =>
-                            <PreviewSelectionCard
-                                key={v?.id}
-                                setSelection={setSelectedCard}
-                                selectedCard={selectedCard}
-                                thisCard={v}
+        <CardsChoise panel={selectedCard && <CardPanel selectedElement={selectedCard} />}>
+            {
+                inventoryCards.map((v, i) =>
+                    <PreviewSelectionCard
+                        key={v?.id}
+                        setSelection={setSelectedCard}
+                        selectedCard={selectedCard}
+                        thisCard={v}
 
-                            >
-                                <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
-                            </PreviewSelectionCard>
-                        )}
-                    </ul>
-                </section>
-            </div>
-            <CardPanel isAdmin={user?.isAdmin} setCardsMode={setCardsMode} cardsMode={cardsMode} selectedCard={selectedCard} />
-        </div >
+                    >
+                        <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                    </PreviewSelectionCard>)}
+        </CardsChoise >
     )
 }
 
 interface ICardPanelProps {
-    isAdmin?: boolean,
-    selectedCard: ICard | null,
-    setCardsMode: (mode: TCardsMode) => void,
-    cardsMode: TCardsMode
+    selectedElement: ICard | IPet,
+    children?: React.ReactNode
+    // setCardsMode: (mode: TCardsMode) => void,
+    // cardsMode: TCardsMode
 }
 
-export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: ICardPanelProps) => {
-    const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
-    const [marketWindowStatus, _, setMarketWindowVisibility] = useOverWindowStatus(400);
-    const { RemoveAdminCard } = useAdmin()
+export const CardPanel = ({ selectedElement, children }: ICardPanelProps) => {
     return (
-        <>
-            {isAdmin &&
-                < div className="admin-logic">
-                    {['adminCards'].includes(cardsMode) && <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="dark" />}
+        < div className="cards-options">
+            {/* {['adminCards'].includes(cardsMode) && <LightButton title={'Создать карту'} func={() => setAdminMode('create')} additionStyle="dark" />}
                     <LightButton title={cardsMode} func={() => setCardsMode(cardsMode === 'adminCards' ? 'allCards' : 'adminCards')} />
                 </div>}
             {
@@ -109,14 +83,19 @@ export const CardPanel = ({ isAdmin, selectedCard, setCardsMode, cardsMode }: IC
                     {['allCards'].includes(cardsMode) && <LightButton title='Выставить на обмен' additionStyle="green" func={setMarketWindowVisibility} />}
                     {['opened', 'to-hide'].includes(marketWindowStatus) && selectedCard &&
                         createPortal(<MarketOfferWindow card={selectedCard} func={setMarketWindowVisibility} additionStyle={marketWindowStatus} />, document.body)
-                    }
-                    <CardDesctiption
-                        {...selectedCard}
-                    />
-                </div>
-            }
-            {['edit', 'create'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} card={selectedCard as ICard} />}
-        </>
+                    } */}
+            <div className="cards-options__manage">
+                {children}
+            </div>
+            <div className="desc-panel">
+                <CardDesctiption
+                    {...selectedElement}
+                />
+            </div>
+        </div>
+        //     }
+        //     {['edit', 'create'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} card={selectedCard as ICard} />}
+        // </>
     )
 }
 

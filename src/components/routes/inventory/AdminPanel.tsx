@@ -9,14 +9,13 @@ import CardsPanel from "./CardsPanel";
 import PetsPanel from "./PetsPanel";
 interface IAdminPanelProps {
     setAdminMode: (mode: 'no' | 'edit' | 'create') => void,
-    card?: ICard,
+    type: TAdminManage
 }
 
 type TAdminManage = 'cards' | 'pets'
 
-const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
+const AdminPanel = ({ setAdminMode, type }: IAdminPanelProps) => {
     const [ws, setWS, setWSTimer] = useOverWindowStatus(300);
-    const [ctype, setCType] = useState<TAdminManage>('cards')
 
     useEffect(() => {
         setWSTimer();
@@ -32,22 +31,8 @@ const AdminPanel = ({ setAdminMode, card }: IAdminPanelProps) => {
     return (
         <OverBlackSpace additionStyle={ws}>
             <div className="admin-panel" >
-                <section className="admin-panel__top">
-                    <ul className="admin-panel__mode-list">
-                        <li className="admin-panel__mode-element">
-                            <button className="admin-panel__btn" onClick={() => setCType('cards')}>
-                                Карты
-                            </button>
-                        </li>
-                        <li className="admin-panel__mode-element">
-                            <button className="admin-panel__btn" onClick={() => setCType('pets')}>
-                                Питомцы
-                            </button>
-                        </li>
-                    </ul>
-                </section>
                 <>
-                    {ctype == 'cards' ? <CardsPanel closeAdminPanel={CloseAdminPanel} /> :
+                    {type == 'cards' ? <CardsPanel closeAdminPanel={CloseAdminPanel} /> :
                         <PetsPanel closeAdminPanel={CloseAdminPanel} />
                     }
                 </>

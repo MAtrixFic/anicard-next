@@ -1,14 +1,11 @@
 'use client'
-import { useCallback, useEffect, useState } from "react"
 import PreviewCard from "../../additionals/cards/PreviewCard"
 import PurpleButton from "../../additionals/buttons/PurpleButton"
 import FavoriteCardsSelectionPlace from "./FavoriteCardsSelectionPlace"
 import { createPortal } from "react-dom"
-import { useCardsStore } from "../../../devs/store/CardsStore"
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import { IUser } from "@/devs/store/UserStore"
 import { useCards } from "@/devs/hooks/server/useCards"
-import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { useQuery } from "@tanstack/react-query"
 
 const FavoriteCardsList = ({ user }: { user?: IUser }) => {

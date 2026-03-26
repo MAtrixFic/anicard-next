@@ -1,19 +1,23 @@
 import { GetAdminPets } from '@/components/server/comp/Apis';
 import { create } from 'zustand';
 
-export interface IPets {
+
+export interface IElement {
     id: number;
     photo: string;
+}
+
+export interface IPet extends IElement {
     rarity: string;
     price: number;
 }
 
 interface IPetsStore {
-    allPets: IPets[];
-    userPets: IPets[];
-    SetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>, pets: IPets[]) => void;
+    allPets: IPet[];
+    userPets: IPet[];
+    SetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>, pets: IPet[]) => void;
     DeletePets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>, petId: number) => void;
-    GetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>) => Promise<IPets[]>;
+    GetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>) => Promise<IPet[]>;
 }
 
 const usePetsStore = create<IPetsStore>((set, get) => ({
