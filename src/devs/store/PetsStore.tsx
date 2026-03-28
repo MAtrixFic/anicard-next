@@ -1,4 +1,4 @@
-import { GetAdminPets } from '@/components/server/comp/Apis';
+import { GetAdminPets, GetInventoryPets } from '@/components/server/comp/Apis';
 import { create } from 'zustand';
 
 
@@ -9,12 +9,16 @@ export interface IElement {
 
 export interface IPet extends IElement {
     rarity: string;
+    rating: number,
     price: number;
+    character: string;
+    attribute: string
 }
 
 interface IPetsStore {
+    adminPets: IPet[];
+    battle: IPet[];
     allPets: IPet[];
-    userPets: IPet[];
     SetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>, pets: IPet[]) => void;
     DeletePets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>, petId: number) => void;
     GetPets: (key: keyof Omit<IPetsStore, 'SetPets' | 'DeletePets' | 'GetPets'>) => Promise<IPet[]>;
@@ -22,7 +26,8 @@ interface IPetsStore {
 
 const usePetsStore = create<IPetsStore>((set, get) => ({
     allPets: [],
-    userPets: [],
+    adminPets: [],
+    battle: [],
     SetPets: (key, pets) => set((state) => ({
         ...state,
         [key]: pets
@@ -32,13 +37,20 @@ const usePetsStore = create<IPetsStore>((set, get) => ({
         [key]: state[key].filter((pet) => pet.id !== petId)
     })),
     GetPets: async (key) => {
-        if (get()[key].length <= 0) {
+        if (key === 'adminPets') {
             const data = await GetAdminPets()
-            console.log('data:', data)
+            if (data.ok) {
+                get().SetPets(key, data.pets);
+            }
+
+        }
+        else {
+            const data = await GetInventoryPets(key === 'allPets' ? undefined : key)
             if (data.ok) {
                 get().SetPets(key, data.pets);
             }
         }
+
         return get()[key]
     }
 }));

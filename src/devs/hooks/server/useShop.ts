@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
-import { GetShopCards, BuyKeys, BuySpecialCards } from "@/components/server/comp/Apis"
+import { GetShopPets, BuyKeys, BuyPet } from "@/components/server/comp/Apis"
 import useMessageStore from "@/devs/store/MessageStore"
 
 export const useShop = () => {
     const addMessage = useMessageStore(state => state.addMessage)
     const { data, isLoading, isError } = useQuery({
-        queryFn: GetShopCards,
-        queryKey: ['shop-cards']
+        queryFn: GetShopPets,
+        queryKey: ['shop-pets']
     })
 
-    async function TryBuyCards(cardId: number) {
+    async function TryBuyPet(id: number) {
 
-        const res = await BuySpecialCards(cardId);
+        const res = await BuyPet(id);
         if (res)
-            addMessage({ text: 'Оплатите карту в боте', type: 'message' })
+            addMessage({ text: 'Оплатите пета в боте', type: 'message' })
         else
             addMessage({ text: 'Ошибка запроса', type: 'error' })
 
@@ -32,7 +32,7 @@ export const useShop = () => {
 
     return {
         offer: { data, isLoading, isError },
-        TryBuyCards,
+        TryBuyPet,
         TryBuyKeys
     }
 }

@@ -41,7 +41,7 @@ const Page = () => {
                         selectedPet={selectedPet}
                         thisPet={v}
                     >
-                        <PetFrame attribute={'/elements/fire.png'} rarity={v.rarity} rating="100" name="Кицуне" />
+                        <PetFrame attribute={v.attribute} rarity={v.rarity} rating={v.rating.toString()} name={v.character} />
                     </PreviewSelectionPets>)
             }
             {cardsChoise && createPortal(

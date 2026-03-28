@@ -1,15 +1,15 @@
 'use client'
-import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { BannerSection } from "@/components/routes/shop/Bunner"
 import DynamicBanner from "@/components/routes/shop/DynamicBanner"
 import { useShop } from "@/devs/hooks/server/useShop"
 import Link from "next/link"
+import { IPetWithId } from "@/components/routes/shop/Bunner"
 
 const Page = () => {
-    const { TryBuyCards, TryBuyKeys, offer } = useShop()
+    const { TryBuyPet, TryBuyKeys, offer } = useShop()
 
-    function BuyFunc(count: number, card?: IShortCardInfo & { id: number }) {
-        if (card) TryBuyCards(card.id)
+    function BuyFunc(count: number, pet?: IPetWithId) {
+        if (pet) TryBuyPet(pet.id)
         else TryBuyKeys(count)
     }
     return (
@@ -24,7 +24,7 @@ const Page = () => {
                     { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'rubles', count: 600 }, count: 6 },
                     { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'rubles', count: 1200 }, count: 12 }
                 ]} />
-                <DynamicBanner buy={BuyFunc} offer={offer} />
+                <DynamicBanner title="Питомцы" offer={offer} buy={BuyFunc} />
             </div>
         </div>
     )

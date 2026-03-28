@@ -92,6 +92,7 @@
     border-radius: 100%;
     overflow: hidden;
     position: relative;
+    transition-duration: .3s;
     // border: 2px solid transparent;
 
     &__preview-container {
@@ -100,11 +101,12 @@
         }
     }
 
-    &-S {
-        border-color: props.$yellow;
+    &.selected{
+        transform: translateY(-10%) rotateZ(5deg);
     }
 
     &-frame {
+        pointer-events: none;
         position: absolute;
         top: 0;
         left: 0;
@@ -171,6 +173,26 @@
 
         .pet-frame__rating {
             background-color: props.$purple;
+        }
+    }
+
+    &-B {
+        .pet-frame__bottom {
+            border-color: props.$blue;
+        }
+
+        .pet-frame__rating {
+            background-color: props.$blue;
+        }
+    }
+
+    &-C {
+        .pet-frame__bottom {
+            border-color: props.$green;
+        }
+
+        .pet-frame__rating {
+            background-color: props.$green;
         }
     }
 }

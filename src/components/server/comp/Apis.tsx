@@ -78,9 +78,12 @@ export const AddTwistsCard = TwistApi.AddTwistCard
 export const GetInventoryCards = InventoryApi.GetInventoryCards
 export const SetInventoryCards = InventoryApi.SetInventoryCards
 export const DeleteInventoryCards = InventoryApi.DeleteInventoryCards
+export const DeleteInventoryPets = InventoryApi.DeleteInventoryPets
+export const SetInventoryPets = InventoryApi.SetInventoryPets
 export const GetAdminPets = InventoryApi.GetAdminPets
+export const GetInventoryPets = InventoryApi.GetInventoryPets
 
 //shop api
-export const GetShopCards = ShopApi.GetShopCards
-export const BuySpecialCards = ShopApi.BuySpecialCards
+export const GetShopPets = ShopApi.GetShopPets
+export const BuyPet = ShopApi.BuyPet
 export const BuyKeys = ShopApi.BuyKeys

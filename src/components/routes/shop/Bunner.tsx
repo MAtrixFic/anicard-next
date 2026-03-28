@@ -2,29 +2,32 @@
 
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
-import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import { IPet } from "@/devs/store/PetsStore";
 
-export interface IBannerProps {
+export interface IBannerProps<T extends { id: number }> {
     src: string,
     name: string,
-    card?: IShortCardInfo & { id: number }
+    material?: T
     cost: {
         type: "rubles" | "pay-game-money" | "game-money";
         count: number
     }
     count: number,
-    buy?: (count: number, card?: IShortCardInfo & { id: number }) => void
+    buy?: (count: number, material?: T) => void
 }
 
-interface IBannerSectionProps {
-    banners: IBannerProps[],
+interface IBannerSectionProps<T> {
+    banners: IBannerProps<IPet>[],
     title: string;
-    buy: (count: number, pet?: IPet & { id: number }) => void
+    buy?: (count: number, material?: T) => void
 }
 
 
-export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
+export interface IPetWithId extends IPet {
+    id: number
+}
+
+export const Bunner = ({ src, name, cost, material, count, buy }: IBannerProps<IPet>) => {
     return (
         <div className="banner">
             <div className="banner__view-block">
@@ -41,13 +44,13 @@ export const Bunner = ({ src, name, cost, card, count, buy }: IBannerProps) => {
                 <span className="banner__count">
                     {cost.count} руб. / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="dark tiny" func={() => buy!(count, card)} />
+                <LightButton title={'Купить'} additionStyle="dark tiny" func={() => buy!(count, material)} />
             </div>
         </div>
     )
 }
 
-export const BannerSection = ({ banners, title, buy }: IBannerSectionProps) => {
+export const BannerSection = ({ banners, title, buy }: IBannerSectionProps<IPet>) => {
     return (
         <section className="banner-section">
             <div className="banner-section__title-container">
@@ -57,7 +60,7 @@ export const BannerSection = ({ banners, title, buy }: IBannerSectionProps) => {
             </div>
             <div className="banner-section__list">
                 {banners.map((v, i) =>
-                    <Bunner key={i + v.name} {...v} buy={buy} />
+                    <Bunner key={i + v.name} material={v.material} {...v} buy={buy} />
                 )}
             </div>
 

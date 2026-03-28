@@ -3,7 +3,6 @@ import PreviewCard from '../cards/PreviewCard'
 import PreviewSelectionCard, { BaseFrame } from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
 import { Arrow } from '../../icons/Cards'
-import { type ICardStore } from '../../../devs/store/CardsStore'
 import useSelection from '@/devs/hooks/useSelection'
 import { createPortal } from 'react-dom'
 import Filter from '../form/Filter'
@@ -11,6 +10,8 @@ import { useCards } from '@/devs/hooks/server/useCards'
 import { useQuery } from '@tanstack/react-query'
 import LightButton from '../buttons/LightButton'
 import { IElement, IPet } from '@/devs/store/PetsStore'
+import CardsChoise from '../cardsList/CardsChoise'
+import PreviewSelectionPets, { PetFrame } from '../pets/PreviewSelectionPets'
 
 export interface ICard extends IShortCardInfo, IElement { }
 
@@ -25,107 +26,121 @@ export interface IShortCardInfo {
     price?: string
 }
 
-interface ICardGlobalChoiseList {
-    choisenCardsNumber: number,
-    cardsRef: RefObject<(ICard | null)[]>,
-    cardsType: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>
+interface ICardGlobalChoiseList<T extends { id: number, photo: string }> {
+    choisenMaterialNumber: number,
+    materialRef: RefObject<(T | null)[]>,
+    materialType: 'battle-cards' | 'favorite-cards' | 'battle-pet',
+    loadAllMaterials: (args?: any) => Promise<T[]>,
+    loadSelectedMaterials: (args?: any) => Promise<T[]>,
 }
 
-const CardGlobalChoiseList = ({ choisenCardsNumber, cardsRef, cardsType }: ICardGlobalChoiseList) => {
-    const { getCards, setCards } = useCards()
-    const [selectedCard, setSelectedCard] = useSelection<ICard>()
+const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType, loadAllMaterials, loadSelectedMaterials }: ICardGlobalChoiseList<ICard | IPet>) => {
+    const [selectedElement, setSelectedElement] = useSelection<ICard | IPet>()
     const [updated, setUpdated] = useState<boolean>(false)
 
-    const [activeCards, setActiveCards] = useState<(ICard | null)[]>(new Array(choisenCardsNumber).fill(null))
-    const [previewCards, setPreviewCards] = useState<ICard[]>([])
+    const [activeElements, setActiveElements] = useState<typeof materialRef.current>(new Array(choisenMaterialNumber).fill(null))
+    const [previewElements, setPreviewElements] = useState<typeof materialRef.current>([])
 
     const query = useQuery({
-        queryKey: ['all-cards', cardsType],
-        queryFn: async () => getCards('allCards').then(data => {
-            const cards = data.length > 0 ? data.filter(v => cardsType !== 'favorite' ? v.category === cardsType : true) : []
-            setPreviewCards(cards);
-            return cards
-        }),
+        queryKey: ['all-cards', materialType],
+        queryFn: async () => loadAllMaterials().then(data => { setPreviewElements(data); return data })
     })
 
     useEffect(() => {
-        getCards(cardsType).then(data => {
-            let activeCells = activeCards
+        loadSelectedMaterials().then(data => {
+            let activeCells = activeElements
             if (data.length > 0) {
                 activeCells = activeCells.map((v, i) => data[i] ? data[i] : v)
-                setActiveCards(activeCells)
+                setActiveElements(activeCells)
             }
             setUpdated(true)
         })
     }, [])
 
-    async function DoMethod(data: ICard) {
-        const filteredResult = Object.fromEntries(
-            Object.entries(data).filter(([_, value]) =>
-                value ? value.toString().length > 0 && value.toString() !== '0' : false
-            )
-        );
-        if (query.data)
-            setPreviewCards(query.data?.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
-            ))
-    }
+    useEffect(() => {
+        console.log('preview', previewElements)
+        console.log('active', activeElements)
+    }, [previewElements, activeElements])
 
-    function SetFavoriteCard(index: number) {
-        if (selectedCard) {
-            const previewFavoriteCards = new Array(...activeCards)
-            previewFavoriteCards[index] = selectedCard
-            setActiveCards(previewFavoriteCards);
-            cardsRef.current = previewFavoriteCards
-            console.log(previewFavoriteCards)
-            setCards(cardsType, previewFavoriteCards.filter(v => v !== null));
-            setSelectedCard(null);
+    // async function DoMethod(data: ICard) {
+    //     const filteredResult = Object.fromEntries(
+    //         Object.entries(data).filter(([_, value]) =>
+    //             value ? value.toString().length > 0 && value.toString() !== '0' : false
+    //         )
+    //     );
+    //     if (query.data)
+    //         setPreviewElements(query.data?.filter(v => Object.keys(filteredResult).every(vk => v[vk as keyof ICard] == filteredResult[vk])
+    //         ))
+    // }
+
+    function SetFavoriteElements(index: number) {
+        if (selectedElement) {
+            const previewFavoriteCards = new Array(...activeElements)
+            previewFavoriteCards[index] = selectedElement
+            setActiveElements(previewFavoriteCards);
+            materialRef.current = previewFavoriteCards
+            setSelectedElement(null);
         }
     }
 
-    function DeleteFavoriteCard(index: number) {
-        const previewFavoriteCards = new Array(...activeCards)
+    function DeleteFavoriteElement(index: number) {
+        const previewFavoriteCards = new Array(...activeElements)
         previewFavoriteCards[index] = null
-        setActiveCards(previewFavoriteCards);
-        console.log(previewFavoriteCards)
-        console.log(activeCards.filter(v => v !== null))
-        setCards(cardsType, previewFavoriteCards.filter(v => v !== null));
-        cardsRef.current = previewFavoriteCards
+        setActiveElements(previewFavoriteCards);
+        materialRef.current = previewFavoriteCards
     }
 
     return (
         <div className="cards-choise">
-            {selectedCard && createPortal(<CardDesctiption
-                {...selectedCard}
+            {selectedElement && createPortal(<CardDesctiption
+                {...selectedElement}
             />, document.querySelector('.desc-panel')!)}
             <div className="cards-choise__favorite-cards-list-container">
                 <ul className="cards-choise__favorite-list">
-                    {new Array(choisenCardsNumber).fill(0).map((_, i) =>
-                        <PreviewCard key={i}
-                            thisCard={activeCards[i]!}
-                            func={() => SetFavoriteCard(i)}
-                            deleteFunc={() => DeleteFavoriteCard(i)}
-                        />
+                    {new Array(choisenMaterialNumber).fill(0).map((_, i) => {
+                        const ae = activeElements[i] as ICard
+                        return (
+                            <PreviewCard key={i}
+                                thisCard={ae!}
+                                func={() => SetFavoriteElements(i)}
+                                deleteFunc={() => DeleteFavoriteElement(i)}
+                            />
+                        )
+                    }
                     )}
                 </ul>
             </div>
-            <div className="cards-choise__list-container">
-                {/* <Filter style='cards-choise__filter' submit={DoMethod} /> */}
-                <section className="cards-choise__cards-list">
-                    <ul className="cards-choise__list">
-                        {previewCards && updated && previewCards.filter((v) => !activeCards.map(v => v ? v.id : null).includes(v.id))
-                            .map((v) =>
+            <CardsChoise>
+                {previewElements && updated && previewElements.filter((pe) => !activeElements.map(ae => ae ? ae.id : null).includes(pe ? pe.id : null))
+                    .map((v) => {
+                        const cardEl = selectedElement as ICard
+                        const currentCard = v as ICard
+
+                        const petEl = selectedElement as IPet
+                        const currentPet = v as IPet
+                        return (
+                            materialType.includes('card') ?
                                 <PreviewSelectionCard
                                     key={v?.id}
-                                    setSelection={setSelectedCard}
-                                    selectedCard={selectedCard}
-                                    thisCard={v}
+                                    setSelection={setSelectedElement}
+                                    selectedCard={cardEl}
+                                    thisCard={currentCard}
                                 >
-                                    <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                                    <BaseFrame rarity={currentCard.rarity} rating={currentCard.rating.toString()} name="Рем" attribute="" />
                                 </PreviewSelectionCard>
-                            )}
-                    </ul>
-                </section>
-            </div>
+                                :
+                                <PreviewSelectionPets
+                                    key={v?.id}
+                                    setSelection={setSelectedElement}
+                                    selectedPet={petEl}
+                                    thisPet={currentPet}
+                                >
+                                    <PetFrame attribute={currentPet.attribute} rarity={currentPet.rarity} rating={currentPet.rating.toString()} name={currentPet.character} />
+                                </PreviewSelectionPets>
+                        )
+                    }
+                    )}
+            </CardsChoise>
         </div>
     )
 }
@@ -146,11 +161,6 @@ export const CardDesctiption = (element: IElement) => {
             <div className="card-desc__top-block">
                 {selected &&
                     <>
-                        {/* <div className="card-desc__top-container">
-                            <h4 className='card-desc__name'>
-                                {card.character ? card.character : 'Карта'}
-                            </h4>
-                        </div> */}
                         <div className="card-desc__top-container">
                             <PurpleButton
                                 active={selected}

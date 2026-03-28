@@ -14,7 +14,7 @@ export class InventoryApi {
     @WithCookies()
     static async GetInventoryCards(cardType?: TCardType): Promise<IAdminCardsResponse> {
         try {
-            const res = await FetchMG.GET(`inventory/cards`)
+            const res = await FetchMG.GET(`inventory/cards${cardType ? `/${cardType}` : ''}`)
             console.log(res.data)
             return res.data
         }
@@ -36,10 +36,37 @@ export class InventoryApi {
     }
 
     @WithCookies()
+    static async GetInventoryPets(cardType?: TCardType): Promise<IPetsResponse> {
+        try {
+            const res = await FetchMG.GET(`inventory/pets${cardType ? `/${cardType}` : ''}`)
+            console.log(res.data)
+            return res.data
+        }
+        catch (error) {
+            return { ok: false, pets: [] }
+        }
+    }
+
+    @WithCookies()
     static async SetInventoryCards(cardType: TCardType, cardsId: number[]): Promise<boolean> {
         try {
-            const res = await FetchMG.POST(`inventory/${cardType}`, {
+            const res = await FetchMG.POST(`inventory/cards/${cardType}`, {
                 cards_id: cardsId
+            })
+            console.log(res.data)
+            return true
+        }
+        catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+
+    @WithCookies()
+    static async SetInventoryPets(petsType: TCardType, petIds: number[]): Promise<boolean> {
+        try {
+            const res = await FetchMG.POST(`inventory/pets/${petsType}`, {
+                pets_id: petIds
             })
             console.log(res.data)
             return true
@@ -53,7 +80,18 @@ export class InventoryApi {
     @WithCookies()
     static async DeleteInventoryCards(cardType: TCardType): Promise<boolean> {
         try {
-            const res = await FetchMG.DELETE(`inventory/${cardType}`)
+            await FetchMG.DELETE(`inventory/cards/${cardType}`)
+            return true
+        }
+        catch (error) {
+            return false
+        }
+    }
+
+    @WithCookies()
+    static async DeleteInventoryPets(cardType: TCardType): Promise<boolean> {
+        try {
+            await FetchMG.DELETE(`inventory/pets/${cardType}`)
             return true
         }
         catch (error) {

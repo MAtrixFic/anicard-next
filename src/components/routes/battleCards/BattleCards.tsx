@@ -16,7 +16,7 @@ const BattleCards = () => {
 
     return (
         <div className="battle-cards">
-            <CardGlobalChoiseList cardsRef={battleCardsRef} cardsType='battle' choisenCardsNumber={6} />
+            <CardGlobalChoiseList materialRef={battleCardsRef} materialType='battle' choisenMaterialNumber={6} />
             <div className="battle-cards__btns">
                 <PurpleButton title={'Сохранить'} func={StoreBattleCards} additionStyle="tiny" />
             </div>

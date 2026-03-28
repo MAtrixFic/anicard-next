@@ -6,7 +6,7 @@ import { useRef } from "react"
 
 const Page = () => {
     const battleCardsRef = useRef<(ICard | null)[]>([])
-    const { SetInvCards } = useCards()
+    const { SetInvCards, getCards } = useCards()
 
     async function StoreBattleCards() {
         const cards = battleCardsRef.current.filter(v => v !== null)
@@ -16,10 +16,16 @@ const Page = () => {
 
     return (
         <div className="battle-cards">
-            <CardGlobalChoiseList cardsRef={battleCardsRef} cardsType='battle' choisenCardsNumber={6} />
+            <CardGlobalChoiseList
+                materialRef={battleCardsRef}
+                materialType='battle-cards'
+                loadAllMaterials={async () => getCards('allCards')}
+                loadSelectedMaterials={async () => getCards('battle')}
+                choisenMaterialNumber={6}
+            />
             <div className="admin-logic">
                 <div className="desc-panel reverse">
-                    <LightButton title='Сохранить' additionStyle="green" func={StoreBattleCards} />
+                    <LightButton title='Сохранить' func={StoreBattleCards} />
                 </div>
             </div>
         </div>

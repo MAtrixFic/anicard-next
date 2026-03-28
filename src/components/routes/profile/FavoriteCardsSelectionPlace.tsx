@@ -17,7 +17,7 @@ interface IFavoriteCardsSelectionPlaceProps extends IOverBlackSpaceProps {
 
 const FavoriteCardsSelectionPlace = ({ func, additionStyle, user }: IFavoriteCardsSelectionPlaceProps) => {
     const favoriteCard = useRef<(ICard | null)[]>([]);
-    const { SetInvCards } = useCards()
+    const { SetInvCards, getCards } = useCards()
 
     async function StoreFavoriteCards() {
         const cards = favoriteCard.current.filter(v => v !== null)
@@ -29,7 +29,13 @@ const FavoriteCardsSelectionPlace = ({ func, additionStyle, user }: IFavoriteCar
 
     return (
         <OverBlackSpace additionStyle={additionStyle}>
-            <CardGlobalChoiseList choisenCardsNumber={3} cardsRef={favoriteCard} cardsType='favorite' />
+            <CardGlobalChoiseList
+                choisenMaterialNumber={3}
+                materialRef={favoriteCard}
+                materialType='favorite-cards'
+                loadAllMaterials={async () => getCards('allCards')}
+                loadSelectedMaterials={async () => getCards('favorite')}
+            />
             <div className="desc-panel pg">
                 <div className="desc-panel__container">
                     <PurpleButton title="Сохранить" additionStyle="tiny" func={StoreFavoriteCards} />

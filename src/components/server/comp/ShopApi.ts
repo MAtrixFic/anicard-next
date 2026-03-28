@@ -1,23 +1,24 @@
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import FetchMG from "../fetches/config"
 import { WithCookies } from "@/devs/decorators/serverDec"
+import { IPet } from "@/devs/store/PetsStore"
 
 export default class ShopApi {
-    static async GetShopCards(): Promise<{ ok: boolean, cards: ICard[] }> {
+    static async GetShopPets(): Promise<{ ok: boolean, pets: IPet[] }> {
         try {
-            const res = await FetchMG.GET('shop/offers')
+            const res = await FetchMG.GET('shop/pet/offers')
             console.log(res.data)
-            return { ok: true, cards: res.data.cards }
+            return { ok: true, pets: res.data.pets }
         }
         catch (error) {
             console.log(error)
-            return { ok: false, cards: [] }
+            return { ok: false, pets: [] }
         }
     }
     @WithCookies()
-    static async BuySpecialCards(cardId: number) {
+    static async BuyPet(id: number) {
         try {
-            await FetchMG.POST(`shop/card/${cardId}`)
+            await FetchMG.POST(`shop/pet/${id}`)
             return true
         }
         catch (error) {
