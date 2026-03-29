@@ -18,7 +18,7 @@ const Page = () => {
     useQuery({
         queryKey: ['allPets'],
         queryFn: async () => {
-            const data = await getPets('allPets')
+            const data = await getPets('adminPets')
             console.log(data);
             setInventoryPets(data);
             return data

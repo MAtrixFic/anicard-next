@@ -11,6 +11,9 @@ import usePets from '@/devs/hooks/server/usePets'
 import { useEffect, useState } from 'react'
 import { IPet } from '@/devs/store/PetsStore'
 import PreviewPet from '@/components/additionals/pets/PreviewPet'
+import { usePVE } from '@/devs/hooks/server/usePve'
+import { useParams } from 'next/navigation'
+import { IPveStarResponse } from '@/components/server/comp/PVEApi'
 
 interface IFarmAttributeProps {
     count: number,
@@ -33,23 +36,38 @@ const FarmAttribute = ({ count, element }: IFarmAttributeProps) => {
 const Page = () => {
     const [overWS, setOverWS, setWMode] = useOverWindowStatus(300);
     const { getPets } = usePets()
-
     const [pets, setPets] = useState<IPet[]>([])
-    const [selectedPets, setSelectedPets] = useState<IPet[]>(new Array(6).fill(null))
+    const [selectedPets, setSelectedPets] = useState<(IPet | null)[]>(new Array(6).fill(null))
+    const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
     const [actIndex, setActIndex] = useState<number>(0)
+    const farmParams = useParams()
+    const { StartFarmTheStar, GetCurrentStar } = usePVE()
+    const [currentStar, setCurrentStar] = useState<IPveStarResponse | null>(null);
 
     useEffect(() => {
         getPets('allPets').then(data => setPets(data));
     }, [])
 
+    function DeletePet(index: number) {
+        const curSelectedPets = [...selectedPets]
+        curSelectedPets[index] = null
+        setSelectedPets(curSelectedPets)
+    }
 
+    useEffect(() => {
+        setSelectedIndexes(selectedPets.filter(v => v != null).map(v => Number(v.id)))
+    }, [selectedPets.filter(v => v !== null).length])
+
+    useEffect(() => {
+        GetCurrentStar(Number(farmParams.index)).then(data => setCurrentStar(data))
+    }, [])
 
     return (
         <div className="farm">
             {['opened', 'to-hide'].includes(overWS) &&
                 createPortal(<OverBlackSpace additionStyle={overWS}>
                     <ul className="farm__all-pets-list">
-                        {pets.map(v =>
+                        {pets.filter(fv => !selectedPets.includes(fv)).map(v =>
                             <PreviewSelectionPets
                                 key={v?.id}
                                 setSelection={() => {
@@ -72,18 +90,32 @@ const Page = () => {
             <div className="farm__place-selector">
                 <section className="farm__selector">
                     <ul className="farm__casts-list">
-                        <FarmAttribute count={5} element='огонь' />
-                        <FarmAttribute count={1} element='ветер' />
+                        {currentStar?.rarity}
+                        {' '}
+                        {currentStar?.element}
+                        {' '}
+                        {currentStar?.star_id}
+                        {/* <FarmAttribute count={5} element='огонь' />
+                        <FarmAttribute count={1} element='ветер' /> */}
                     </ul>
                     <ul className="farm__pets-list">
-                        {new Array(6).fill(null).map((v, i) =>
-                            <PreviewPet
-                                key={i}
-                                thisPet={selectedPets[i]}
-                                func={() => setOverWS('opened')}
-                                setSelection={() => setActIndex(i)}
-                            />
-                        )}
+                        {new Array(6).fill(null).map((v, i) => {
+                            const currentSelPet = selectedPets[i]
+                            return (
+                                <PreviewPet
+                                    key={i}
+                                    thisPet={currentSelPet}
+                                    func={() => { setOverWS('opened'); setActIndex(i) }}
+                                    deleteFunc={() => DeletePet(i)}
+                                >
+                                    {currentSelPet && <PetFrame
+                                        name={currentSelPet.character}
+                                        rating={currentSelPet.rating.toString()}
+                                        attribute={currentSelPet.attribute}
+                                        rarity={currentSelPet.rarity} />}
+                                </PreviewPet>
+                            )
+                        })}
                     </ul>
                     <div className="farm__result">
                         <div className="farm__result-title">
@@ -92,7 +124,7 @@ const Page = () => {
                             </h4>
                         </div>
                         <div className="farm__result-counter">
-                            <span className='farm__result-text'>1200</span>
+                            <span className='farm__result-text'>{currentStar?.reward}</span>
                         </div>
                     </div>
                 </section>
@@ -103,7 +135,7 @@ const Page = () => {
                         </span>
                     </div>
                     <div className="farm__btns">
-                        <LightButton title="Начать" />
+                        <LightButton title="Начать" active={selectedIndexes.length > 0} func={async () => await StartFarmTheStar(Number(farmParams.index), selectedIndexes)} />
                     </div>
                 </section>
             </div>

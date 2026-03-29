@@ -18,6 +18,7 @@ export default class ShopApi {
     @WithCookies()
     static async BuyPet(id: number) {
         try {
+            console.log(`shop/pet/${id}`)
             await FetchMG.POST(`shop/pet/${id}`)
             return true
         }

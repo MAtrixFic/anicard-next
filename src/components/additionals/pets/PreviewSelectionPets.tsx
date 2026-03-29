@@ -6,7 +6,7 @@ import { IBaseFrameProps } from '../cards/PreviewSelectionCard'
 import { attributesImages } from '../form/FormCardFields'
 
 export interface IPreviewSelectionPetProps {
-    setSelection: (card: IPet | null) => void,
+    setSelection: (pet: IPet | null) => void,
     selectedPet: IPet | null,
     thisPet: IPet,
     children?: React.ReactNode

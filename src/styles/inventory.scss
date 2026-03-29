@@ -101,7 +101,7 @@
         }
     }
 
-    &.selected{
+    &.selected {
         transform: translateY(-10%) rotateZ(5deg);
     }
 
@@ -154,45 +154,45 @@
                 color: white;
             }
         }
-    }
 
-    &-S {
-        .pet-frame__bottom {
-            border-color: props.$yellow;
+        &__S {
+            .pet-frame__bottom {
+                border-color: props.$yellow;
+            }
+
+            .pet-frame__rating {
+                background-color: props.$yellow;
+            }
         }
 
-        .pet-frame__rating {
-            background-color: props.$yellow;
-        }
-    }
+        &__A {
+            .pet-frame__bottom {
+                border-color: props.$purple;
+            }
 
-    &-A {
-        .pet-frame__bottom {
-            border-color: props.$purple;
-        }
-
-        .pet-frame__rating {
-            background-color: props.$purple;
-        }
-    }
-
-    &-B {
-        .pet-frame__bottom {
-            border-color: props.$blue;
+            .pet-frame__rating {
+                background-color: props.$purple;
+            }
         }
 
-        .pet-frame__rating {
-            background-color: props.$blue;
-        }
-    }
+        &__B {
+            .pet-frame__bottom {
+                border-color: props.$blue;
+            }
 
-    &-C {
-        .pet-frame__bottom {
-            border-color: props.$green;
+            .pet-frame__rating {
+                background-color: props.$blue;
+            }
         }
 
-        .pet-frame__rating {
-            background-color: props.$green;
+        &__C {
+            .pet-frame__bottom {
+                border-color: props.$green;
+            }
+
+            .pet-frame__rating {
+                background-color: props.$green;
+            }
         }
     }
 }

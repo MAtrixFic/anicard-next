@@ -1,0 +1,25 @@
+'use client'
+
+import { StarFarmPoint } from '@/app/(menu)/farm/points/page'
+import { IPveStarResponse } from '@/components/server/comp/PVEApi'
+import { usePVE } from '@/devs/hooks/server/usePve'
+import { useEffect, useState } from 'react'
+
+const StarsList = () => {
+    const { getValue } = usePVE()
+    const [stars, setStars] = useState<IPveStarResponse[]>([])
+
+    useEffect(() => {
+        setStars(getValue('stars') as IPveStarResponse[])
+    }, [])
+
+    return (
+        <ul className="farm-points__star-list">
+            {stars.map(v =>
+                <StarFarmPoint key={v.star_id} time={v.end_time} rarity={v.rarity.toLowerCase()} id={v.star_id} active={!v.status.includes('free')} />
+            )}
+        </ul>
+    )
+}
+
+export default StarsList

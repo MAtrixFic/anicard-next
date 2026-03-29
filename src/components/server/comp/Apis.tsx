@@ -7,6 +7,7 @@ import setCookieParser from 'set-cookie-parser';
 import AdminApi, { TCardWithPhoto } from "./AdminApi";
 import { InventoryApi, TwistApi } from "./InventoryApi";
 import ShopApi from "./ShopApi";
+import PVEApi from "./PVEApi";
 
 //user api
 export const AuthUser = async (initData: any) => {
@@ -87,3 +88,8 @@ export const GetInventoryPets = InventoryApi.GetInventoryPets
 export const GetShopPets = ShopApi.GetShopPets
 export const BuyPet = ShopApi.BuyPet
 export const BuyKeys = ShopApi.BuyKeys
+
+// pve api
+export const GetStars = PVEApi.GetStars
+export const StartStar = PVEApi.StartStar
+export const GetCurrentStar = PVEApi.GetCurrentStar
