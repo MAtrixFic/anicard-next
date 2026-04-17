@@ -131,7 +131,7 @@ const Page = () => {
                 <section className="farm__logic">
                     <div className="farm__timer">
                         <span className='farm__t-text'>
-                            00:00:00
+                            {currentStar?.status !== 'free' ? `${currentStar?.hours}:00:00` : `00:00:00`}
                         </span>
                     </div>
                     <div className="farm__btns">

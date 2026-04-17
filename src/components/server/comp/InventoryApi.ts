@@ -72,6 +72,7 @@ export class InventoryApi {
             return true
         }
         catch (error) {
+            console.log(`inventory/pets/${petsType}`, {pets_id: petIds})
             console.log(error)
             return false
         }
@@ -91,7 +92,8 @@ export class InventoryApi {
     @WithCookies()
     static async DeleteInventoryPets(cardType: TCardType): Promise<boolean> {
         try {
-            await FetchMG.DELETE(`inventory/pets/${cardType}`)
+            const deleteRes = await FetchMG.DELETE(`inventory/pets/${cardType}`)
+            console.log(deleteRes.data)
             return true
         }
         catch (error) {

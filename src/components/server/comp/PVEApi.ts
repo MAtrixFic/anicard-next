@@ -9,6 +9,7 @@ export interface IPveStarResponse extends IFarmCell {
     element: string,
     reward: number,
     status: TPveStatus,
+    hours: number,
     time_left_seconds: number,
 }
 
@@ -65,7 +66,7 @@ export default class PVEApi {
             return res.data
         }
         catch (error) {
-            console.log(error.config)
+            console.log(error.response.data)
             return false
         }
     }

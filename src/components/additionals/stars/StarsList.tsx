@@ -10,7 +10,10 @@ const StarsList = () => {
     const [stars, setStars] = useState<IPveStarResponse[]>([])
 
     useEffect(() => {
-        setStars(getValue('stars') as IPveStarResponse[])
+        getValue('stars').then((data) => {
+            console.log(data)
+            setStars(data as IPveStarResponse[])
+        })
     }, [])
 
     return (

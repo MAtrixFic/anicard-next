@@ -1,12 +1,12 @@
-import { IPveStarResponse, IPveStarDataResponse } from '@/components/server/comp/PVEApi'
+import { IPveStarResponse } from '@/components/server/comp/PVEApi'
 import { create } from 'zustand'
-import { StartStar, GetStars, GetCurrentStar } from '@/components/server/comp/Apis'
+import { GetStars, GetCurrentStar } from '@/components/server/comp/Apis'
 
 interface IPveStore {
     stars: IPveStarResponse[],
-    currentStar: IPveStarDataResponse | null,
+    currentStar: IPveStarResponse | null,
     setValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue'>, value: IPveStarResponse[] | IPveStarResponse) => void,
-    getValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue'>, param?: any) => IPveStarResponse[] | IPveStarResponse | null,
+    getValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue'>, param?: any) => Promise<IPveStarResponse[] | IPveStarResponse | null>,
 }
 
 const usePveStore = create<IPveStore>((set, get) => ({
@@ -16,20 +16,18 @@ const usePveStore = create<IPveStore>((set, get) => ({
         ...state,
         [key]: value
     })),
-    getValue: (key, param) => {
-        switch (key) {
-            case 'currentStar':
-                if (get().currentStar === null) {
-                    GetCurrentStar(param as number).then(data =>
-                        get().setValue('currentStar', data!)
-                    )
-                }
-                break;
-            case 'stars':
-                if (get().stars.length <= 0) {
-                    GetStars().then(data => get().setValue('stars', data))
-                }
-                break;
+    getValue: async (key, param) => {
+        if (key == 'currentStar') {
+            if (get().currentStar === null) {
+                const data = await GetCurrentStar(param as number);
+                get().setValue('currentStar', data!);       
+            }
+        }
+        else if (key == 'stars') {
+            if (get().stars.length <= 0) {
+                const data = await GetStars();
+                get().setValue('stars', data);      
+            }
         }
         return get()[key]
     }
