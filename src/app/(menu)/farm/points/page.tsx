@@ -1,13 +1,13 @@
 'use client'
 import '@/styles/farmPoints.scss'
-import { StarPoint } from '@/components/icons/Star'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import StarsList from '@/components/additionals/stars/StarsList'
+import { StarPoint } from '@/components/icons/Star'
 import SuperTimer from '@/devs/time/SuperTimer'
+import useTimer from '@/devs/hooks/useTimer'
 
 const Page = () => {
-
     return (
         <div className="farm-points">
             <div className="farm-points__top">
@@ -32,7 +32,7 @@ export interface IStarFarmPointProps {
 
 export const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPointProps & { id: number }) => {
     const [pos, setPos] = useState<'left' | 'right'>('right')
-    const [timeLeft, setTimeLeft] = useState<number>(() => time ? SuperTimer.GetSeonds(time) : 0)
+    const { timeLeft, Start } = useTimer()
 
     useEffect(() => {
         const current = document.querySelector(`.star-point__${id}`)
@@ -45,14 +45,8 @@ export const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPoi
             }
         }
 
-    }, [])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimeLeft(prev => prev - 1)
-        }, 1000)
-
-        return () => clearInterval(interval)
+        Start(time ? SuperTimer.GetSeonds(time) : 0)
     }, [])
 
     return (
@@ -63,7 +57,7 @@ export const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPoi
                         <StarPoint />
                     </div>
                 </Link>
-                {active && <div className={`star-point__logic star-point__logic-${pos}`}>
+                {active && (timeLeft > 0) && <div className={`star-point__logic star-point__logic-${pos}`}>
                     <div className="star-point__time">
                         <span className='star-pint__timer'>{SuperTimer.ToCustomTimeString(timeLeft)}</span>
                     </div>

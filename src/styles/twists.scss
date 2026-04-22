@@ -163,9 +163,9 @@
     flex-direction: column;
     flex-grow: 1;
     backdrop-filter: blur(10px);
-    background-color: rgba(props.$darkerSkin, .2);
+    background-color: rgba(props.$labelBorder, .2);
     z-index: 300;
-    padding: .5rem;
+    padding: .3rem;
 
     &.opened {
         animation: show-card-twist .4s forwards;
@@ -180,9 +180,9 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        border: 2px solid props.$darkestSkin;
+        border: 2px solid props.$labelColor;
         border-radius: 25px;
-        box-shadow: 0px 0px 40px 0px props.$lightSkin inset;
+        box-shadow: 0px 0px 40px 0px props.$labelColor inset;
         corner-shape: bevel;
         padding: .5rem;
     }

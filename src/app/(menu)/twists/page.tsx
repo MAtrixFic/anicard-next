@@ -104,7 +104,7 @@ const TwistWindow = ({ setOpenWindow, windowMode, card }: ITwistWindowProps) => 
                     </div>
                 </div>
                 {openCardMode === 'hidden' && <div className="twist__panel">
-                    <LightButton title={"Забрать"} additionStyle="dark" func={setOpenWindow} />
+                    <LightButton title={"Забрать"} func={setOpenWindow} />
                 </div>}
             </div>
         </div>

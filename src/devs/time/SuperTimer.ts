@@ -1,9 +1,9 @@
 export default class SuperTimer {
     static GetSeonds = (time: string) => {
-        const fixed = time.replace(/(\.\d{3})\d+/, '$1');
-        const pastDate = new Date(fixed);
+        const target = new Date(time).getTime();
         const now = Date.now();
-        const diffMs = now - pastDate.getTime();
+
+        const diffMs = target - now;
         const diffSeconds = Math.floor(diffMs / 1000);
         return diffSeconds
     }

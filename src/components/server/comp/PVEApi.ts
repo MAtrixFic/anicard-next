@@ -26,6 +26,11 @@ export interface IExpeditionDataResponse extends IFarmCell {
     pets: IPet[]
 }
 
+export interface ICurrentStartAllDataResponse {
+    expedition: IExpeditionDataResponse,
+    star: IPveStarResponse
+}
+
 export interface IPveCurrentStarDataRepsonse {
     star: IPveStarResponse,
     expedition: IExpeditionDataResponse
@@ -44,11 +49,11 @@ export default class PVEApi {
         }
     }
 
-    static async GetCurrentStar(starId: number): Promise<IPveStarResponse | null> {
+    static async GetCurrentStar(starId: number): Promise<ICurrentStartAllDataResponse | null> {
         try {
             const res = await FetchMG.GET(`pve/star/${starId}`)
             console.log(res.data)
-            return res.data.star
+            return res.data
         }
         catch (error) {
             console.log(error)
@@ -70,4 +75,19 @@ export default class PVEApi {
             return false
         }
     }
+
+    static async ClaimStar(id: number): Promise<IExpeditionDataResponse | boolean> {
+        try {
+            const res = await FetchMG.POST(`pve/start`, {
+                expedition_id: id,
+            })
+            console.log(res.data)
+            return res.data
+        }
+        catch (error) {
+            console.log(error.response.data)
+            return false
+        }
+    }
+
 }

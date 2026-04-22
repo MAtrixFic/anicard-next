@@ -2,11 +2,19 @@ import { useFormContext } from "react-hook-form"
 import BaseList from "../BaseList"
 import { useState } from "react";
 
-export const attributes = { 'огонь': 'Огонь', 'ветер': 'Ветер', 'лава': 'Лава' }
+export const attributes = {
+    'огонь': 'Огонь',
+    'ветер': 'Ветер',
+    'лава': 'Лава',
+    'вода': 'Вода',
+    'молния': 'Молния'
+}
 export const attributesImages = {
     'огонь': '/elements/fire.png',
     'ветер': '/elements/wind.png',
-    'лава': '/elements/fire.png'
+    'лава': '/elements/fire.png',
+    'вода': '/elements/water.png',
+    'молния': '/elements/lighting.png'
 }
 
 const FormCardFields = () => {

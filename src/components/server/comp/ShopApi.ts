@@ -19,7 +19,9 @@ export default class ShopApi {
     static async BuyPet(id: number) {
         try {
             console.log(`shop/pet/${id}`)
-            await FetchMG.POST(`shop/pet/${id}`)
+            await FetchMG.POST(`shop/pet/${id}`, {
+                payment_type: "real_money"
+            })
             return true
         }
         catch (error) {
