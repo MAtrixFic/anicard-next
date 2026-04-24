@@ -130,17 +130,38 @@
             justify-content: center;
         }
 
+        &__bottom svg,
+        &__cover {
+            left: 50%;
+            transform: translateX(-50%);
+            position: absolute;
+        }
+
         &__bottom {
-            background-color: white;
-            border-radius: 10px 10px 0 0;
-            border: 2px solid transparent;
-            border-bottom: none;
-            width: 120px;
-            align-self: center;
+            position: relative;
+
+            svg {
+                bottom: -5px;
+                z-index: 100;
+                width: 160px;
+            }
+        }
+
+        &__cover {
+            top: -50px;
+            z-index: 101;
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+        }
+
+        &__name{
+            text-wrap: nowrap;
         }
 
         &__name,
         &__element {
+            z-index: 200;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -149,15 +170,30 @@
         &__text {
             color: props.$bodyColor;
             font-weight: 700;
+            font-size: .9rem;
 
             &-white {
                 color: white;
             }
         }
 
+        &__element {
+            img {
+                object-fit: contain;
+                width: 18px;
+                aspect-ratio: 1;
+            }
+        }
+
         &__S {
             .pet-frame__bottom {
-                border-color: props.$yellow;
+                svg {
+
+                    path:last-child {
+                        stroke: props.$yellow;
+                        stroke-width: 2;
+                    }
+                }
             }
 
             .pet-frame__rating {
@@ -167,7 +203,12 @@
 
         &__A {
             .pet-frame__bottom {
-                border-color: props.$purple;
+                svg {
+                    path:last-child {
+                        stroke: props.$purple;
+                        stroke-width: 2;
+                    }
+                }
             }
 
             .pet-frame__rating {
@@ -177,7 +218,12 @@
 
         &__B {
             .pet-frame__bottom {
-                border-color: props.$blue;
+                svg {
+                    path:last-child {
+                        stroke: props.$blue;
+                        stroke-width: 2;
+                    }
+                }
             }
 
             .pet-frame__rating {
@@ -187,7 +233,12 @@
 
         &__C {
             .pet-frame__bottom {
-                border-color: props.$green;
+                svg {
+                    path:last-child {
+                        stroke: props.$green;
+                        stroke-width: 2;
+                    }
+                }
             }
 
             .pet-frame__rating {
@@ -440,7 +491,7 @@
     z-index: 120;
     display: flex;
     align-items: end;
-    gap: 1rem;
+    gap: .6rem;
     flex-direction: column;
     position: fixed;
     bottom: 60px;
@@ -449,5 +500,67 @@
 
     &__manage {
         padding-inline: .6rem;
+        width: 100%;
+        display: flex;
+    }
+}
+
+.upgrade-panel {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: .4rem .8rem .4rem .4rem;
+    border-radius: 10px;
+    background-color: rgba(props.$labelColor, .4);
+    border: 1px solid props.$labelColor;
+    backdrop-filter: blur(6px);
+    gap: 1rem;
+
+    &__left-block {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    &__needed {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__right-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__experience {
+        flex-grow: 1;
+        height: 30px;
+        position: relative;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: rgba(props.$green, .3);
+        border: 1px solid props.$green;
+    }
+
+    &__experience-indicator {
+        padding-inline: .4rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    button {
+        font-size: 1rem;
+        font-weight: 550;
+
+        &:disabled {
+            opacity: .6;
+
+            &:hover {
+                cursor: not-allowed;
+            }
+        }
     }
 }

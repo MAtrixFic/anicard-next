@@ -1,6 +1,7 @@
 import { WithCookies } from "@/devs/decorators/serverDec";
 import FetchMG from "../fetches/config";
 import { IPet } from "@/devs/store/PetsStore";
+import { type IError } from "./Apis";
 
 export type TPveStatus = "free" | "occupied"
 
@@ -71,12 +72,12 @@ export default class PVEApi {
             return res.data
         }
         catch (error) {
-            console.log(error.response.data)
+            console.log((error as IError).response.data)
             return false
         }
     }
 
-    static async ClaimStar(id: number): Promise<IExpeditionDataResponse | boolean> {
+    static async ClaimStar(id: number): Promise<string | boolean> {
         try {
             const res = await FetchMG.POST(`pve/start`, {
                 expedition_id: id,
@@ -85,7 +86,7 @@ export default class PVEApi {
             return res.data
         }
         catch (error) {
-            console.log(error.response.data)
+            console.log((error as IError).response.data)
             return false
         }
     }

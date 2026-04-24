@@ -1,40 +1,23 @@
 'use client'
 import '@/styles/farm.scss'
 import LightButton from '@/components/additionals/buttons/LightButton'
-import Image from 'next/image'
-import useOverWindowStatus from '@/devs/hooks/useOverWindowStatus'
 import OverBlackSpace from '@/components/additionals/OverBlackSpace'
-import { createPortal } from 'react-dom'
-import { attributesImages } from '@/components/additionals/form/FormCardFields'
 import PreviewSelectionPets, { PetFrame } from '@/components/additionals/pets/PreviewSelectionPets'
-import usePets from '@/devs/hooks/server/usePets'
-import { useEffect, useState } from 'react'
-import { IPet } from '@/devs/store/PetsStore'
 import PreviewPet from '@/components/additionals/pets/PreviewPet'
-import { usePVE } from '@/devs/hooks/server/usePve'
+import { FarmStatutes } from '@/components/routes/farm/StarsList'
+import useOverWindowStatus from '@/devs/hooks/useOverWindowStatus'
+
+import { createPortal } from 'react-dom'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
+
+import { IPet } from '@/devs/store/PetsStore'
+import usePets from '@/devs/hooks/server/usePets'
+import { usePVE } from '@/devs/hooks/server/usePve'
 import useTimer from '@/devs/hooks/useTimer'
-import { ICurrentStartAllDataResponse, IPveStarResponse } from '@/components/server/comp/PVEApi'
-import { FarmStatutes } from '@/components/additionals/stars/StarsList'
 import SuperTimer from '@/devs/time/SuperTimer'
+import { type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
 
-interface IFarmAttributeProps {
-    count: number,
-    element: keyof typeof attributesImages
-}
-
-const FarmAttribute = ({ count, element }: IFarmAttributeProps) => {
-    return (
-        <li className='cast'>
-            <div className="cast__number">
-                <span className='cast__text'>{count}</span>
-            </div>
-            <div className="cast__preview">
-                <Image src={attributesImages[element]} alt="Cast" width={24} height={24} quality={60} />
-            </div>
-        </li>
-    )
-}
 
 const Page = () => {
     const farmParams = useParams()
@@ -42,12 +25,14 @@ const Page = () => {
 
     const { getPets } = usePets()
     const [pets, setPets] = useState<IPet[]>([])
+
     const [selectedPets, setSelectedPets] = useState<(IPet | null)[]>(new Array(6).fill(null))
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
     const [actIndex, setActIndex] = useState<number>(0)
-    const { StartFarmTheStar, GetCurrentStar } = usePVE()
-    const [currentStar, setCurrentStar] = useState<ICurrentStartAllDataResponse>();
+
+    const { StartFarmTheStar, GetCurrentStar, ClaimStarRewards, inProcessStar, starOnStart } = usePVE()
     const { timeLeft, Pause, Start } = useTimer();
+    const possiblePets = useMemo(() => inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [])
 
     useEffect(() => {
         getPets('allPets').then(data => setPets(data));
@@ -59,28 +44,47 @@ const Page = () => {
         setSelectedPets(curSelectedPets)
     }
 
+    async function StartStar() {
+        await StartFarmTheStar(Number(farmParams.index), selectedIndexes)
+    }
+
+    async function ClaimStar() {
+        await ClaimStarRewards(inProcessStar?.expedition.expedition_id!)
+    }
+
     useEffect(() => {
         setSelectedIndexes(selectedPets.filter(v => v != null).map(v => Number(v.id)))
     }, [selectedPets.filter(v => v !== null).length])
 
     useEffect(() => {
         GetCurrentStar(Number(farmParams.index)).then(data => {
-            if (data) setCurrentStar(data)
-            if (data?.star.status.includes(FarmStatutes.OCCUPIED)) {
-                Start(SuperTimer.GetSeonds(data.star.end_time))
-                setSelectedPets(data.expedition.pets)
+            const csData = (data as ICurrentStartAllDataResponse)
+            if (csData?.star.status.includes(FarmStatutes.OCCUPIED)) {
+                Start(SuperTimer.GetSeonds(csData.star.end_time))
+                setSelectedPets(csData.expedition.pets)
             }
         })
     }, [])
 
-
+    const buttonStatics = useMemo(() => ({
+        [FarmStatutes.FREE]:
+            <LightButton
+                title="Начать"
+                active={selectedIndexes.length > 0 && starOnStart != null}
+                func={StartStar} />,
+        [FarmStatutes.OCCUPIED]:
+            <LightButton
+                title="Собрать награду"
+                active={timeLeft <= 0}
+                func={ClaimStar} />
+    }), [inProcessStar?.star.status])
 
     return (
         <div className="farm">
             {['opened', 'to-hide'].includes(overWS) &&
                 createPortal(<OverBlackSpace additionStyle={overWS}>
-                    <ul className="farm__all-pets-list">
-                        {pets.filter(fv => !selectedPets.includes(fv) && currentStar?.star.element.includes(fv.attribute)).map(v =>
+                    <ul className='farm__all-pets-list'>
+                        {pets.filter(fv => !selectedPets.includes(fv) && inProcessStar?.star.element.includes(fv.attribute)).map(v =>
                             <PreviewSelectionPets
                                 key={v?.id}
                                 setSelection={() => {
@@ -103,16 +107,14 @@ const Page = () => {
             <div className="farm__place-selector">
                 <section className="farm__selector">
                     <ul className="farm__casts-list">
-                        {currentStar?.star.rarity}
+                        {inProcessStar?.star.rarity}
                         {' '}
-                        {currentStar?.star.element}
+                        {inProcessStar?.star.element}
                         {' '}
-                        {currentStar?.star.star_id}
-                        {/* <FarmAttribute count={5} element='огонь' />
-                        <FarmAttribute count={1} element='ветер' /> */}
+                        {inProcessStar?.star.star_id}
                     </ul>
-                    <ul className="farm__pets-list">
-                        {new Array(6).fill(null).map((v, i) => {
+                    <ul className={`farm__pets-list ${inProcessStar?.star.status}`}>
+                        {new Array(possiblePets).fill(null).map((_, i) => {
                             const currentSelPet = selectedPets[i]
                             return (
                                 <PreviewPet
@@ -133,22 +135,31 @@ const Page = () => {
                     <div className="farm__result">
                         <div className="farm__result-title">
                             <h4 className='farm__rt'>
-                                Получаемые очки
+                                Получаемая награда
                             </h4>
                         </div>
                         <div className="farm__result-counter">
-                            <span className='farm__result-text'>{currentStar?.star.reward}</span>
+                            <span className='farm__result-text'>{inProcessStar?.star.reward} монет</span>
+                            {inProcessStar?.expedition.reward_pet && <PreviewPet
+                                thisPet={inProcessStar.expedition.reward_pet}
+                            >
+                                <PetFrame
+                                    name={inProcessStar.expedition.reward_pet.character}
+                                    rating={inProcessStar.expedition.reward_pet.rating.toString()}
+                                    attribute={inProcessStar.expedition.reward_pet.attribute}
+                                    rarity={inProcessStar.expedition.reward_pet.rarity} />
+                            </PreviewPet>}
                         </div>
                     </div>
                 </section>
                 <section className="farm__logic">
                     <div className="farm__timer">
                         <span className='farm__t-text'>
-                            {currentStar?.star.status.includes('free') ? `${currentStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
+                            {inProcessStar?.star.status.includes('free') ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
                         </span>
                     </div>
                     <div className="farm__btns">
-                        <LightButton title="Начать" active={selectedIndexes.length > 0} func={async () => await StartFarmTheStar(Number(farmParams.index), selectedIndexes)} />
+                        {inProcessStar && buttonStatics[inProcessStar?.star.status]}
                     </div>
                 </section>
             </div>

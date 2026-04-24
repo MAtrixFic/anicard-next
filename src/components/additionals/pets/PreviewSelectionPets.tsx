@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { IPet } from '@/devs/store/PetsStore'
+import { PetCover } from '@/components/icons/Cards'
 import { BACK_ORIGIN } from '@/components/server/fetches/env.config'
 import { IBaseFrameProps } from '../cards/PreviewSelectionCard'
 import { attributesImages } from '../form/FormCardFields'
@@ -43,13 +44,16 @@ export const PetFrame = ({ name, rarity, rating, attribute }: IBaseFrameProps) =
                 </div>
             </section>
             <section className="pet-frame__bottom">
-                <div className="pet-frame__name">
-                    <span className="pet-frame__text">
-                        {name}
-                    </span>
-                </div>
-                <div className="pet-frame__element">
-                    <Image src={attributesImages[attribute as keyof typeof attributesImages]} height={24} width={24} alt='el' quality={80} />
+                <PetCover />
+                <div className="pet-frame__cover">
+                    <div className="pet-frame__name">
+                        <span className="pet-frame__text">
+                            {name}
+                        </span>
+                    </div>
+                    <div className="pet-frame__element">
+                        <Image src={attributesImages[attribute as keyof typeof attributesImages]} height={24} width={24} alt='el' quality={80} />
+                    </div>
                 </div>
             </section>
         </div>

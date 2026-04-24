@@ -1,6 +1,6 @@
 'use client'
 
-import { StarFarmPoint } from '@/app/(menu)/farm/points/page'
+import StarFarmPoint from '@/components/routes/farm/StarFarmPoint'
 import { IPveStarResponse } from '@/components/server/comp/PVEApi'
 import { usePVE } from '@/devs/hooks/server/usePve'
 import { useEffect, useState } from 'react'

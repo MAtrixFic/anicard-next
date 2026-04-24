@@ -130,7 +130,8 @@ body {
     }
 
     &__money-block {
-        padding-inline: 1rem;
+        overflow: hidden;
+        padding-inline: .5rem;
         background-color: white;
         border-radius: 50px;
         height: 36px;
@@ -837,7 +838,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 1rem;
+    // padding: 1rem;
     z-index: 200;
     box-sizing: border-box;
     height: 100%;

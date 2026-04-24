@@ -4,10 +4,19 @@ import { AxiosResponse } from "axios";
 import { cookies } from "next/headers";
 import UserApi from "./UserApi"
 import setCookieParser from 'set-cookie-parser';
-import AdminApi, { TCardWithPhoto } from "./AdminApi";
+import AdminApi from "./AdminApi";
 import { InventoryApi, TwistApi } from "./InventoryApi";
 import ShopApi from "./ShopApi";
 import PVEApi from "./PVEApi";
+import UpgradeApi from "./UpgradeApi";
+
+export interface IError {
+    response: {
+        data: {
+            detail: string
+        }
+    }
+}
 
 //user api
 export const AuthUser = async (initData: any) => {
@@ -93,3 +102,10 @@ export const BuyKeys = ShopApi.BuyKeys
 export const GetStars = PVEApi.GetStars
 export const StartStar = PVEApi.StartStar
 export const GetCurrentStar = PVEApi.GetCurrentStar
+export const ClaimStar = PVEApi.ClaimStar
+
+// upgrade api
+export const GetCardUpgradeInfo = UpgradeApi.GetCardUpgradeInfo
+export const UpgradeCard = UpgradeApi.UpgradeCard
+export const GetPetUpgradeInfo = UpgradeApi.GetPetUpgradeInfo
+export const UpgradePet = UpgradeApi.UpgradePet

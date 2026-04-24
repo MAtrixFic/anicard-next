@@ -58,6 +58,20 @@ $mainBorderRad: 60px;
         flex-wrap: wrap;
         gap: .5rem;
         row-gap: 1rem;
+
+        &.occupied {
+            .pet-preview__delete-container {
+                display: none;
+            }
+
+            button {
+                pointer-events: none;
+
+                &:hover {
+                    cursor: not-allowed;
+                }
+            }
+        }
     }
 
     &__logic {
@@ -121,7 +135,7 @@ $mainBorderRad: 60px;
         justify-content: center;
         align-items: center;
 
-        img{
+        img {
             object-fit: contain;
         }
     }

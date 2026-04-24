@@ -204,7 +204,7 @@
 .value-info {
     display: flex;
     align-items: center;
-    gap: .6rem;
+    gap: .3rem;
 
     &__view-container {
         height: 100%;
@@ -222,7 +222,7 @@
     }
 
     &__count {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 600;
         color: props.$body;
     }

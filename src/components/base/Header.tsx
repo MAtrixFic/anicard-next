@@ -20,6 +20,8 @@ const Header = () => {
         await GetUserKeys()
     }
 
+    console.log(user)
+
     useEffect(() => {
         GetKeys()
     }, [])
@@ -35,6 +37,10 @@ const Header = () => {
                     </button>
                 </div>
                 <div className="header__right-container">
+                    <div className="header__money-block">
+                        <ValueInfo src="/keys/crown-key.jpg" count={user?.coin || 0} name="crown-key" />
+                        <ValueInfo src="/keys/crown-key.jpg" count={user?.battle_coin || 0} name="crown-key" />
+                    </div>
                     <div className="header__money-block">
                         <ValueInfo src="/keys/crown-key.jpg" count={user?.keys || 0} name="crown-key" />
                     </div>

@@ -7,14 +7,6 @@ export interface IAdminCardsResponse extends IResponse {
     cards: ICard[]
 }
 
-export interface IError {
-    response: {
-        data: {
-            detail: string
-        }
-    }
-}
-
 export interface IRespone<T> {
     ok: boolean,
     data: T
