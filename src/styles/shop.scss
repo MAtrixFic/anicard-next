@@ -227,3 +227,38 @@
         color: props.$body;
     }
 }
+
+.exp-selector {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-block: 1rem;
+
+    &__main {
+        padding-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    &__list {
+        padding-inline: 1rem;
+        flex-wrap: wrap;
+        display: flex;
+        flex-direction: row;
+        row-gap: 3rem;
+        // align-items: start;
+        justify-content: space-between;
+        // flex-grow: 1;
+    }
+
+    &__logic {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+}

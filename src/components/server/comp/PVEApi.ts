@@ -79,7 +79,7 @@ export default class PVEApi {
 
     static async ClaimStar(id: number): Promise<string | boolean> {
         try {
-            const res = await FetchMG.POST(`pve/start`, {
+            const res = await FetchMG.POST(`pve/claim`, {
                 expedition_id: id,
             })
             console.log(res.data)

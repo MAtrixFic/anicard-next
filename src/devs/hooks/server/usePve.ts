@@ -1,8 +1,10 @@
 import usePveStore from "@/devs/store/PveStore"
 import useMessageStore from "@/devs/store/MessageStore"
 import { ClaimStar } from "@/components/server/comp/Apis"
+import { useRouter } from "next/navigation"
 
 export const usePVE = () => {
+    const router = useRouter()
     const getValue = usePveStore(state => state.getValue)
     const setValue = usePveStore(state => state.setValue)
     const starOnStart = usePveStore(state => state.currentStarOnStarted)
@@ -25,7 +27,12 @@ export const usePVE = () => {
 
     async function ClaimStarRewards(expId: number) {
         const claimedData = await ClaimStar(expId)
-        if (claimedData) addMessage({ text: claimedData.toString(), type: 'message' })
+        if (claimedData) {
+            addMessage({ text: 'Успешное получение награды', type: 'message' })
+            setTimeout(()=> {
+                router.push('/farm/points')
+            }, 2000 )
+        }
         else addMessage({ text: 'Ошибка получения награды', type: 'error' })
     }
 

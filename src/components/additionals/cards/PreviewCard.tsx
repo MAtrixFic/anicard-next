@@ -17,12 +17,12 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
     }, [thisCard])
 
     return (
-        <li className={`card card-${thisCard?.rarity?.toLocaleLowerCase() || ''}`} onClick={func}>
-            <div className="card__active-prev-container">
+        <li className={`card-preview card-${thisCard?.rarity?.toLocaleLowerCase() || ''}`} onClick={func}>
+            <div className="card-preview__active-prev-container">
                 {isSetCard ?
-                    <div className="card__preview-container">
-                        {deleteFunc && <div className="card__delete-container">
-                            <button className="card__delete" onClick={deleteFunc}>
+                    <div className="card-preview__preview-container">
+                        {deleteFunc && <div className="card-preview__delete-container">
+                            <button className="card-preview__delete" onClick={deleteFunc}>
                                 <Delete />
                             </button>
                         </div>
@@ -35,11 +35,11 @@ const PreviewCard = ({ func, deleteFunc, thisCard }: IPreviewCardProps) => {
                                 quality={80}
                                 src={`${BACK_ORIGIN}/${thisCard.photo}`}
                                 alt="card-preivew"
-                                className="card__preview"
+                                className="card-preview__preview"
                             />}
                     </div>
                     :
-                    <div className="card__set-container">
+                    <div className="card-preview__set-container">
                         <Plus />
                     </div>
                 }

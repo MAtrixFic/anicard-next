@@ -2,6 +2,8 @@
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
+import { attributesImages } from "../form/FormCardFields"
+import { CardCover } from "@/components/icons/Cards"
 import React from "react"
 
 export interface IPreviewSelectionCardProps {
@@ -16,6 +18,8 @@ const PreviewSelectionCard = ({ setSelection, selectedCard, thisCard, children }
     function SetStateOfCard() {
         setSelection(thisCard.id === selectedCard?.id ? null : thisCard)
     }
+
+    console.log(thisCard)
 
     if (!thisCard.photo) return
 
@@ -38,27 +42,40 @@ export interface IBaseFrameProps {
     name: string,
     rating: string,
     attribute: string,
-    rarity: string
+    rarity: string,
 }
-export const BaseFrame = ({ name, rating, rarity, attribute }: IBaseFrameProps) => {
+export const BaseFrame = ({ name, rating, rarity, attribute, university }: IBaseFrameProps & { university: string }) => {
     return (
         <div className="card-frame">
             <section className="card-frame__top">
-                {/* <div className="card-frame__rarity-block">
-                    <p className="card-frame__text card-frame__text-rarity">{rarity}</p>
-                </div> */}
-            </section>
-            <section className="card-frame__bottom">
-                <div className="card-frame__group">
-                    <div className="card-frame__rating-block">
-                        <p className="card-frame__text card-frame__text-rating">{rating}</p>
-                    </div>
-                    <div className="card-frame__attribute-block">
-                        {/* <Image className="card-frame__img" src={attribute} height={30} width={30} alt="attribute" /> */}
-                    </div>
+                <div className="card-frame__rating">
+                    <span className="card-frame__text card-frame__text-white card-frame__text-rating">
+                        {rating}
+                    </span>
                 </div>
-                <div className="card-frame__name-block">
-                    {/* <p className="card-frame__text card-frame__text-name">-{name}-</p> */}
+            </section>
+            <section className="card-frame__frames" />
+            <section className="card-frame__bottom">
+                <div className="card-frame__cover">
+                    <CardCover />
+                </div>
+                <div className="card-frame__group">
+                    <div className="card-frame__rating-about-block">
+                        <div className="card-frame__name">
+                            <span className="card-frame__text card-frame__text-name">
+                                {name}
+                            </span>
+                            <span className="card-frame__text card-frame__text-university">
+                                {university}
+                            </span>
+                        </div>
+                        <div className="card-frame__element">
+                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={20} height={20} alt={attribute} />
+                        </div>
+                    </div>
+                    <div className="card-frame__rating-anti-elements-block">
+
+                    </div>
                 </div>
             </section>
         </div>

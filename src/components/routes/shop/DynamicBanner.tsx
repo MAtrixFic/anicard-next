@@ -3,35 +3,31 @@ import { useMemo } from "react"
 import { BannerSection, IBannerProps } from "./Bunner"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 import { IPet } from "@/devs/store/PetsStore"
+import { TPayment } from "@/components/server/comp/ShopApi"
 
-interface IDynamicBannerProps<T extends { id: number }> {
-    buy?: (count: number, material?: T) => void
+interface IDynamicBannerProps {
+    buy?: (...materials: any[]) => void
     offer: any;
-    title: string
+    title: string,
+    type: TPayment
 }
 
 
-const DynamicBanner = ({ buy, offer, title }: IDynamicBannerProps<IPet>) => {
-    if (!offer.data) return
+export const DynamicBannerPets = ({ buy, offer, title, type }: IDynamicBannerProps) => {
+    if (!offer) return
 
-    const cards = useMemo(() => (offer.data?.pets as IPet[]).map(v => ({
+    const cards = useMemo(() => (offer.pets as IPet[]).map(v => ({
         src: `${BACK_ORIGIN}/${v.photo}`,
         name: `${v.character} <${v.rarity}>`,
-        cost: { count: v!.price, type: 'rubles' },
+        cost: { count: v!.price, type: type },
         material: {
             rarity: v.rarity,
             id: v.id
         },
         count: 1
-    } as unknown as IBannerProps<IPet>)), [offer.data?.pets.length || 0])
+    } as unknown as IBannerProps)), [offer.pets.length || 0])
 
     return (
-        <>
-            {cards &&
-                <BannerSection buy={buy} title={title} banners={cards} />
-            }
-        </>
+        <BannerSection buy={buy} title={title} banners={cards} />
     )
 }
-
-export default DynamicBanner

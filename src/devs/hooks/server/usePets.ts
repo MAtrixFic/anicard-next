@@ -2,7 +2,6 @@
 import { DeleteInventoryPets, SetInventoryPets } from "@/components/server/comp/Apis"
 import { TCardType } from "@/components/server/comp/InventoryApi"
 import { usePetsStore } from "@/devs/store/PetsStore"
-import { useQueryClient } from "@tanstack/react-query"
 import useMessageStore from "@/devs/store/MessageStore"
 
 const usePets = () => {

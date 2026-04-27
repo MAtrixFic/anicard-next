@@ -41,7 +41,7 @@ const Page = () => {
                         thisCard={v}
 
                     >
-                        <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                        <BaseFrame university={v.universe} rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute={v.attribute} />
                     </PreviewSelectionCard>)}
         </CardsChoise >
     )
@@ -83,7 +83,7 @@ export const UpgradePanel = ({ type, index }: IUpgradePanelProps) => {
                                     top: 0,
                                     backgroundColor: 'rgba(36, 91, 55, 0.8)',
                                     borderRadius: '5px',
-                                    border: '1px solid #5BE98B',
+                                    borderRight: '1px solid #5BE98B',
                                     height: '100%',
                                     width: `${ratio * 100}%`
                                 }} >

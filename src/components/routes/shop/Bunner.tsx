@@ -2,32 +2,38 @@
 
 import Image from "next/image";
 import LightButton from "@/components/additionals/buttons/LightButton";
+import { TPayment } from "@/components/server/comp/ShopApi";
 import { IPet } from "@/devs/store/PetsStore";
 
-export interface IBannerProps<T extends { id: number }> {
+export interface IBannerProps {
     src: string,
     name: string,
-    material?: T
+    material?: any
     cost: {
-        type: "rubles" | "pay-game-money" | "game-money";
+        type: TPayment;
         count: number
     }
     count: number,
-    buy?: (count: number, material?: T) => void
+    buy?: (...materials: any) => void
 }
 
-interface IBannerSectionProps<T> {
-    banners: IBannerProps<IPet>[],
+interface IBannerSectionProps {
+    banners: IBannerProps[],
     title: string;
-    buy?: (count: number, material?: T) => void
+    buy?: (...materials: any) => void
 }
-
 
 export interface IPetWithId extends IPet {
     id: number
 }
 
-export const Bunner = ({ src, name, cost, material, count, buy }: IBannerProps<IPet>) => {
+export const PaymentOutput: { [k in TPayment]: string } = {
+    real_money: 'руб.',
+    keys: 'ключ.',
+    battle_coins: 'б. коины'
+}
+
+export const Bunner = ({ src, name, cost, material, count, buy }: IBannerProps) => {
     return (
         <div className="banner">
             <div className="banner__view-block">
@@ -42,15 +48,15 @@ export const Bunner = ({ src, name, cost, material, count, buy }: IBannerProps<I
             </div>
             <div className="banner__count-container banner__count-container-normal">
                 <span className="banner__count">
-                    {cost.count} руб. / {count} шт.
+                    {cost.count} {PaymentOutput[cost.type]} / {count} шт.
                 </span>
-                <LightButton title={'Купить'} additionStyle="dark tiny" func={() => buy!(count, material)} />
+                <LightButton title={'Купить'} additionStyle="dark tiny" func={() => buy!(material)} />
             </div>
         </div>
     )
 }
 
-export const BannerSection = ({ banners, title, buy }: IBannerSectionProps<IPet>) => {
+export const BannerSection = ({ banners, title, buy }: IBannerSectionProps) => {
     return (
         <section className="banner-section">
             <div className="banner-section__title-container">

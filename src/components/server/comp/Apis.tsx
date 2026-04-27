@@ -97,6 +97,7 @@ export const GetInventoryPets = InventoryApi.GetInventoryPets
 export const GetShopPets = ShopApi.GetShopPets
 export const BuyPet = ShopApi.BuyPet
 export const BuyKeys = ShopApi.BuyKeys
+export const BuyExpForPet = ShopApi.BuyExpForPet
 
 // pve api
 export const GetStars = PVEApi.GetStars

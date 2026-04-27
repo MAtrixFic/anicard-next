@@ -1,11 +1,17 @@
 export default class SuperTimer {
     static GetSeonds = (time: string) => {
+        // Целевое время (убедитесь, что оно тоже в UTC или с указанием +03:00)
         const target = new Date(time).getTime();
-        const now = Date.now();
 
-        const diffMs = target - now;
+        // Получаем текущий UTC timestamp и принудительно добавляем 3 часа
+        const nowUtcMs = Date.now();
+        const moscowOffsetMs = 3600 * 1000;
+        const nowMoscow = nowUtcMs - moscowOffsetMs;
+
+        const diffMs = target - nowMoscow;
         const diffSeconds = Math.floor(diffMs / 1000);
-        return diffSeconds
+
+        return diffSeconds > 0 ? diffSeconds : 0;
     }
 
     static ToCustomTimeString = (seconds: number) => {

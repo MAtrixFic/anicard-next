@@ -16,7 +16,7 @@ import usePets from '@/devs/hooks/server/usePets'
 import { usePVE } from '@/devs/hooks/server/usePve'
 import useTimer from '@/devs/hooks/useTimer'
 import SuperTimer from '@/devs/time/SuperTimer'
-import { type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
+import { IExpeditionDataResponse, IPveStarResponse, type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
 
 
 const Page = () => {
@@ -32,7 +32,9 @@ const Page = () => {
 
     const { StartFarmTheStar, GetCurrentStar, ClaimStarRewards, inProcessStar, starOnStart } = usePVE()
     const { timeLeft, Pause, Start } = useTimer();
-    const possiblePets = useMemo(() => inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [])
+    const possiblePets = useMemo(() => starOnStart ? starOnStart.pets.length : inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [starOnStart])
+
+    // if (!inProcessStar) return
 
     useEffect(() => {
         getPets('allPets').then(data => setPets(data));
@@ -53,6 +55,12 @@ const Page = () => {
     }
 
     useEffect(() => {
+        if (starOnStart) {
+            Start(SuperTimer.GetSeonds(starOnStart.end_time))
+        }
+    }, [starOnStart])
+
+    useEffect(() => {
         setSelectedIndexes(selectedPets.filter(v => v != null).map(v => Number(v.id)))
     }, [selectedPets.filter(v => v !== null).length])
 
@@ -60,24 +68,24 @@ const Page = () => {
         GetCurrentStar(Number(farmParams.index)).then(data => {
             const csData = (data as ICurrentStartAllDataResponse)
             if (csData?.star.status.includes(FarmStatutes.OCCUPIED)) {
-                Start(SuperTimer.GetSeonds(csData.star.end_time))
+                if (csData.star.time_left_seconds) Start(csData.star.time_left_seconds)
                 setSelectedPets(csData.expedition.pets)
             }
         })
     }, [])
 
-    const buttonStatics = useMemo(() => ({
+    const buttonStatics = {
         [FarmStatutes.FREE]:
             <LightButton
                 title="Начать"
-                active={selectedIndexes.length > 0 && starOnStart != null}
+                active={selectedIndexes.length > 0}
                 func={StartStar} />,
         [FarmStatutes.OCCUPIED]:
             <LightButton
                 title="Собрать награду"
                 active={timeLeft <= 0}
                 func={ClaimStar} />
-    }), [inProcessStar?.star.status])
+    }
 
     return (
         <div className="farm">
@@ -123,11 +131,11 @@ const Page = () => {
                                     func={() => { setOverWS('opened'); setActIndex(i) }}
                                     deleteFunc={() => DeletePet(i)}
                                 >
-                                    {currentSelPet && <PetFrame
+                                    {/* {currentSelPet && <PetFrame
                                         name={currentSelPet.character}
                                         rating={currentSelPet.rating.toString()}
                                         attribute={currentSelPet.attribute}
-                                        rarity={currentSelPet.rarity} />}
+                                        rarity={currentSelPet.rarity} />} */}
                                 </PreviewPet>
                             )
                         })}
@@ -140,7 +148,7 @@ const Page = () => {
                         </div>
                         <div className="farm__result-counter">
                             <span className='farm__result-text'>{inProcessStar?.star.reward} монет</span>
-                            {inProcessStar?.expedition.reward_pet && <PreviewPet
+                            {inProcessStar?.expedition && inProcessStar?.expedition.reward_pet && <PreviewPet
                                 thisPet={inProcessStar.expedition.reward_pet}
                             >
                                 <PetFrame
@@ -153,11 +161,12 @@ const Page = () => {
                     </div>
                 </section>
                 <section className="farm__logic">
-                    <div className="farm__timer">
+                    {inProcessStar?.star.status.includes(FarmStatutes.OCCUPIED) || timeLeft > 0 && <div className="farm__timer">
                         <span className='farm__t-text'>
-                            {inProcessStar?.star.status.includes('free') ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
+                            {starOnStart ? SuperTimer.ToCustomTimeString(timeLeft) :
+                                inProcessStar?.star.status.includes(FarmStatutes.FREE) ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
                         </span>
-                    </div>
+                    </div>}
                     <div className="farm__btns">
                         {inProcessStar && buttonStatics[inProcessStar?.star.status]}
                     </div>

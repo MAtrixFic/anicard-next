@@ -126,7 +126,12 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
                                     selectedCard={cardEl}
                                     thisCard={currentCard}
                                 >
-                                    <BaseFrame rarity={currentCard.rarity} rating={currentCard.rating.toString()} name="Рем" attribute="" />
+                                    <BaseFrame
+                                        university={currentCard.universe}
+                                        rarity={currentCard.rarity}
+                                        rating={currentCard.rating.toString()}
+                                        name="Рем"
+                                        attribute={currentCard.attribute} />
                                 </PreviewSelectionCard>
                                 :
                                 <PreviewSelectionPets
