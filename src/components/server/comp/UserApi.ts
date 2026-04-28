@@ -28,6 +28,7 @@ export interface IRatingResponse extends IResponse {
 }
 
 export default class UserApi {
+    @WithCookies()
     static async AuthUser(initData: any): Promise<AxiosResponse | boolean> {
         try {
             const statusCode = await FetchMG.POST('user/auth', {
@@ -40,6 +41,7 @@ export default class UserApi {
         }
     }
 
+    @WithCookies()
     static async CreateUser(nickname: string) {
         try {
             const userId = (await CookieGet('userId')) as RequestCookie
@@ -96,7 +98,7 @@ export default class UserApi {
             return false
         }
     }
-
+    @WithCookies()
     static async GetTopUsers(): Promise<IRatingResponse | boolean> {
         try {
             const res = await FetchMG.GET(`rating/top`)

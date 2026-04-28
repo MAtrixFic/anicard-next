@@ -1,6 +1,7 @@
 import { WithCookies } from "@/devs/decorators/serverDec"
 import FetchMG from "../fetches/config"
-import { IAdminCardsResponse, IError } from "./AdminApi"
+import { IAdminCardsResponse } from "./AdminApi"
+import { IError } from "./Apis"
 import { IPet } from "@/devs/store/PetsStore"
 import { IResponse } from "./UserApi"
 
@@ -72,7 +73,7 @@ export class InventoryApi {
             return true
         }
         catch (error) {
-            console.log(`inventory/pets/${petsType}`, {pets_id: petIds})
+            console.log(`inventory/pets/${petsType}`, { pets_id: petIds })
             console.log(error)
             return false
         }

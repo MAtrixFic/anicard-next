@@ -7,6 +7,7 @@ import { IPet } from "@/devs/store/PetsStore"
 export type TPayment = 'real_money' | 'keys' | 'battle_coins'
 
 export default class ShopApi {
+    @WithCookies()
     static async GetShopPets(payment: TPayment): Promise<{ ok: boolean, pets: IPet[] }> {
         try {
             const res = await FetchMG.GET(`shop/pet/offers?payment_type=${payment}`)
@@ -59,7 +60,7 @@ export default class ShopApi {
             return { ok: true }
         }
         catch (error) {
-            console.log( (error as IError).response.data.detail)
+            console.log((error as IError).response.data.detail)
             return { ok: false, data: (error as IError).response.data.detail }
         }
     }

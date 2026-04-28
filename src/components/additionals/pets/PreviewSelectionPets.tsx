@@ -24,8 +24,8 @@ const PreviewSelectionPets = ({ setSelection, selectedPet, thisPet, children }: 
             {children}
             <button className="pet__active-container" onClick={SetStateOfCard}>
                 <div className="pet__preview-container">
-                    <Image height={150} width={150} src={`${BACK_ORIGIN}/${thisPet.photo}`} quality={60} alt={thisPet.photo} className="card__preview"
-                        objectFit="cover" />
+                    <Image height={150} width={150} src={`${BACK_ORIGIN}/${thisPet.photo}`} quality={40} alt={thisPet.photo} className="card__preview"
+                        objectFit="contain" />
                 </div>
             </button>
         </li>

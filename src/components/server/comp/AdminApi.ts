@@ -28,7 +28,7 @@ export default class AdminApi {
             return { 'ok': false, cards: [] }
         }
     }
-
+    @WithCookies()
     static async AddCard(card: TCardWithPhoto): Promise<ICard | boolean> {
         try {
             const res = await FetchMG.POST(`admin/cards`, card)

@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import FetchMG from '@/components/server/fetches/config';
+import { IError } from '@/components/server/comp/Apis';
 
 export function WithCookies() {
     return function (
@@ -54,7 +55,6 @@ export function WithCookies() {
 
                 return result;
             } catch (error) {
-                console.error('Error in WithCookies:', error);
                 return await originalMethod.apply(this, args);
             }
         };

@@ -40,7 +40,13 @@ const Page = () => {
                         thisCard={v}
 
                     >
-                        <BaseFrame rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute="" />
+                        <BaseFrame
+                            rarity={v.rarity}
+                            rating={v.rating.toString()}
+                            name="Рем"
+                            attribute={v.attribute}
+                            university={v.universe}
+                            />
                     </PreviewSelectionCard>)
             }
             {cardsChoise && createPortal(

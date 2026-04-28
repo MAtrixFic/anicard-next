@@ -14,7 +14,7 @@ export const ValueInfo = ({ count, type, src }: IValueInfoProps) => {
                 <span className="value-info__count">{`${count} ${type ? type : ''}`}</span>
             </div>
             <div className="value-info__view-container">
-                <Image height={34} width={34} quality={75} loading={'eager'} src={src} alt="value" className="value-info__view" />
+                <Image height={34} width={34} quality={60} loading={'eager'} src={src} alt="value" className="value-info__view" />
             </div>
         </div>
     )

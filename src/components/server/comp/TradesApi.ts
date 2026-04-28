@@ -2,7 +2,8 @@
 
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import FetchMG from "../fetches/config"
-import { IError, IRespone } from "./AdminApi";
+import { IRespone } from "./AdminApi";
+import { IError } from "./Apis";
 
 export type TTradeStatus = 'pending' | 'waiting_approval' | 'accepted' | 'declined';
 

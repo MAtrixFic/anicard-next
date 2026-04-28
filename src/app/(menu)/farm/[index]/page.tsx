@@ -32,7 +32,7 @@ const Page = () => {
 
     const { StartFarmTheStar, GetCurrentStar, ClaimStarRewards, inProcessStar, starOnStart } = usePVE()
     const { timeLeft, Pause, Start } = useTimer();
-    const possiblePets = useMemo(() => starOnStart ? starOnStart.pets.length : inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [starOnStart])
+    const possiblePets = useMemo(() => starOnStart ? starOnStart.pets.length : inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [starOnStart, inProcessStar])
 
     // if (!inProcessStar) return
 
@@ -86,6 +86,8 @@ const Page = () => {
                 active={timeLeft <= 0}
                 func={ClaimStar} />
     }
+
+    console.log(starOnStart)
 
     return (
         <div className="farm">
@@ -161,14 +163,14 @@ const Page = () => {
                     </div>
                 </section>
                 <section className="farm__logic">
-                    {inProcessStar?.star.status.includes(FarmStatutes.OCCUPIED) || timeLeft > 0 && <div className="farm__timer">
+                    {(inProcessStar?.star.status.includes(FarmStatutes.OCCUPIED) || timeLeft > 0) && <div className="farm__timer">
                         <span className='farm__t-text'>
                             {starOnStart ? SuperTimer.ToCustomTimeString(timeLeft) :
                                 inProcessStar?.star.status.includes(FarmStatutes.FREE) ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
                         </span>
                     </div>}
                     <div className="farm__btns">
-                        {inProcessStar && buttonStatics[inProcessStar?.star.status]}
+                        {starOnStart != null ? buttonStatics[FarmStatutes.OCCUPIED] : inProcessStar && buttonStatics[inProcessStar?.star.status]}
                     </div>
                 </section>
             </div>

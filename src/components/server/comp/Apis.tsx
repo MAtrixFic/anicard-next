@@ -33,6 +33,7 @@ export const AuthUser = async (initData: any) => {
                     secure: c.secure,
                     path: c.path,
                     expires: c.expires,
+                    sameSite: 'none',
                 });
                 console.log("cookie added")
             });
@@ -43,37 +44,42 @@ export const AuthUser = async (initData: any) => {
         return false
     }
 
+}
+
+export const UpdateToken = async (access: string) => {
+    'use server'
+    const cookiesStorage = await cookies();
+    if (access) {
+        const parsedCookies = setCookieParser.parse(access);
+        console.log('updated token', access)
+        parsedCookies.forEach((c) => {
+            cookiesStorage.set(c.name, c.value, {
+                httpOnly: true,
+                secure: c.secure,
+                path: c.path,
+                expires: c.expires,
+                sameSite: 'none',
+            });
+        });
+    }
 }
 
 export const RefreshUser = async () => {
     try {
         const res = (await UserApi.RefreshToken() as AxiosResponse);
         const setCookieHeader = res.headers['set-cookie'];
-        const cookiesStorage = await cookies();
-        if (setCookieHeader) {
-            const parsedCookies = setCookieParser.parse(setCookieHeader);
-
-            parsedCookies.forEach((c) => {
-                cookiesStorage.set(c.name, c.value, {
-                    httpOnly: true,
-                    secure: c.secure,
-                    path: c.path,
-                    expires: c.expires,
-                });
-                console.log("cookie added")
-            });
-        }
-        return res.data
+        return setCookieHeader
     }
-    catch {
+    catch (error) {
+        console.log(error)
         return false
     }
 }
+
 export const GetUser = UserApi.GetUser
 export const CreateUser = UserApi.CreateUser
 export const GetTopUsers = UserApi.GetTopUsers
 export const GetUserKeys = UserApi.GetUserKeys
-
 //admin api
 export const GetCards = AdminApi.GetCards
 export const DeleteCard = AdminApi.DeleteCard

@@ -41,6 +41,7 @@ export interface IPetUpgrade extends IElementUpgrade {
 
 
 export default class UpgradeApi {
+    @WithCookies()
     static async GetCardUpgradeInfo(id: number): Promise<ICardUpgradeInfo | boolean> {
         try {
             const res = await FetchMG.GET(`card/upgrade-info/${id}`)
@@ -52,7 +53,7 @@ export default class UpgradeApi {
             return false
         }
     }
-
+    @WithCookies()
     static async UpgradeCard(id: number): Promise<ICardUpgrade | boolean> {
         try {
             const res = await FetchMG.POST(`card/upgrade`, {
@@ -66,7 +67,7 @@ export default class UpgradeApi {
             return false
         }
     }
-
+    @WithCookies()
     static async GetPetUpgradeInfo(id: number): Promise<IPetUpgradeInfo | boolean> {
         try {
             const res = await FetchMG.GET(`pet/upgrade-info/${id}`)
@@ -78,7 +79,7 @@ export default class UpgradeApi {
             return false
         }
     }
-
+    @WithCookies()
     static async UpgradePet(id: number): Promise<IPetUpgrade | boolean> {
         try {
             const res = await FetchMG.POST(`pet/upgrade`, {

@@ -26,7 +26,7 @@ const StarsList = () => {
             {stars.map(v =>
                 <StarFarmPoint
                     key={v.star_id}
-                    time={v.end_time}
+                    time={v.time_left_seconds}
                     rarity={v.rarity.toLowerCase()}
                     id={v.star_id}
                     active={v.status.includes(FarmStatutes.OCCUPIED)} />

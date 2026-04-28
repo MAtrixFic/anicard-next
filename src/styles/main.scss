@@ -745,20 +745,19 @@ body {
             position: absolute;
             z-index: 120;
             bottom: 0;
+            min-height: 82px;
             left: 50%;
-            transform: translateX(-50%) translateY(-40%);
-            width: 100;
+            transform: translateX(-50%);
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: .1rem;
-            height: 60px;
             align-items: center;
         }
 
         &__rating-about-block {
             display: flex;
             width: 100%;
-            justify-content: space-around;
+            justify-content: space-evenly;
             align-items: center;
         }
 
@@ -768,9 +767,24 @@ body {
             align-items: center;
         }
 
+        &__anti-elements-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        &__anti-elements-list{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .4rem;
+        }
+
         &__text {
             &-name {
                 font-weight: 800;
+                font-size: .9rem;
                 text-align: center;
                 color: props.$body;
             }
@@ -781,8 +795,14 @@ body {
             }
 
             &-university {
-                font-size: .8rem;
+                font-size: .65rem;
                 color: grey;
+            }
+
+            &-red {
+                font-weight: 800;
+                color: props.$cuprum;
+                font-size: .6rem;
             }
         }
     }

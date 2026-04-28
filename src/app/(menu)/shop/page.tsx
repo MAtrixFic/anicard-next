@@ -9,6 +9,8 @@ import ExpSelector from "@/components/routes/shop/ExpSelector"
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus"
 import { useState } from "react"
 
+const keyPath = '/keys/golden_key-new.png'
+
 const Page = () => {
     const { TryBuyPet, TryBuyKeys, offer, TryBuyExp } = useShop()
 
@@ -30,17 +32,18 @@ const Page = () => {
                     <Link href={'/twists'} className="shop-top__link">Крутки</Link>
                 </section>
                 <BannerSection buy={TryBuyKeys} title="Ключи" banners={[
-                    { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 100 }, count: 1, material: 1 },
-                    { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 300 }, count: 3, material: 3 },
-                    { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 600 }, count: 6, material: 6 },
-                    { name: "Ключ", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 1200 }, count: 12, material: 12 }
+                    { name: "Ключ", src: keyPath, cost: { type: 'real_money', count: 100 }, count: 1, material: 1 },
+                    { name: "Ключи", src: keyPath, cost: { type: 'real_money', count: 300 }, count: 3, material: 3 },
+                    { name: "Ключи", src: keyPath, cost: { type: 'real_money', count: 600 }, count: 6, material: 6 },
+                    { name: "Ключи", src: keyPath, cost: { type: 'real_money', count: 1200 }, count: 12, material: 12 }
                 ]} />
                 <DynamicBannerPets type='real_money' title="Питомцы (за деньги)" offer={offer.data?.real_money} buy={BuyPetByRealMoney} />
-                <DynamicBannerPets type='battle_coins' title="Питомцы (за боевые койны)" offer={offer.data?.battle_coins} buy={BuyPetByBattleCoins} />
+                <DynamicBannerPets type='battle_coins' title="Питомцы (за боевые коины)" offer={offer.data?.battle_coins} buy={BuyPetByBattleCoins} />
 
                 <BannerSection buy={(index: number) => { setSIndex(index); SetWM() }} title="Опыт" banners={[
-                    { name: "Малый", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 200 }, count: 50, material: 1 },
-                    { name: "Средний", src: '/keys/crown-key.jpg', cost: { type: 'real_money', count: 1000 }, count: 250, material: 2 },
+                    { name: "Маленькая баночка", src: '/exp/exp_bottle-tiny.png', cost: { type: 'real_money', count: 200 }, count: 50, material: 1 },
+                    { name: "Средняя баночка", src: '/exp/exp_bottle-middle.png', cost: { type: 'real_money', count: 1000 }, count: 250, material: 2 },
+                    { name: "Большая баночка", src: '/exp/exp_bottle-big.png', cost: { type: 'real_money', count: 2000 }, count: 500, material: 3 },
                 ]} />
             </div>
             {['opened', 'to-hide'].includes(overW) &&

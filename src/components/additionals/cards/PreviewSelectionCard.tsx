@@ -73,8 +73,15 @@ export const BaseFrame = ({ name, rating, rarity, attribute, university }: IBase
                             <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={20} height={20} alt={attribute} />
                         </div>
                     </div>
-                    <div className="card-frame__rating-anti-elements-block">
-
+                    <div className="card-frame__anti-elements-block">
+                        <span className="card-frame__text card-frame__text-red">
+                            Несовместимые стихии
+                        </span>
+                        <ul className="card-frame__anti-elements-list">
+                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
+                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
+                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
+                        </ul>
                     </div>
                 </div>
             </section>

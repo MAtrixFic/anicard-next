@@ -38,6 +38,7 @@ export interface IPveCurrentStarDataRepsonse {
 }
 
 export default class PVEApi {
+    @WithCookies()
     static async GetStars(): Promise<IPveStarResponse[]> {
         try {
             const res = await FetchMG.GET(`pve/stars`)
@@ -49,7 +50,7 @@ export default class PVEApi {
             return []
         }
     }
-
+    @WithCookies()
     static async GetCurrentStar(starId: number): Promise<ICurrentStartAllDataResponse | null> {
         try {
             const res = await FetchMG.GET(`pve/star/${starId}`)
@@ -61,7 +62,7 @@ export default class PVEApi {
             return null
         }
     }
-
+    @WithCookies()
     static async StartStar(id: number, petIds: number[]): Promise<IExpeditionDataResponse | boolean> {
         try {
             const res = await FetchMG.POST(`pve/start`, {
@@ -76,7 +77,7 @@ export default class PVEApi {
             return false
         }
     }
-
+    @WithCookies()
     static async ClaimStar(id: number): Promise<string | boolean> {
         try {
             const res = await FetchMG.POST(`pve/claim`, {

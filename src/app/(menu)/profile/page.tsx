@@ -1,11 +1,9 @@
 "use client"
-import BlurSpace from "@/components/additionals/BlurSpace"
 import FavoriteCardsList from "@/components/routes/profile/FavoriteCardsList"
 import UserAchivment from "@/components/routes/profile/UserAchivment"
-import { Suspense, lazy } from "react"
+import { Suspense } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import Image from "next/image"
-import { useCards } from "@/devs/hooks/server/useCards"
 
 // const lazyStats = lazy(()=> import(''))
 

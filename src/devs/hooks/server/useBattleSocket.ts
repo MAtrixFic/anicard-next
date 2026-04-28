@@ -17,7 +17,7 @@ const useBattleSocket = () => {
     const CreateWS = useCallback(async () => {
         if (ws) return
         else {
-            const localWS = new WebSocket(`${BACK_ORIGIN}/battle/ws/${await getValue('id')}`)
+            const localWS = new WebSocket(`${BACK_ORIGIN}/battle/ws/${await getValue('id')}`,)
             setWSValue('WS', localWS)
         }
     }, [ws])

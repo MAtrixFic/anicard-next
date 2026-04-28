@@ -7,7 +7,7 @@ import { StarPoint } from "@/components/icons/Star"
 
 export interface IStarFarmPointProps {
     rarity: string,
-    time?: string,
+    time?: number,
     active?: boolean
 }
 
@@ -27,7 +27,7 @@ const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPointProps
         }
 
 
-        Start(time ? SuperTimer.GetSeonds(time) : 0)
+        Start(time ? time : 0)
     }, [])
 
     return (

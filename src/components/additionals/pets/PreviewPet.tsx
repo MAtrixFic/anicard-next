@@ -20,7 +20,7 @@ const PreviewPet = ({ func, thisPet, deleteFunc, children }: IPreviewPetsProps) 
                 :
                 <>
                     <div className="pet-preview__active-container">
-                        <Image alt='pet' width={150} height={150} src={`${BACK_ORIGIN}/${thisPet.photo}`} />
+                        <Image quality={40} alt='pet' width={150} height={150} src={`${BACK_ORIGIN}/${thisPet.photo}`} />
                         {children}
                         <div className="pet-preview__delete-container">
                             <button className="pet-preview__delete" onClick={deleteFunc}>

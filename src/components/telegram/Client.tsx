@@ -8,11 +8,13 @@ import { AuthUser } from '../server/comp/Apis';
 import { useUserStore } from '@/devs/store/UserStore';
 import { CookieSet } from '../server/CookieManager';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 export default function TelegramInit() {
     const rawInitData = useRawInitData();
     const setUserValue = useUserStore(state => state.setUserValue);
+    const client = useQueryClient()
     const router = useRouter();
 
     useEffect(() => {
@@ -30,6 +32,7 @@ export default function TelegramInit() {
                     if (data) {
                         CookieSet('isAuth', JSON.stringify(true))
                         CookieSet('isAdmin', JSON.stringify((data as IUserResponse).isAdmin))
+                        client.invalidateQueries({ queryKey: ['user'] })
                     }
                     else {
                         router.replace('/auth')
