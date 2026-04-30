@@ -26,6 +26,7 @@ const useCardsStore = create<ICardStore>((set, get) => ({
     GetCards: async (key) => {
         if (key === 'adminCards') {
             const data = await GetCards()
+            console.log(data)
             if (data.ok) {
                 get().SetCards(key, data.cards);
             }
@@ -33,6 +34,7 @@ const useCardsStore = create<ICardStore>((set, get) => ({
         }
         else {
             const data = await GetInventoryCards(key === 'allCards' ? undefined : key)
+            console.log(key, data)
             if (data.ok) {
                 get().SetCards(key, data.cards);
             }

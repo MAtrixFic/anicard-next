@@ -2,21 +2,23 @@
 import { createPortal } from "react-dom";
 import useSelectionCard from '@/devs/hooks/useSelection'
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { CardPanel } from "../../page";
+import { useEffect, useRef, useState } from "react";
+import { CardPanel } from "../../cards/page";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import AdminPanel from "@/components/routes/inventory/AdminPanel";
 import usePets from "@/devs/hooks/server/usePets";
 import { IPet } from "@/devs/store/PetsStore";
 import PreviewSelectionPets from "@/components/additionals/pets/PreviewSelectionPets";
 import { PetFrame } from "@/components/additionals/pets/PreviewSelectionPets";
+import { useAdmin } from "@/devs/hooks/server/useAdmin";
 
 const Page = () => {
     const { getPets } = usePets()
     const [inventoryPets, setInventoryPets] = useState<IPet[]>([])
     const [selectedPet, setSelectedPet] = useSelectionCard<IPet>()
+    const { RemoveAdminPet } = useAdmin()
     useQuery({
-        queryKey: ['allPets'],
+        queryKey: ['adminPets'],
         queryFn: async () => {
             const data = await getPets('adminPets')
             console.log(data);
@@ -27,9 +29,9 @@ const Page = () => {
 
     const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
 
-    const [cardsChoise, setCardsChoise] = useState<null | Element>()
+    const cardsChoise = useRef<Element>(null)
     useEffect(() => {
-        setCardsChoise(document.querySelector('.cards-choise'))
+        cardsChoise.current = document.querySelector('.cards-choise')
     }, [])
     return (
         <>
@@ -44,15 +46,15 @@ const Page = () => {
                         <PetFrame attribute={v.attribute} rarity={v.rarity} rating={v.rating.toString()} name={v.character} />
                     </PreviewSelectionPets>)
             }
-            {cardsChoise && createPortal(
+            {cardsChoise.current && createPortal(
                 <div className="admin-logic">
                     <LightButton title={'Создать питомца'} func={() => setAdminMode('create')} />
                 </div>
-                , cardsChoise)
+                , cardsChoise.current)
             }
             {selectedPet &&
                 createPortal(<CardPanel selectedElement={selectedPet}>
-                    {/* <LightButton title={'Удалить карту'} /> */}
+                    <LightButton title={'Удалить карту'} func={() => RemoveAdminPet(selectedPet.id.toString())} />
                 </CardPanel>, document.body)}
             {['create', 'edit'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} type={'pets'} />}
         </>

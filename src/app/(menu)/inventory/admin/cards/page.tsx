@@ -5,15 +5,17 @@ import useSelectionCard from '@/devs/hooks/useSelection'
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import { useCards } from "@/devs/hooks/server/useCards";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { CardPanel } from "../../page";
+import { useEffect, useRef, useState } from "react";
+import { CardPanel } from "../../cards/page";
 import LightButton from "@/components/additionals/buttons/LightButton";
 import AdminPanel from "@/components/routes/inventory/AdminPanel";
+import { useAdmin } from "@/devs/hooks/server/useAdmin";
 
 const Page = () => {
     const { getCards } = useCards()
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
+    const { RemoveAdminCard } = useAdmin()
     useQuery({
         queryKey: ['adminCards'],
         queryFn: async () => {
@@ -22,13 +24,11 @@ const Page = () => {
             return data
         }
     })
-
-    const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
-
-    const [cardsChoise, setCardsChoise] = useState<null | Element>()
+    const cardsChoise = useRef<Element>(null)
     useEffect(() => {
-        setCardsChoise(document.querySelector('.cards-choise'))
+        cardsChoise.current = document.querySelector('.cards-choise')
     }, [])
+    const [adminMode, setAdminMode] = useState<'no' | 'edit' | 'create'>('no')
     return (
         <>
             {
@@ -43,22 +43,25 @@ const Page = () => {
                         <BaseFrame
                             rarity={v.rarity}
                             rating={v.rating.toString()}
-                            name="Рем"
+                            name={v.character || ''}
                             attribute={v.attribute}
                             university={v.universe}
-                            />
+                        />
                     </PreviewSelectionCard>)
             }
-            {cardsChoise && createPortal(
+            {cardsChoise.current && createPortal(
                 <div className="admin-logic">
                     <LightButton title={'Создать карту'} func={() => setAdminMode('create')} />
                 </div>
-                , cardsChoise)
+                , cardsChoise.current)
             }
             {selectedCard &&
-                createPortal(<CardPanel selectedElement={selectedCard}>
-                    {/* <LightButton title={'Удалить карту'} /> */}
-                </CardPanel>, document.body)}
+                createPortal(
+                    <CardPanel selectedElement={selectedCard}>
+                        <LightButton title={'Удалить карту'} func={() => RemoveAdminCard(selectedCard.id.toString())} />
+                    </CardPanel>
+                    , document.body)
+            }
             {['create', 'edit'].includes(adminMode) && <AdminPanel setAdminMode={setAdminMode} type={'cards'} />}
         </>
     )

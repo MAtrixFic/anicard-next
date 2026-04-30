@@ -12,7 +12,7 @@ const Navigation = () => {
                         <MainNavElemenet name='Магазин' href='/shop' currentPath={pathname} />
                         <MainNavElemenet name='Трейды' href='/trades' currentPath={pathname} />
                         <MainNavElemenet name='Арена' href='/' currentPath={pathname} />
-                        <MainNavElemenet name='Инвентарь' href='/inventory' currentPath={pathname} />
+                        <MainNavElemenet name='Инвентарь' href='/inventory/cards' currentPath={pathname} />
                         <MainNavElemenet name='Рейтинг' href='/rating' currentPath={pathname} />
                     </ul>
                 </nav>

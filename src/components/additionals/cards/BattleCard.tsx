@@ -12,26 +12,28 @@ const BattleCard = ({ setSelection, selectedCard, thisCard }: Omit<IPreviewSelec
 
     return (
         <li
-            className={`card card-${thisCard?.rarity.toLocaleLowerCase()} 
+            className={`battle-card card-${thisCard?.rarity.toLocaleLowerCase()} 
         ${!selectedCard ? 'deselected' : selectedCard.id == thisCard?.id ? 'selected' : 'deselected'}
         ${thisCard.health > 0 ? 'alive' : 'defeated'}
         `}
         >
-            <button className="card__active-container" onClick={SetStateOfCard}>
-                <div className="card__preview-container">
-                    <Image height={140} width={60} quality={80} preload src={`${BACK_ORIGIN}${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
+            <button className="battle-card__active-container" onClick={SetStateOfCard}>
+                <div className="battle-card__preview-container">
+                    <Image height={140} width={60} quality={80} preload src={`${BACK_ORIGIN}/${thisCard.photo}`} alt={thisCard.photo} className="card__preview" />
                 </div>
-                <div className="card__stats-container">
+                <div className="battle-card__stats-container">
                     {thisCard &&
                         <>
-                            <div className="card__stat">
-                                <span className="card__stat-text">{thisCard.health}</span>
+                            <div className="battle-card__attack-block">
+                                <div className="battle-card__stat">
+                                    <span className="battle-card__stat-text">{thisCard.health}</span>
+                                </div>
+                                <div className="battle-card__stat" >
+                                    <span className="battle-card__stat-text">{thisCard.damage}</span>
+                                </div>
                             </div>
-                            <div className="card__stat" >
-                                <span className="card__stat-text">{thisCard.damage}</span>
-                            </div>
-                            <div className="card__stat">
-                                <span className="card__stat-text">{thisCard.attribute}</span>
+                            <div className="battle-card__stat">
+                                <span className="battle-card__stat-text">{thisCard.attribute}</span>
                             </div>
                         </>
                     }

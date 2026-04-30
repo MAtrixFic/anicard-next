@@ -1,10 +1,11 @@
 import { GetCardUpgradeInfo, GetPetUpgradeInfo, UpgradeCard, UpgradePet } from "@/components/server/comp/Apis"
-import { ICardUpgrade, ICardUpgradeInfo, IElementUpgradeInfo, IPetUpgrade, IPetUpgradeInfo } from "@/components/server/comp/UpgradeApi"
+import { ICardUpgrade, IPetUpgrade } from "@/components/server/comp/UpgradeApi"
 import useMessageStore from "@/devs/store/MessageStore"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 const useUpgrade = (type: 'card' | 'pet', index: number) => {
     const addMessage = useMessageStore(state => state.addMessage)
+    const client = useQueryClient()
 
     const { data } = useQuery({
         queryKey: [type, index],
@@ -16,13 +17,21 @@ const useUpgrade = (type: 'card' | 'pet', index: number) => {
 
     async function upgradeCard(id: number) {
         const upgradedData = await UpgradeCard(id)
-        if (upgradedData) addMessage({ text: (upgradedData as ICardUpgrade).status, type: 'message' })
+        if (upgradedData) {
+            addMessage({ text: (upgradedData as ICardUpgrade).status, type: 'message' });
+            client.invalidateQueries({ queryKey: ['user'] })
+            client.invalidateQueries({ queryKey: [type, index] })
+        }
         else addMessage({ text: "Ошибка прокачки", type: 'error' })
     }
 
     async function upgradePet(id: number) {
         const upgradedData = await UpgradePet(id)
-        if (upgradedData) addMessage({ text: (upgradedData as IPetUpgrade).status, type: 'message' })
+        if (upgradedData) {
+            addMessage({ text: (upgradedData as IPetUpgrade).status, type: 'message' });
+            client.invalidateQueries({ queryKey: ['user'] })
+            client.invalidateQueries({ queryKey: [type, index] })
+        }
         else addMessage({ text: "Ошибка прокачки", type: 'error' })
     }
 

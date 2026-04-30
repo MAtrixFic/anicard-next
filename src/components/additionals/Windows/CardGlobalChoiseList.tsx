@@ -130,7 +130,7 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
                                         university={currentCard.universe}
                                         rarity={currentCard.rarity}
                                         rating={currentCard.rating.toString()}
-                                        name="Рем"
+                                        name={currentCard.character || ''}
                                         attribute={currentCard.attribute} />
                                 </PreviewSelectionCard>
                                 :

@@ -42,7 +42,9 @@ $maxBlockWidth: 400px;
     }
 
     &__inventory {
+        height: 170px;
         display: flex;
+        align-items: center;
         flex-grow: 1;
         gap: calc((100% - 300px)/2);
         overflow-x: auto;
@@ -117,6 +119,7 @@ $maxBlockWidth: 400px;
 }
 
 .health-bar {
+    position: relative;
     width: 100%;
     display: flex;
     flex-grow: 1;
@@ -132,9 +135,46 @@ $maxBlockWidth: 400px;
     }
 
 
+
+
     &.rival {
         .health-bar__user-name {
             color: props.$purple;
+        }
+    }
+
+    &__pet-container {
+        aspect-ratio: 1;
+        height: 36px;
+        border: 1.2px solid transparent;
+        overflow: hidden;
+        border-radius: 100%;
+        position: absolute;
+        bottom: 50%;
+        z-index: 100;
+        left: 5%;
+        border-radius: 100%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &.pet-s {
+            border-color: props.$yellow;
+        }
+
+        &.pet-a {
+            border-color: props.$purple;
+        }
+
+        &.pet-b {
+            border-color: props.$blue;
+        }
+
+        &.pet-c {
+            border-color: props.$green;
         }
     }
 
@@ -147,6 +187,7 @@ $maxBlockWidth: 400px;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        position: relative;
 
         img {
             object-fit: contain;

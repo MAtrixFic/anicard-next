@@ -18,14 +18,17 @@ export default function RootLayout({
                 </section>
                 <section className="inventory__main-nav">
                     <nav className="inventory__navigation">
-                        <Link href={'/inventory'} className="inventory__link">
-                            ИВ
-                        </Link>
-                        <Link href={'/inventory/battle-cards'} className="inventory__link">
-                            БК
+                        <Link href={'/inventory/cards'} className="inventory__link">
+                            ИК
                         </Link>
                         <Link href={'/inventory/pets'} className="inventory__link">
-                            ПК
+                            ИП
+                        </Link>
+                        <Link href={'/inventory/cards/battle'} className="inventory__link">
+                            БК
+                        </Link>
+                        <Link href={'/inventory/pets/battle'} className="inventory__link">
+                            БП
                         </Link>
                     </nav>
                 </section>

@@ -1,35 +1,45 @@
 'use client'
-import CardGlobalChoiseList, { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import LightButton from "@/components/additionals/buttons/LightButton"
+import useSelectionCard from "@/devs/hooks/useSelection"
+import { useState } from "react"
+import PreviewSelectionPets, { PetFrame } from "@/components/additionals/pets/PreviewSelectionPets"
+import { useQuery } from "@tanstack/react-query"
+import CardsChoise from "@/components/additionals/cardsList/CardsChoise"
+import { IPet } from "@/devs/store/PetsStore"
 import usePets from "@/devs/hooks/server/usePets"
-import { useRef } from "react"
+import { CardPanel, UpgradePanel } from "../cards/page"
 
 const Page = () => {
-    const petsRef = useRef<(ICard | null)[]>([])
-    const { getPets, SetInvPets } = usePets()
+    const { getPets } = usePets()
+    const [selectedPet, setSelectedPet] = useSelectionCard<IPet>()
 
-    async function StorePets() {
-        const pets = petsRef.current.filter(v => v !== null)
-        SetInvPets('battle', pets.length > 0 ? pets.map(v => v!.id) : [])
-    }
+    const [inventoryPets, setInventoryPets] = useState<IPet[]>([])
 
+    useQuery({
+        queryKey: ['allPets'],
+        queryFn: async () => {
+            const data = await getPets('allPets')
+            setInventoryPets(data);
+            return data
+        }
+    })
 
     return (
-        <div className="pets">
-            <CardGlobalChoiseList
-                materialRef={petsRef}
-                materialType='battle-pet'
-                loadAllMaterials={async () => getPets('allPets')}
-                loadSelectedMaterials={async () => getPets('battle')}
-                choisenMaterialNumber={1}
-            />
-
-            <div className="admin-logic">
-                <div className="desc-panel reverse">
-                    <LightButton title='Сохранить' func={StorePets} />
-                </div>
-            </div>
-        </div>
+        <CardsChoise
+            panel={selectedPet && <CardPanel selectedElement={selectedPet} >
+                <UpgradePanel type="pet" index={selectedPet.id} />
+            </CardPanel>}
+        >
+            {
+                inventoryPets.map((v) =>
+                    <PreviewSelectionPets
+                        key={v?.id}
+                        setSelection={setSelectedPet}
+                        selectedPet={selectedPet}
+                        thisPet={v}
+                    >
+                        <PetFrame name={v.character} rating={v.rating.toString()} attribute={v.attribute} rarity={v.rarity} />
+                    </PreviewSelectionPets>)}
+        </CardsChoise >
     )
 }
 

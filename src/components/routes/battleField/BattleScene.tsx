@@ -12,10 +12,11 @@ export interface IBattleSceneProps {
     battleState: TBattleState,
     readyFunc: () => void;
     rivalCards: TSelectionCardsArr
+    rivalCardIds: number[]
 }
 
 
-const BattleScene = ({ battleState, readyFunc, rivalCards, selectionBattleCards, selectedCard, setSelectedCard, setBattleCard }: IBattleSceneProps) => {
+const BattleScene = ({ rivalCardIds, battleState, readyFunc, rivalCards, selectionBattleCards, selectedCard, setSelectedCard, setBattleCard }: IBattleSceneProps) => {
 
 
     return (
@@ -25,7 +26,7 @@ const BattleScene = ({ battleState, readyFunc, rivalCards, selectionBattleCards,
                     <ul className="battle-scene__cards-list">
                         {new Array(3).fill(null).map((v, i) =>
                             <FlipCard
-                                state={battleState === 'battle' ? 'no-flip' : 'flip'}
+                                state={rivalCards[i] && rivalCardIds.includes(rivalCards[i]!.id) && rivalCards[i].health > 0 ? 'no-flip' : battleState === 'battle' ? 'no-flip' : 'flip'}
                                 key={rivalCards[i] ? rivalCards[i].id : i}
                                 element={
                                     rivalCards[i] === null ?

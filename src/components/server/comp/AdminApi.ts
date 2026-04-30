@@ -57,6 +57,19 @@ export default class AdminApi {
     //     }
     // }
 
+
+    @WithCookies()
+    static async DeletePet(petId: string) {
+        try {
+            await FetchMG.DELETE(`admin/pets/${petId}`,)
+            return true
+        }
+        catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+
     @WithCookies()
     static async DeleteCard(cardId: string) {
         try {

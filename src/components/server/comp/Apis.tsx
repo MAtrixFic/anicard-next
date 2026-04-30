@@ -9,6 +9,8 @@ import { InventoryApi, TwistApi } from "./InventoryApi";
 import ShopApi from "./ShopApi";
 import PVEApi from "./PVEApi";
 import UpgradeApi from "./UpgradeApi";
+import { BACK_ORIGIN } from "../fetches/env.config";
+
 
 export interface IError {
     response: {
@@ -29,6 +31,15 @@ export const AuthUser = async (initData: any) => {
 
             parsedCookies.forEach((c) => {
                 cookiesStorage.set(c.name, c.value, {
+                    domain: BACK_ORIGIN,
+                    httpOnly: true,
+                    secure: c.secure,
+                    path: c.path,
+                    expires: c.expires,
+                    sameSite: 'none',
+                });
+                cookiesStorage.set(c.name, c.value, {
+                    // domain: BACK_ORIGIN,
                     httpOnly: true,
                     secure: c.secure,
                     path: c.path,
@@ -54,6 +65,15 @@ export const UpdateToken = async (access: string) => {
         console.log('updated token', access)
         parsedCookies.forEach((c) => {
             cookiesStorage.set(c.name, c.value, {
+                domain: BACK_ORIGIN,
+                httpOnly: true,
+                secure: c.secure,
+                path: c.path,
+                expires: c.expires,
+                sameSite: 'none',
+            });
+            cookiesStorage.set(c.name, c.value, {
+                // domain: BACK_ORIGIN,
                 httpOnly: true,
                 secure: c.secure,
                 path: c.path,
@@ -76,6 +96,20 @@ export const RefreshUser = async () => {
     }
 }
 
+export const GetAuthCookie = async () => {
+    const cookieStore = await cookies()
+
+    const access = cookieStore.get('access_token')
+    const refresh = cookieStore.get('refresh_token')
+
+    const result = []
+
+    if (access) result.push(`access_token=${access.value}`)
+    if (refresh) result.push(`refresh_token=${refresh.value}`)
+
+    return result.join('; ')
+}
+
 export const GetUser = UserApi.GetUser
 export const CreateUser = UserApi.CreateUser
 export const GetTopUsers = UserApi.GetTopUsers
@@ -83,6 +117,7 @@ export const GetUserKeys = UserApi.GetUserKeys
 //admin api
 export const GetCards = AdminApi.GetCards
 export const DeleteCard = AdminApi.DeleteCard
+export const DeletePet = AdminApi.DeletePet
 export const UploadPhotoForCard = async (data: File) => {
     console.log(data)
 }

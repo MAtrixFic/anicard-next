@@ -2,14 +2,14 @@
 import PreviewSelectionCard from "@/components/additionals/cards/PreviewSelectionCard"
 import useSelectionCard from "@/devs/hooks/useSelection"
 import { CardDesctiption, ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useCards } from "@/devs/hooks/server/useCards"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import useUpgrade from "@/devs/hooks/server/useUpgrade"
 import { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard"
 import CardsChoise from "@/components/additionals/cardsList/CardsChoise"
 import { IPet } from "@/devs/store/PetsStore"
-import { IElementUpgradeInfo } from "@/components/server/comp/UpgradeApi"
+import { ICardUpgradeInfo, IElementUpgradeInfo, IPetUpgradeInfo } from "@/components/server/comp/UpgradeApi"
 
 const Page = () => {
     const { getCards } = useCards()
@@ -55,18 +55,17 @@ interface IUpgradePanelProps {
 export const UpgradePanel = ({ type, index }: IUpgradePanelProps) => {
     const { upgradedInfo, upgradeCard, upgradePet } = useUpgrade(type, index)
     const upgradedElement = (upgradedInfo as IElementUpgradeInfo)
-    const clint = useQueryClient()
+    const currentValue = useMemo(() => type === 'card' ? (upgradedElement as ICardUpgradeInfo)?.current_copies : (upgradedElement as IPetUpgradeInfo)?.current_exp, [type, upgradedElement])
+    const neededValue = useMemo(() => type === 'card' ? (upgradedElement as ICardUpgradeInfo)?.copies_needed : (upgradedElement as IPetUpgradeInfo)?.required_exp, [type, upgradedElement])
 
 
     if (!upgradedInfo) return
 
     async function Upgrade() {
         type === 'card' ? await upgradeCard(index) : await upgradePet(index)
-        clint.invalidateQueries({ queryKey: [type, index] })
-        // clint.invalidateQueries({ queryKey: ['allCards'] })
     }
 
-    const ratio = (upgradedElement.current_copies / upgradedElement.copies_needed)
+    const ratio = (currentValue / neededValue)
     const inProcess = upgradedElement.current_level < upgradedElement.max_level
 
     return (
@@ -87,7 +86,7 @@ export const UpgradePanel = ({ type, index }: IUpgradePanelProps) => {
                                     height: '100%',
                                     width: `${ratio * 100}%`
                                 }} >
-                                    {upgradedElement.current_copies}/{upgradedElement.copies_needed}
+                                    {currentValue}/{neededValue}
                                 </div>
                             </div>
                         }

@@ -17,8 +17,23 @@ export default function TelegramInit() {
     const client = useQueryClient()
     const router = useRouter();
 
+    function _AuthUser() {
+        AuthUser(rawInitData).then(data => {
+            console.log("user auth:", data);
+            if (data) {
+                CookieSet('isAuth', JSON.stringify(true))
+                CookieSet('isAdmin', JSON.stringify((data as IUserResponse).isAdmin))
+                client.invalidateQueries({ queryKey: ['user'] })
+            }
+            else {
+                router.replace('/auth')
+            }
+        })
+    }
+
     useEffect(() => {
         if (rawInitData) {
+            // GetAllCookie()
             const parseInitData = parse(rawInitData)
             if (parseInitData.user?.photo_url) {
                 sessionStorage.setItem('avatar', parseInitData.user?.photo_url)
@@ -27,17 +42,10 @@ export default function TelegramInit() {
             if (sessionStorage.getItem('userId') == null) {
                 sessionStorage.setItem('userId', parseInitData.user?.id.toString() || JSON.stringify(null))
                 CookieSet('userId', parseInitData.user?.id)
-                AuthUser(rawInitData).then(data => {
-                    console.log("user auth:", data);
-                    if (data) {
-                        CookieSet('isAuth', JSON.stringify(true))
-                        CookieSet('isAdmin', JSON.stringify((data as IUserResponse).isAdmin))
-                        client.invalidateQueries({ queryKey: ['user'] })
-                    }
-                    else {
-                        router.replace('/auth')
-                    }
-                })
+                _AuthUser()
+            }
+            else {
+                _AuthUser()
             }
         }
     }, [])

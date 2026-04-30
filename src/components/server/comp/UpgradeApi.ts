@@ -6,10 +6,7 @@ import FetchMG from "../fetches/config";
 
 export interface IElementUpgradeInfo {
     current_level: number,
-    current_copies: number,
-    copies_needed: number,
     coin_cost: number,
-    has_enough_copies: boolean,
     has_enough_coins: boolean,
     max_level: number
 }
@@ -24,10 +21,16 @@ export interface IElementUpgrade {
 }
 
 export interface ICardUpgradeInfo extends IElementUpgradeInfo {
+    current_copies: number,
+    copies_needed: number,
+    has_enough_copies: boolean,
     card: IShortCardInfo
 }
 
 export interface IPetUpgradeInfo extends IElementUpgradeInfo {
+    current_exp: number
+    required_exp: number,
+    has_enough_exp: boolean,
     pet: IPetWithId
 }
 

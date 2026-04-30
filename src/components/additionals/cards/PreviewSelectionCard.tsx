@@ -2,7 +2,7 @@
 import { type ICard } from "../Windows/CardGlobalChoiseList"
 import Image from "next/image"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
-import { attributesImages } from "../form/FormCardFields"
+import { attributesImages, cardAttributeWeaknesses } from "../form/FormCardFields"
 import { CardCover } from "@/components/icons/Cards"
 import React from "react"
 
@@ -78,9 +78,9 @@ export const BaseFrame = ({ name, rating, rarity, attribute, university }: IBase
                             Несовместимые стихии
                         </span>
                         <ul className="card-frame__anti-elements-list">
-                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
-                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
-                            <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
+                            {cardAttributeWeaknesses[attribute].map((wa, i) =>
+                                <Image key={wa + i} src={attributesImages[wa as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
+                            )}
                         </ul>
                     </div>
                 </div>

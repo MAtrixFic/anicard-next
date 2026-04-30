@@ -15,6 +15,8 @@ import useBattleSocket from "@/devs/hooks/server/useBattleSocket"
 import { EventTypes } from "@/devs/store/BattleSocketStore"
 import { ICard, TCardRarity } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
+import { IPet } from "@/devs/store/PetsStore"
+import { json } from "stream/consumers"
 
 export type TSelectedBattleCard = IBattleCard | null
 export type TSelectionCardsArr = [TSelectedBattleCard, TSelectedBattleCard, TSelectedBattleCard]
@@ -92,6 +94,7 @@ const Fight = () => {
     const { ws, players, environment, CloseWS, location, weather } = useBattleSocket()
     const router = useRouter()
 
+    const [pets, setPets] = useState<(IPet | null)[]>([])
     const isYou = useMemo(() => environment === 'weather', [])
     const portalContainer = usePortal()
     const [selectedCard, setSelectedCard] = useSelection<IBattleCard>(false, '.fight__inventory');
@@ -99,7 +102,9 @@ const Fight = () => {
     const [handCards, setHandCards] = useState<IBattleCard[]>([])
     const [rivalCards, setRivalCards] = useState<TSelectionCardsArr>([null, null, null])
 
-    const [hps, setHps] = useState<{ rivalHP: number, yourHP: number }>({ rivalHP: 200, yourHP: 200 })
+    const [rivalArray, setRivalArray] = useState<number[]>([])
+
+    const [hps, setHps] = useState<{ rivalHP: number, maxRivalHp: number, yourHP: number, maxYourHp: number }>({ rivalHP: 0, maxRivalHp: 0, yourHP: 0, maxYourHp: 0 })
     const [battleState, setBattleState] = useState<TBattleState>('deployment')
     const [timer, setTimer] = useState<number>(0)
 
@@ -119,9 +124,16 @@ const Fight = () => {
     }
 
     useEffect(() => {
+        const newIds = rivalCards.filter(v => v != null && !rivalArray.includes(v.id)).map(v => v?.id)
+        setRivalArray(prev => [...prev, ...newIds.filter(v => typeof v === 'number')])
+    }, [rivalCards])
+
+    useEffect(() => {
         setHps(prev => ({
             rivalHP: prev.rivalHP > 0 ? prev.rivalHP : 0,
-            yourHP: prev.yourHP > 0 ? prev.yourHP : 0
+            yourHP: prev.yourHP > 0 ? prev.yourHP : 0,
+            maxRivalHp: prev.maxRivalHp,
+            maxYourHp: prev.maxYourHp
         }))
     }, [hps.rivalHP, hps.yourHP])
 
@@ -130,6 +142,7 @@ const Fight = () => {
             const jsonEvent = JSON.parse(event.data)
             console.log(jsonEvent)
             if (jsonEvent.type === EventTypes.BATTLE_STATE) {
+                setPets([jsonEvent.state.pet, jsonEvent.state.opponent_pet])
                 SetHandCards(jsonEvent.state.player_hand, setHandCards)
                 if (jsonEvent.state.phase) {
                     if (jsonEvent.state.phase === 'deployment') {
@@ -157,7 +170,9 @@ const Fight = () => {
                         SetHandCards(jsonEvent.state.player_hand, setHandCards)
                         setHps(() => ({
                             rivalHP: isYou ? jsonEvent.player2_hp : jsonEvent.player1_hp,
-                            yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp
+                            yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp,
+                            maxRivalHp: jsonEvent.state.opponent_max_hp,
+                            maxYourHp: jsonEvent.state.max_hp,
                         }))
                     }, 2000)
                 }, 200)
@@ -169,7 +184,9 @@ const Fight = () => {
                 }, 6000)
                 setHps(() => ({
                     rivalHP: isYou ? jsonEvent.player2_hp : jsonEvent.player1_hp,
-                    yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp
+                    yourHP: isYou ? jsonEvent.player1_hp : jsonEvent.player2_hp,
+                    maxRivalHp: hps.maxRivalHp,
+                    maxYourHp: hps.maxYourHp
                 }))
                 ws.send(JSON.stringify({
                     type: EventTypes.BATTLE_STATE
@@ -209,10 +226,16 @@ const Fight = () => {
         <div className="fight">
             {portalContainer && createPortal(<FightHeader battleState={battleState} timer={timer} exit={ExitBattle} weather={weather} location={location} />, portalContainer)}
             <div className="fight__rival">
-                <HealthBar userName={players[1]} health={hps.rivalHP / 2} additionalStyle="rival" />
+                <HealthBar
+                    maxHp={hps.maxRivalHp}
+                    pet={pets[1]}
+                    userName={players[1]}
+                    health={hps.rivalHP}
+                    additionalStyle="rival" />
             </div>
             <div className="fight__battle-scene">
                 <BattleScene
+                    rivalCardIds={rivalArray}
                     rivalCards={rivalCards}
                     battleState={battleState}
                     selectionBattleCards={selectionBattleCards}
@@ -223,7 +246,12 @@ const Fight = () => {
                 />
             </div>
             <div className="fight__user-manager">
-                <HealthBar userName={players[0]} health={hps.yourHP / 2} additionalStyle="you" />
+                <HealthBar
+                    maxHp={hps.maxYourHp}
+                    pet={pets[0]}
+                    userName={players[0]}
+                    health={hps.yourHP}
+                    additionalStyle="you" />
                 <section className="fight__card-inventory">
                     <ul className="fight__inventory">
                         {handCards.filter(v => !selectionBattleCards.map(sv => sv ? sv.id : -1).includes(v.id)).map((v, i) =>
