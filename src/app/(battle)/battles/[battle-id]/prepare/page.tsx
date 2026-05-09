@@ -11,7 +11,7 @@ import BattleRival from "@/components/routes/battleRival/BattleRival";
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config";
 
 const Prepare = () => {
-    const { ws, environment, setWSValue, battleId, players, CloseWS } = useBattleSocket();
+    const { ws, environment, setWSValue, battleId, players, CloseWS, opponentId } = useBattleSocket();
     const choises = useMemo(() => ({
         weather: [
             "sunny",
@@ -36,6 +36,7 @@ const Prepare = () => {
                 console.log(jsonEvent);
 
                 if (jsonEvent.type === EventTypes.BATTLE_STATE) {
+                    setWSValue('opponentId', jsonEvent.state.opponent_id)
                     if (jsonEvent.state.weather && jsonEvent.state.location) {
                         setPoints([{ environment: 'location', name: jsonEvent.state.location, id: 0 }, { environment: 'weather', name: jsonEvent.state.weather, id: 1 }])
                         console.log(`/static/images/location/${jsonEvent.state.location}`, `/static/images/weather/${jsonEvent.state.weather}`)
@@ -66,7 +67,9 @@ const Prepare = () => {
     const [timerStatus, setTimerStatus] = useState<'running' | 'finished'>('running');
     const [choicePointStatus, _, setStatusInTime] = useOverWindowStatus(800);
 
+
     const router = useRouter();
+    console.log(opponentId, 'opponentId')
 
     useEffect(() => {
         setTimeout(() => {
@@ -81,7 +84,7 @@ const Prepare = () => {
                     <h2 className="battle-choice__title">
                         <span className="battle-choice__t-el battle-choice__t-el-you">{players[0]}</span>
                         <span className="battle-choice__t-el battle-choice__t-el-vs">VS</span>
-                        <BattleRival userId={1853332193}>
+                        <BattleRival userId={opponentId} name={players[1]}>
                             <span className="battle-choice__t-el battle-choice__t-el-rival">{players[1]}</span>
                         </BattleRival>
                     </h2>

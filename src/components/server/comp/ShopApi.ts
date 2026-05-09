@@ -1,16 +1,13 @@
-import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import FetchMG from "../fetches/config"
-import { WithCookies } from "@/devs/decorators/serverDec"
+import { GET, POST } from "../fetches/AuthFetch"
 import { IError } from "./Apis"
 import { IPet } from "@/devs/store/PetsStore"
 
 export type TPayment = 'real_money' | 'keys' | 'battle_coins'
 
 export default class ShopApi {
-    @WithCookies()
     static async GetShopPets(payment: TPayment): Promise<{ ok: boolean, pets: IPet[] }> {
         try {
-            const res = await FetchMG.GET(`shop/pet/offers?payment_type=${payment}`)
+            const res = await GET(`shop/pet/offers?payment_type=${payment}`)
             console.log(res.data)
             return { ok: true, pets: res.data.pets }
         }
@@ -19,11 +16,11 @@ export default class ShopApi {
             return { ok: false, pets: [] }
         }
     }
-    @WithCookies()
+
     static async BuyPet(id: number, payment: TPayment) {
         try {
             console.log(`shop/pet/${id}`)
-            await FetchMG.POST(`shop/pet/${id}`, {
+            await POST(`shop/pet/${id}`, {
                 payment_type: payment
             })
             return { ok: true }
@@ -33,11 +30,10 @@ export default class ShopApi {
             return { ok: false, data: (error as IError).response.data.detail }
         }
     }
-    @WithCookies()
+
     static async BuyKeys(keysCount: number) {
         try {
-            // console.log(`shop/keys`, { keys: keysCount })
-            await FetchMG.POST(`shop/keys`, { keys: keysCount })
+            await POST(`shop/keys`, { keys: keysCount })
             return true
         }
         catch (error) {
@@ -46,14 +42,13 @@ export default class ShopApi {
         }
     }
 
-    @WithCookies()
     static async BuyExpForPet(id: number, expId: number) {
         console.log('shop/pet/experience', {
             bottle_id: expId,
             pet_id: id
         })
         try {
-            await FetchMG.POST(`shop/pet/experience`, {
+            await POST(`shop/pet/experience`, {
                 bottle_id: expId,
                 pet_id: id
             })

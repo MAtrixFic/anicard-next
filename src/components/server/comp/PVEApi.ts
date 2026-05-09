@@ -1,5 +1,4 @@
-import { WithCookies } from "@/devs/decorators/serverDec";
-import FetchMG from "../fetches/config";
+import { GET, POST } from "../fetches/AuthFetch"
 import { IPet } from "@/devs/store/PetsStore";
 import { type IError } from "./Apis";
 
@@ -24,6 +23,7 @@ export interface IExpeditionDataResponse extends IFarmCell {
     reward_coins: number,
     start_time: string,
     reward_pet: IPet,
+    time_left_seconds: number,
     pets: IPet[]
 }
 
@@ -38,10 +38,9 @@ export interface IPveCurrentStarDataRepsonse {
 }
 
 export default class PVEApi {
-    @WithCookies()
     static async GetStars(): Promise<IPveStarResponse[]> {
         try {
-            const res = await FetchMG.GET(`pve/stars`)
+            const res = await GET(`pve/stars`)
             console.log(res.data)
             return res.data
         }
@@ -50,10 +49,10 @@ export default class PVEApi {
             return []
         }
     }
-    @WithCookies()
+
     static async GetCurrentStar(starId: number): Promise<ICurrentStartAllDataResponse | null> {
         try {
-            const res = await FetchMG.GET(`pve/star/${starId}`)
+            const res = await GET(`pve/star/${starId}`)
             console.log(res.data)
             return res.data
         }
@@ -62,10 +61,10 @@ export default class PVEApi {
             return null
         }
     }
-    @WithCookies()
+
     static async StartStar(id: number, petIds: number[]): Promise<IExpeditionDataResponse | boolean> {
         try {
-            const res = await FetchMG.POST(`pve/start`, {
+            const res = await POST(`pve/start`, {
                 star_id: id,
                 pet_ids: petIds
             })
@@ -77,10 +76,10 @@ export default class PVEApi {
             return false
         }
     }
-    @WithCookies()
+
     static async ClaimStar(id: number): Promise<string | boolean> {
         try {
-            const res = await FetchMG.POST(`pve/claim`, {
+            const res = await POST(`pve/claim`, {
                 expedition_id: id,
             })
             console.log(res.data)

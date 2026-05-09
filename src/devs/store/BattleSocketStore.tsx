@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 interface IBattleSocketStore {
     WS?: WebSocket,
+    opponentId: number,
     environment?: 'location' | 'weather',
     battleId?: string,
     players: [string, string];
@@ -22,6 +23,7 @@ export enum EventTypes {
 }
 
 const useBattleSocketStore = create<IBattleSocketStore>((set, get) => ({
+    opponentId: 0,
     WS: undefined,
     location: '',
     weather: '',

@@ -18,6 +18,7 @@ const Page = () => {
         queryKey: ['allPets'],
         queryFn: async () => {
             const data = await getPets('allPets')
+            console.log(data);
             setInventoryPets(data);
             return data
         }
@@ -37,7 +38,11 @@ const Page = () => {
                         selectedPet={selectedPet}
                         thisPet={v}
                     >
-                        <PetFrame name={v.character} rating={v.rating.toString()} attribute={v.attribute} rarity={v.rarity} />
+                        <PetFrame
+                            name={v.character}
+                            rating={v.current_rating?.toString() || '0'}
+                            attribute={v.attribute}
+                            rarity={v.rarity} />
                     </PreviewSelectionPets>)}
         </CardsChoise >
     )

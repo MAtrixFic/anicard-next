@@ -8,8 +8,9 @@ interface IPveStore {
     stars: IPveStarResponse[],
     currentStarInProcess: ICurrentStartAllDataResponse | null,
     currentStarOnStarted: IExpeditionDataResponse | null,
-    setValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue'>, value: TStarValue) => void,
-    getValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue'>, param?: any) => Promise<TStarValue>,
+    setValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue' | 'clearValue'>, value: TStarValue) => void,
+    getValue: (key: keyof Omit<IPveStore, 'setValue' | 'getValue' | 'clearValue'>, param?: any) => Promise<TStarValue>,
+    clearValue: () => void
 }
 
 const usePveStore = create<IPveStore>((set, get) => ({
@@ -20,6 +21,13 @@ const usePveStore = create<IPveStore>((set, get) => ({
         ...state,
         [key]: value
     })),
+    clearValue: () => {
+        set(state => ({
+            ...state,
+            currentStarInProcess: null,
+            currentStarOnStarted: null
+        }))
+    },
     getValue: async (key, param) => {
         const SetValue = get().setValue
         if (key == 'currentStarInProcess') {
@@ -32,10 +40,8 @@ const usePveStore = create<IPveStore>((set, get) => ({
             else SetValue('currentStarOnStarted', null)
         }
         else if (key == 'stars') {
-            if (get().stars.length <= 0) {
-                const data = await GetStars();
-                SetValue('stars', data);
-            }
+            const data = await GetStars();
+            SetValue('stars', data);
         }
         return get()[key]
     }

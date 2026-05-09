@@ -1,8 +1,7 @@
-import { WithCookies } from "@/devs/decorators/serverDec";
 import { IShortCardInfo } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import { IPetWithId } from "@/components/routes/shop/Bunner";
 import { IError } from "./Apis";
-import FetchMG from "../fetches/config";
+import { GET, POST } from "../fetches/AuthFetch"
 
 export interface IElementUpgradeInfo {
     current_level: number,
@@ -44,10 +43,9 @@ export interface IPetUpgrade extends IElementUpgrade {
 
 
 export default class UpgradeApi {
-    @WithCookies()
     static async GetCardUpgradeInfo(id: number): Promise<ICardUpgradeInfo | boolean> {
         try {
-            const res = await FetchMG.GET(`card/upgrade-info/${id}`)
+            const res = await GET(`card/upgrade-info/${id}`)
             console.log(res.data)
             return res.data
         }
@@ -56,10 +54,10 @@ export default class UpgradeApi {
             return false
         }
     }
-    @WithCookies()
+
     static async UpgradeCard(id: number): Promise<ICardUpgrade | boolean> {
         try {
-            const res = await FetchMG.POST(`card/upgrade`, {
+            const res = await POST(`card/upgrade`, {
                 card_id: id
             })
             console.log(res.data)
@@ -70,10 +68,10 @@ export default class UpgradeApi {
             return false
         }
     }
-    @WithCookies()
+
     static async GetPetUpgradeInfo(id: number): Promise<IPetUpgradeInfo | boolean> {
         try {
-            const res = await FetchMG.GET(`pet/upgrade-info/${id}`)
+            const res = await GET(`pet/upgrade-info/${id}`)
             console.log(res.data)
             return res.data
         }
@@ -82,10 +80,10 @@ export default class UpgradeApi {
             return false
         }
     }
-    @WithCookies()
+
     static async UpgradePet(id: number): Promise<IPetUpgrade | boolean> {
         try {
-            const res = await FetchMG.POST(`pet/upgrade`, {
+            const res = await POST(`pet/upgrade`, {
                 pet_id: id
             })
             console.log(res.data)

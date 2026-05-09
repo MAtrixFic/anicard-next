@@ -6,15 +6,14 @@ export interface IElement {
     id: number;
     photo: string;
 }
-
 export interface IPet extends IElement {
     rarity: string;
     rating: number,
     price: number;
     character: string;
     attribute: string
+    current_rating: number
 }
-
 interface IPetsStore {
     adminPets: IPet[];
     battle: IPet[];

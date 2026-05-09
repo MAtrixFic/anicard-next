@@ -1,7 +1,6 @@
 import type { IResponse } from "./UserApi"
-import FetchMG from "../fetches/config"
+import { GET, POST, DELETE } from "../fetches/AuthFetch"
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import { WithCookies } from "@/devs/decorators/serverDec"
 
 export interface IAdminCardsResponse extends IResponse {
     cards: ICard[]
@@ -16,10 +15,9 @@ export type TCardAdd = Omit<ICard, 'photo' | 'id'>
 export type TCardWithPhoto = TCardAdd & { photo: File }
 
 export default class AdminApi {
-    @WithCookies()
     static async GetCards(): Promise<IAdminCardsResponse> {
         try {
-            const res = await FetchMG.GET(`admin/cards`)
+            const res = await GET(`admin/cards`)
             console.log(res.data)
             return res.data
         }
@@ -28,10 +26,9 @@ export default class AdminApi {
             return { 'ok': false, cards: [] }
         }
     }
-    @WithCookies()
     static async AddCard(card: TCardWithPhoto): Promise<ICard | boolean> {
         try {
-            const res = await FetchMG.POST(`admin/cards`, card)
+            const res = await POST(`admin/cards`, card)
             return res.data.card
         }
         catch (error) {
@@ -58,10 +55,9 @@ export default class AdminApi {
     // }
 
 
-    @WithCookies()
     static async DeletePet(petId: string) {
         try {
-            await FetchMG.DELETE(`admin/pets/${petId}`,)
+            await DELETE(`admin/pets/${petId}`,)
             return true
         }
         catch (error) {
@@ -70,10 +66,9 @@ export default class AdminApi {
         }
     }
 
-    @WithCookies()
     static async DeleteCard(cardId: string) {
         try {
-            await FetchMG.DELETE(`admin/cards/${cardId}`,)
+            await DELETE(`admin/cards/${cardId}`,)
             return true
         }
         catch (error) {

@@ -5,11 +5,12 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
+        const { access } = await GetAuthCookie()
         let res = await fetch(`${BACK_ORIGIN}/admin/cards`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Cookie': await GetAuthCookie()
+                'access_token': access ? access.value : '',
             },
             body: JSON.stringify(body)
         });

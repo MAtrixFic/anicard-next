@@ -1,8 +1,6 @@
-import FetchMG from "../fetches/config"
+import { GET, POST } from "../fetches/AuthFetch"
 import { CookieGet } from "../CookieManager"
-import { WithCookies } from "@/devs/decorators/serverDec";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { AxiosResponse } from "axios";
 
 
 export interface IResponse {
@@ -28,24 +26,23 @@ export interface IRatingResponse extends IResponse {
 }
 
 export default class UserApi {
-    @WithCookies()
-    static async AuthUser(initData: any): Promise<AxiosResponse | boolean> {
+    static async AuthUser(initData: any): Promise<{ access_token: string, refresh_token: string } | false> {
         try {
-            const statusCode = await FetchMG.POST('user/auth', {
+            const userAuthData = await POST('user/auth', {
                 init_data: initData
             })
-            return statusCode
+            return userAuthData.data
         }
         catch (error) {
             return false
         }
     }
 
-    @WithCookies()
+
     static async CreateUser(nickname: string) {
         try {
             const userId = (await CookieGet('userId')) as RequestCookie
-            const statusCode = await FetchMG.POST('user', {
+            const statusCode = await POST('user', {
                 user_id: Number(userId!.value),
                 nickname: nickname
             })
@@ -59,11 +56,11 @@ export default class UserApi {
         }
     }
 
-    @WithCookies()
+
     static async GetUser(): Promise<IUserResponse | boolean> {
         try {
 
-            const res = await FetchMG.GET(`user`)
+            const res = await GET(`user`)
             console.log(res.data)
             return res.data
         }
@@ -73,10 +70,10 @@ export default class UserApi {
         }
     }
 
-    @WithCookies()
+
     static async RefreshToken() {
         try {
-            const res = await FetchMG.POST('user/refresh')
+            const res = await POST('user/refresh')
             return res
         }
         catch (error) {
@@ -85,11 +82,11 @@ export default class UserApi {
     }
 
 
-    @WithCookies()
+
     static async GetUserKeys(): Promise<any | boolean> {
         try {
 
-            const res = await FetchMG.GET(`user/keys`)
+            const res = await GET(`user/keys`)
             console.log('keys:', res.data)
             return res.data
         }
@@ -98,10 +95,10 @@ export default class UserApi {
             return false
         }
     }
-    @WithCookies()
+
     static async GetTopUsers(): Promise<IRatingResponse | boolean> {
         try {
-            const res = await FetchMG.GET(`rating/top`)
+            const res = await GET(`rating/top`)
             console.log(res.data)
             return res.data
         }

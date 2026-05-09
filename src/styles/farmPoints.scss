@@ -47,6 +47,14 @@
         position: relative;
     }
 
+    &__attribute {
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        color: props.$labelColor;
+    }
+
     &__btn {
         height: 80px;
         width: 80px;

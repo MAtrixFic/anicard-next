@@ -20,11 +20,11 @@ const Page = () => {
                                 <Image height={100} width={100} src={sessionStorage.getItem('avatar') || '/avatar/default-avatar.jpg'} alt="default-avatar" className="profile__logo" />
                             </div>
                             <div className="profile__user-nick-id">
-                                <div className="profile__user-id-container">
+                                {/* <div className="profile__user-id-container">
                                     <span className="profile__user-id">
                                         {`UId: ${data?.id}`}
                                     </span>
-                                </div>
+                                </div> */}
                                 <div className="profile__user-nick-container">
                                     <h2 className="profile__user-nick">
                                         {data?.nickname}

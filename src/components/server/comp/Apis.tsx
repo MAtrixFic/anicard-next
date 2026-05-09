@@ -10,6 +10,7 @@ import ShopApi from "./ShopApi";
 import PVEApi from "./PVEApi";
 import UpgradeApi from "./UpgradeApi";
 import { BACK_ORIGIN } from "../fetches/env.config";
+import { BattleApi } from "./BattleApi";
 
 
 export interface IError {
@@ -22,39 +23,23 @@ export interface IError {
 
 //user api
 export const AuthUser = async (initData: any) => {
-    try {
-        const res = (await UserApi.AuthUser(initData) as AxiosResponse);
-        const setCookieHeader = res.headers['set-cookie'];
-        const cookiesStorage = await cookies();
-        if (setCookieHeader) {
-            const parsedCookies = setCookieParser.parse(setCookieHeader);
-
-            parsedCookies.forEach((c) => {
-                cookiesStorage.set(c.name, c.value, {
-                    domain: BACK_ORIGIN,
-                    httpOnly: true,
-                    secure: c.secure,
-                    path: c.path,
-                    expires: c.expires,
-                    sameSite: 'none',
-                });
-                cookiesStorage.set(c.name, c.value, {
-                    // domain: BACK_ORIGIN,
-                    httpOnly: true,
-                    secure: c.secure,
-                    path: c.path,
-                    expires: c.expires,
-                    sameSite: 'none',
-                });
-                console.log("cookie added")
-            });
-        }
-        return res.data
+    'use server'
+    const cookiesStorage = await cookies();
+    const authData = await UserApi.AuthUser(initData)
+    if (authData) {
+        cookiesStorage.set('access_token', authData.access_token, {
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
+        });
+        cookiesStorage.set('refresh_token', authData.refresh_token, {
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
+        });
+        return true
     }
-    catch {
-        return false
-    }
-
+    return false
 }
 
 export const UpdateToken = async (access: string) => {
@@ -102,12 +87,8 @@ export const GetAuthCookie = async () => {
     const access = cookieStore.get('access_token')
     const refresh = cookieStore.get('refresh_token')
 
-    const result = []
 
-    if (access) result.push(`access_token=${access.value}`)
-    if (refresh) result.push(`refresh_token=${refresh.value}`)
-
-    return result.join('; ')
+    return {access, refresh}
 }
 
 export const GetUser = UserApi.GetUser
@@ -151,3 +132,6 @@ export const GetCardUpgradeInfo = UpgradeApi.GetCardUpgradeInfo
 export const UpgradeCard = UpgradeApi.UpgradeCard
 export const GetPetUpgradeInfo = UpgradeApi.GetPetUpgradeInfo
 export const UpgradePet = UpgradeApi.UpgradePet
+
+// battle api
+export const GetOpponetData = BattleApi.GetOpponentData

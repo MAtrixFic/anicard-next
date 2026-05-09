@@ -1,5 +1,4 @@
-import { WithCookies } from "@/devs/decorators/serverDec"
-import FetchMG from "../fetches/config"
+import { GET, POST, DELETE } from "../fetches/AuthFetch"
 import { IAdminCardsResponse } from "./AdminApi"
 import { IError } from "./Apis"
 import { IPet } from "@/devs/store/PetsStore"
@@ -12,10 +11,9 @@ interface IPetsResponse extends IResponse {
 }
 
 export class InventoryApi {
-    @WithCookies()
     static async GetInventoryCards(cardType?: TCardType): Promise<IAdminCardsResponse> {
         try {
-            const res = await FetchMG.GET(`inventory/cards${cardType ? `/${cardType}` : ''}`)
+            const res = await GET(`inventory/cards${cardType ? `/${cardType}` : ''}`)
             console.log(res.data)
             return res.data
         }
@@ -24,10 +22,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async GetAdminPets(): Promise<IPetsResponse> {
         try {
-            const res = await FetchMG.GET('admin/pets')
+            const res = await GET('admin/pets')
             console.log(res.data)
             return res.data
         }
@@ -36,10 +33,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async GetInventoryPets(cardType?: TCardType): Promise<IPetsResponse> {
         try {
-            const res = await FetchMG.GET(`inventory/pets${cardType ? `/${cardType}` : ''}`)
+            const res = await GET(`inventory/pets${cardType ? `/${cardType}` : ''}`)
             console.log(res.data)
             return res.data
         }
@@ -48,10 +44,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async SetInventoryCards(cardType: TCardType, cardsId: number[]): Promise<boolean> {
         try {
-            const res = await FetchMG.POST(`inventory/cards/${cardType}`, {
+            const res = await POST(`inventory/cards/${cardType}`, {
                 cards_id: cardsId
             })
             console.log(res.data)
@@ -63,10 +58,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async SetInventoryPets(petsType: TCardType, petIds: number[]): Promise<boolean> {
         try {
-            const res = await FetchMG.POST(`inventory/pets/${petsType}`, {
+            const res = await POST(`inventory/pets/${petsType}`, {
                 pets_id: petIds
             })
             console.log(res.data)
@@ -79,10 +73,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async DeleteInventoryCards(cardType: TCardType): Promise<boolean> {
         try {
-            await FetchMG.DELETE(`inventory/cards/${cardType}`)
+            await DELETE(`inventory/cards/${cardType}`)
             return true
         }
         catch (error) {
@@ -90,10 +83,9 @@ export class InventoryApi {
         }
     }
 
-    @WithCookies()
     static async DeleteInventoryPets(cardType: TCardType): Promise<boolean> {
         try {
-            const deleteRes = await FetchMG.DELETE(`inventory/pets/${cardType}`)
+            const deleteRes = await DELETE(`inventory/pets/${cardType}`)
             console.log(deleteRes.data)
             return true
         }
@@ -105,10 +97,9 @@ export class InventoryApi {
 }
 
 export class TwistApi {
-    @WithCookies()
     static async AddTwistCard(cardType: Omit<TCardType, 'favorite'>) {
         try {
-            const res = await FetchMG.POST(`card`, { card_type: cardType })
+            const res = await POST(`card`, { card_type: cardType })
             console.log(res.data)
             return { ok: true, data: res.data.card }
         }

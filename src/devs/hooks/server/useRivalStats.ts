@@ -1,33 +1,21 @@
 import useRivalStatsStore from "@/devs/store/RivalStatsStore";
-import { IUserResponse } from "@/components/server/comp/UserApi";
-import { GetUser, GetInventoryCards } from "@/components/server/comp/Apis";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { IAdminCardsResponse } from "@/components/server/comp/AdminApi";
+import { GetUser, GetInventoryCards, GetOpponetData } from "@/components/server/comp/Apis";
 
 
-export const useRivalStats = (rivalId: number) => {
-    const getRivalValues = useRivalStatsStore(state => state.getValue);
-    const setRivalValues = useRivalStatsStore(state => state.setValue);
+export const useRivalStats = () => {
+    const { score, setValue, battleHistory, cards } = useRivalStatsStore();
 
-    // useEffect(() => {
-    //     GetScore()
-    //     GetCards()
-    // }, [])
+    async function GetOpData(opId: number) {
+        const data = await GetOpponetData(opId);
+        if (data) {
+            setValue('battleHistory', data.battle_history)
+            // setRivalValues('score', data.score)
+            setValue('cards', data.user_cards)
+        }
+        console.log(data)
+    }
 
-    // async function GetScore() {
-    //     const data = await GetUser(rivalId.toString())
-    //     if (data) {
-    //         setRivalValues('score', (data as IUserResponse).user.rating)
-    //     }
-    // }
+    // return { GetOpData, opponentData }
 
-    // async function GetCards() {
-    //     const data = await GetInventoryCards(rivalId.toString())
-    //     if (data) {
-    //         setRivalValues('cards', (data as IAdminCardsResponse).cards)
-    //     }
-    // }
-
-    return { getRivalValues, setRivalValues }
+    return { score, battleHistory, GetOpData, cards }
 }

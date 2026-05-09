@@ -1,28 +1,34 @@
 import { useEffect, useRef, useState } from "react"
 
 const useTimer = () => {
-    const [startTimer, setStartTimer] = useState<boolean>(false)
-    const [timeLeft, setTimeLeft] = useState<number>(0)
-    const intervalRef = useRef<number>(null)
+    const [startTimer, setStartTimer] = useState(false)
+    const [timeLeft, setTimeLeft] = useState(0)
+
+    const intervalRef = useRef<number | null>(null)
 
     useEffect(() => {
         if (startTimer) {
             intervalRef.current = window.setInterval(() => {
-                if (timeLeft <= 0) {
-                    Pause()
-                    return
-                }
-                setTimeLeft(prev => prev - 1)
+                setTimeLeft(prev => {
+                    if (prev <= 1) {
+                        Pause()
+                        return 0
+                    }
+
+                    return prev - 1
+                })
             }, 1000)
-
-
-            return () => Pause()
         }
+
+        return () => Pause()
     }, [startTimer])
 
     function Pause() {
-        clearInterval(intervalRef.current as number)
-        setStartTimer(false)
+        if (intervalRef.current !== null) {
+            clearInterval(intervalRef.current)
+        }
+
+        // setStartTimer(false)
     }
 
     function Start(seconds: number) {

@@ -2,25 +2,32 @@ import OverBlackSpace from "@/components/additionals/OverBlackSpace"
 import LightButton from "@/components/additionals/buttons/LightButton";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import { useRivalStats } from "@/devs/hooks/server/useRivalStats";
-import PreviewSelectionCard from "@/components/additionals/cards/PreviewSelectionCard";
+import PreviewSelectionCard, { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard";
 import { CardDesctiption, ICard } from "@/components/additionals/Windows/CardGlobalChoiseList";
 import useSelectionCard from "@/devs/hooks/useSelection"
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { IBattleStats } from "@/devs/store/RivalStatsStore";
 interface IBattleRivalProps {
     children: React.ReactNode;
+    name: string,
     userId: number,
 }
 
-const BattleRival = ({ children, userId }: IBattleRivalProps) => {
+const BattleRival = ({ children, userId,name }: IBattleRivalProps) => {
     const [ws, setWS, setWSTimer] = useOverWindowStatus(400)
-    const { setRivalValues, getRivalValues } = useRivalStats(userId)
+    const { battleHistory, cards, GetOpData } = useRivalStats()
     const [page, setPage] = useState<'cards' | 'battleHistory'>('cards');
 
     const pages = useMemo(() => ({
-        cards: <RivalCards cards={getRivalValues('cards')} />,
-        battleHistory: <RivalBattles score={getRivalValues('score')} />
+        cards: <RivalCards cards={cards} />,
+        battleHistory: <RivalBattles battles={battleHistory} />
     }), [page])
+
+    useEffect(() => {
+        if (userId > 0)
+            GetOpData(userId)
+    }, [userId])
 
     return (
         <>
@@ -32,7 +39,7 @@ const BattleRival = ({ children, userId }: IBattleRivalProps) => {
                     <div className="rival-stats__top">
                         <div className="rival-stats__container rival-stats__container-user">
                             <h2 className="rival-stats__username">
-                                MAtrix
+                                {name}
                             </h2>
                         </div>
                         <div className="rival-stats__container rival-stats__container-nav">
@@ -63,49 +70,59 @@ const RivalCards = ({ cards }: { cards: ICard[] }) => {
             {cards.map(v =>
 
                 <PreviewSelectionCard
+                    key={v.id}
                     setSelection={setSelectedCard}
                     selectedCard={selectedCard}
-                    thisCard={v} />
+                    thisCard={v} >
+                    <BaseFrame
+                        name={v.character!}
+                        rating={v.rating.toString()}
+                        attribute={v.attribute} 
+                        rarity={v.rarity} 
+                        university={v.universe} />
+                </PreviewSelectionCard>
+
             )}
-            <div className="rival-inventory__desc">
+            {/* <div className="rival-inventory__desc">
                 {selectedCard && <CardDesctiption {...selectedCard} />}
-            </div>
+            </div> */}
         </div>
     )
 }
 
 
-const RivalBattles = ({ score }: { score: number }) => {
-    const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
+const RivalBattles = ({ battles }: { battles: IBattleStats[] }) => {
     return (
         <div className="rival-battles">
-            <section className="rival-battles__section rival-battles__section-score">
-                <h2 className="rival-battles__score">
-                    {/* <span className="tiny">счет</span> */}
-                    {score}
-                </h2>
-            </section>
+            {/* <section className="rival-battles__section rival-battles__section-score"> */}
+            {/* <h2 className="rival-battles__score"> */}
+            {/* <span className="tiny">счет</span> */}
+            {/* {score}
+                </h2> */}
+            {/* </section> */}
             <section className="rival-battles__section rival-battles__section-battles">
                 <ul className="rival-battles__btl-list">
-                    <li className="rival-battle">
-                        <div className="rival-battle__user">
-                            <Image
-                                height={50}
-                                width={50}
-                                alt='user'
-                                src={'/avatar/default-avatar.jpg'} />
-                            <span className="rival-battle__name">Игрок 1</span>
-                        </div>
-                        <span className="rival-battle__vs">VS</span>
-                        <div className="rival-battle__user">
-                            <Image
-                                height={50}
-                                width={50}
-                                alt='user'
-                                src={'/avatar/default-avatar.jpg'} />
-                            <span className="rival-battle__name winner">Игрок 2</span>
-                        </div>
-                    </li>
+                    {battles.map((v, i) =>
+                        <li key={i + v.user1_id} className="rival-battle">
+                            <div className="rival-battle__user">
+                                <Image
+                                    height={50}
+                                    width={50}
+                                    alt='user'
+                                    src={'/avatar/default-avatar.jpg'} />
+                                <span className={`rival-battle__name ${v.winner_id === v.user1_id ? 'winner' : ''}`}>{v.user1_nickname}</span>
+                            </div>
+                            <span className="rival-battle__vs">VS</span>
+                            <div className="rival-battle__user">
+                                <Image
+                                    height={50}
+                                    width={50}
+                                    alt='user'
+                                    src={'/avatar/default-avatar.jpg'} />
+                                <span className={`rival-battle__name ${v.winner_id === v.user2_id ? 'winner' : ''}`}>{v.user2_nickname}</span>
+                            </div>
+                        </li>
+                    )}
                 </ul>
             </section>
         </div>

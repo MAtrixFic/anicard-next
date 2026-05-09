@@ -16,7 +16,6 @@ import { EventTypes } from "@/devs/store/BattleSocketStore"
 import { ICard, TCardRarity } from "@/components/additionals/Windows/CardGlobalChoiseList"
 import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 import { IPet } from "@/devs/store/PetsStore"
-import { json } from "stream/consumers"
 
 export type TSelectedBattleCard = IBattleCard | null
 export type TSelectionCardsArr = [TSelectedBattleCard, TSelectedBattleCard, TSelectedBattleCard]

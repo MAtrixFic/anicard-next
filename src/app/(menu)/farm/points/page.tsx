@@ -1,4 +1,3 @@
-'use client'
 import '@/styles/farmPoints.scss'
 import StarsList from '@/components/routes/farm/StarsList'
 

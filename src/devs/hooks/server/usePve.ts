@@ -1,6 +1,7 @@
 import usePveStore from "@/devs/store/PveStore"
 import useMessageStore from "@/devs/store/MessageStore"
 import { ClaimStar } from "@/components/server/comp/Apis"
+import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
 export const usePVE = () => {
@@ -9,6 +10,8 @@ export const usePVE = () => {
     const setValue = usePveStore(state => state.setValue)
     const starOnStart = usePveStore(state => state.currentStarOnStarted)
     const inProcessStar = usePveStore(state => state.currentStarInProcess)
+    const clearValue = usePveStore(state => state.clearValue)
+    const queryClient = useQueryClient()
 
     const { addMessage } = useMessageStore()
 
@@ -20,7 +23,8 @@ export const usePVE = () => {
     }
 
     async function GetCurrentStar(starId: number) {
-        const currentStar = (await getValue('currentStarInProcess', starId))
+        const currentStar = await getValue('currentStarInProcess', starId)
+        console.log('in process star', currentStar)
         if (!currentStar) addMessage({ text: 'Ошибка получения звезды', type: 'error' })
         return currentStar
     }
@@ -30,8 +34,12 @@ export const usePVE = () => {
         if (claimedData) {
             addMessage({ text: 'Успешное получение награды', type: 'message' })
             setTimeout(()=> {
+                queryClient.invalidateQueries({ queryKey: ['user'] })
                 router.push('/farm/points')
-            }, 2000 )
+                setTimeout(()=> {
+                    clearValue()
+                }, 400)
+            }, 1000 )
         }
         else addMessage({ text: 'Ошибка получения награды', type: 'error' })
     }
@@ -43,6 +51,6 @@ export const usePVE = () => {
         setValue,
         StartFarmTheStar,
         GetCurrentStar,
-        ClaimStarRewards
+        ClaimStarRewards,
     }
 }

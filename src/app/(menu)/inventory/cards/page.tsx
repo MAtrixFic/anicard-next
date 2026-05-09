@@ -39,9 +39,12 @@ const Page = () => {
                         setSelection={setSelectedCard}
                         selectedCard={selectedCard}
                         thisCard={v}
-
                     >
-                        <BaseFrame university={v.universe} rarity={v.rarity} rating={v.rating.toString()} name="Рем" attribute={v.attribute} />
+                        <BaseFrame
+                            university={v.universe}
+                            rarity={v.rarity}
+                            rating={v.rating?.toString() || '0'}
+                            name={v.character || 'Unknown'} attribute={v.attribute} />
                     </PreviewSelectionCard>)}
         </CardsChoise >
     )

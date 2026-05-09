@@ -23,7 +23,8 @@ export interface IShortCardInfo {
     rarity: TCardRarity,
     attribute: string,
     category: string,
-    price?: string
+    price?: string,
+    // current_rating?: number,
 }
 
 interface ICardGlobalChoiseList<T extends { id: number, photo: string }> {
@@ -129,7 +130,7 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
                                     <BaseFrame
                                         university={currentCard.universe}
                                         rarity={currentCard.rarity}
-                                        rating={currentCard.rating.toString()}
+                                        rating={currentCard.rating?.toString() || '0'}
                                         name={currentCard.character || ''}
                                         attribute={currentCard.attribute} />
                                 </PreviewSelectionCard>
@@ -140,7 +141,7 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
                                     selectedPet={petEl}
                                     thisPet={currentPet}
                                 >
-                                    <PetFrame attribute={currentPet.attribute} rarity={currentPet.rarity} rating={currentPet.rating.toString()} name={currentPet.character} />
+                                    <PetFrame attribute={currentPet.attribute} rarity={currentPet.rarity} rating={currentPet.current_rating?.toString() || '0'} name={currentPet.character} />
                                 </PreviewSelectionPets>
                         )
                     }
@@ -179,7 +180,7 @@ export const CardDesctiption = (element: IElement) => {
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {Object.keys(element).filter(v => !['created', 'updated', 'photo', 'id'].includes(v))
+                    {Object.keys(element).filter(v => !['created', 'updated', 'photo', 'id', 'isBattle', 'isFavorite', 'current_rating', 'user_id', 'copies'].includes(v))
                         .filter(v => element[v as keyof IElement] ? element[v as keyof IElement]!.toString().length > 0 : false)
                         .map((v, i) =>
                             <li className="card-desc__desc-element" key={i}>

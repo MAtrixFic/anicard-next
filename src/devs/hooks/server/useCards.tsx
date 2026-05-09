@@ -1,6 +1,6 @@
 import { useCardsStore } from "@/devs/store/CardsStore"
 import { type ICardStore } from "@/devs/store/CardsStore"
-import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
+import { IAllCardData } from "@/components/server/comp/AdminApi"
 import { TCardType } from "@/components/server/comp/InventoryApi"
 import { DeleteInventoryCards, SetInventoryCards } from "@/components/server/comp/Apis"
 import { useQueryClient } from "@tanstack/react-query"
@@ -27,7 +27,7 @@ export const useCards = () => {
 
 
     return {
-        setCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: ICard[]) => await SetCards(key, cards),
+        setCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>, cards: IAllCardData[]) => await SetCards(key, cards),
         getCards: async (key: keyof Omit<ICardStore, 'SetCards' | 'GetCards'>) => await GetCards(key),
         SetInvCards
     }

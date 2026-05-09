@@ -9,9 +9,10 @@ export interface IStarFarmPointProps {
     rarity: string,
     time?: number,
     active?: boolean
+    attribute: string,
 }
 
-const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPointProps & { id: number }) => {
+const StarFarmPoint = ({ active = false, time, rarity, id, attribute }: IStarFarmPointProps & { id: number }) => {
     const [pos, setPos] = useState<'left' | 'right'>('right')
     const { timeLeft, Start } = useTimer()
 
@@ -26,7 +27,7 @@ const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPointProps
             }
         }
 
-
+        console.log(time);
         Start(time ? time : 0)
     }, [])
 
@@ -36,6 +37,9 @@ const StarFarmPoint = ({ active = false, time, rarity, id }: IStarFarmPointProps
                 <Link className='star-point__btn' href={`/farm/${id}`}>
                     <div className="star-container">
                         <StarPoint />
+                    </div>
+                    <div className="star-point__attribute">
+                        {attribute}
                     </div>
                 </Link>
                 {active && (timeLeft > 0) && <div className={`star-point__logic star-point__logic-${pos}`}>

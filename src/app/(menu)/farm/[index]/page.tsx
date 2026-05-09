@@ -16,7 +16,8 @@ import usePets from '@/devs/hooks/server/usePets'
 import { usePVE } from '@/devs/hooks/server/usePve'
 import useTimer from '@/devs/hooks/useTimer'
 import SuperTimer from '@/devs/time/SuperTimer'
-import { IExpeditionDataResponse, IPveStarResponse, type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
+import { type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
+import { IAllPetData } from '@/components/server/comp/AdminApi'
 
 
 const Page = () => {
@@ -24,17 +25,15 @@ const Page = () => {
     const [overWS, setOverWS, setWMode] = useOverWindowStatus(300);
 
     const { getPets } = usePets()
-    const [pets, setPets] = useState<IPet[]>([])
+    const [pets, setPets] = useState<IAllPetData[]>([])
 
-    const [selectedPets, setSelectedPets] = useState<(IPet | null)[]>(new Array(6).fill(null))
+    const [selectedPets, setSelectedPets] = useState<(IAllPetData | null)[]>(new Array(6).fill(null))
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
     const [actIndex, setActIndex] = useState<number>(0)
 
     const { StartFarmTheStar, GetCurrentStar, ClaimStarRewards, inProcessStar, starOnStart } = usePVE()
     const { timeLeft, Pause, Start } = useTimer();
     const possiblePets = useMemo(() => starOnStart ? starOnStart.pets.length : inProcessStar?.star.status.includes(FarmStatutes.FREE) ? 6 : inProcessStar?.expedition.pets.length, [starOnStart, inProcessStar])
-
-    // if (!inProcessStar) return
 
     useEffect(() => {
         getPets('allPets').then(data => setPets(data));
@@ -51,12 +50,13 @@ const Page = () => {
     }
 
     async function ClaimStar() {
-        await ClaimStarRewards(inProcessStar?.expedition.expedition_id!)
+        const clamedId = inProcessStar?.expedition ? inProcessStar?.expedition.expedition_id : starOnStart?.expedition_id
+        await ClaimStarRewards(clamedId!)
     }
 
     useEffect(() => {
         if (starOnStart) {
-            Start(SuperTimer.GetSeonds(starOnStart.end_time))
+            Start(starOnStart.time_left_seconds)
         }
     }, [starOnStart])
 
@@ -67,12 +67,20 @@ const Page = () => {
     useEffect(() => {
         GetCurrentStar(Number(farmParams.index)).then(data => {
             const csData = (data as ICurrentStartAllDataResponse)
+            console.log('current star data', csData)
             if (csData?.star.status.includes(FarmStatutes.OCCUPIED)) {
                 if (csData.star.time_left_seconds) Start(csData.star.time_left_seconds)
                 setSelectedPets(csData.expedition.pets)
             }
         })
     }, [])
+
+    function Includes(key: FarmStatutes) {
+        if (inProcessStar) {
+            return inProcessStar.star.status.includes(key)
+        }
+        else return false
+    }
 
     const buttonStatics = {
         [FarmStatutes.FREE]:
@@ -87,7 +95,7 @@ const Page = () => {
                 func={ClaimStar} />
     }
 
-    console.log(starOnStart)
+    // console.log(starOnStart)
 
     return (
         <div className="farm">
@@ -96,7 +104,7 @@ const Page = () => {
                     <ul className='farm__all-pets-list'>
                         {pets.filter(fv => !selectedPets.includes(fv) && inProcessStar?.star.element.includes(fv.attribute)).map(v =>
                             <PreviewSelectionPets
-                                key={v?.id}
+                                key={v?.pet_id}
                                 setSelection={() => {
                                     let previewPets = selectedPets;
                                     previewPets[actIndex] = v
@@ -106,7 +114,11 @@ const Page = () => {
                                 selectedPet={null}
                                 thisPet={v}
                             >
-                                <PetFrame attribute={v.attribute} rarity={v.rarity} rating={v.rating.toString()} name={v.character} />
+                                <PetFrame
+                                    attribute={v.pet.attribute}
+                                    rarity={v.pet.rarity}
+                                    rating={v.pet.rating.toString()}
+                                    name={v.pet.character} />
                             </PreviewSelectionPets>
                         )}
                     </ul>
@@ -163,10 +175,10 @@ const Page = () => {
                     </div>
                 </section>
                 <section className="farm__logic">
-                    {(inProcessStar?.star.status.includes(FarmStatutes.OCCUPIED) || timeLeft > 0) && <div className="farm__timer">
+                    {((Includes(FarmStatutes.OCCUPIED) && timeLeft > 0) || Includes(FarmStatutes.FREE)) && <div className="farm__timer">
                         <span className='farm__t-text'>
                             {starOnStart ? SuperTimer.ToCustomTimeString(timeLeft) :
-                                inProcessStar?.star.status.includes(FarmStatutes.FREE) ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
+                                Includes(FarmStatutes.FREE) ? `${inProcessStar?.star.hours}:00:00` : SuperTimer.ToCustomTimeString(timeLeft)}
                         </span>
                     </div>}
                     <div className="farm__btns">

@@ -11,6 +11,7 @@ const useBattleSocket = () => {
     const players = useBattleSocketStore(state => state.players);
     const environment = useBattleSocketStore(state => state.environment);
     const setWSValue = useBattleSocketStore(state => state.setValue);
+    const opponentId = useBattleSocketStore(state => state.opponentId);
     const weather = useBattleSocketStore(state => state.weather);
     const location = useBattleSocketStore(state => state.location);
 
@@ -27,7 +28,7 @@ const useBattleSocket = () => {
         setWSValue('WS', undefined)
     }, [ws])
 
-    return { ws, CreateWS, CloseWS, setWSValue, environment, players, battleId, weather, location }
+    return { ws, CreateWS, CloseWS, setWSValue, environment, players, battleId, weather, location, opponentId }
 }
 
 export default useBattleSocket

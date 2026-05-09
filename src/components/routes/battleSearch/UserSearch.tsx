@@ -36,6 +36,7 @@ const UserSearch = () => {
                             setWSValue('environment', jsonEvent.environment);
                         }
                         setWSValue('battleId', jsonEvent.battle_id);
+                        // setWSValue('opponentId', jsonEvent.state.opponent_id);
                         setWSValue('players', [jsonEvent.player_nickname, jsonEvent.opponent_nickname]);
                         setFightIsFound(true)
                         setTimeout(() => {

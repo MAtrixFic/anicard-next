@@ -25,6 +25,7 @@ const StarsList = () => {
         <ul className="farm-points__star-list">
             {stars.map(v =>
                 <StarFarmPoint
+                    attribute={v.element}
                     key={v.star_id}
                     time={v.time_left_seconds}
                     rarity={v.rarity.toLowerCase()}
