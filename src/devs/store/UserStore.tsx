@@ -11,6 +11,7 @@ export interface IUser {
     rating: number,
     keys: number,
     avatar: string,
+    cardsCount: number
 }
 export interface IUserStore extends Partial<IUser> {
     setUserData: (arg: Omit<IUserStore, 'setUserData' | 'getUserValues' | 'setUserValue'>) => void,
@@ -25,6 +26,7 @@ const useUserStore = create<IUserStore>((set, get) => ({
     isAdmin: undefined,
     coin: undefined,
     battleCoin: undefined,
+    cardsCount: undefined,
     rating: undefined,
     keys: undefined,
     setUserValue: (key, value) => set(state => ({
@@ -39,7 +41,8 @@ const useUserStore = create<IUserStore>((set, get) => ({
         isAdmin: arg.isAdmin,
         battleCoin: arg.battleCoin,
         rating: arg.rating,
-        keys: arg.keys
+        keys: arg.keys,
+        cardsCount: arg.cardsCount
     })),
     getUserValues: async (key, push = false) => {
         console.log('get user')
@@ -59,7 +62,8 @@ const useUserStore = create<IUserStore>((set, get) => ({
                         battleCoin: resData.user.battle_coin,
                         rating: resData.user.rating,
                         isAdmin: resData.isAdmin,
-                        keys: resData.user.card_keys?.[0]?.key ?? 0
+                        keys: resData.user.card_keys?.[0]?.key ?? 0,
+                        cardsCount: resData.user.total_cards ?? 0
                     })
                     return get()[key]
                 }
@@ -78,7 +82,8 @@ const useUserStore = create<IUserStore>((set, get) => ({
                         battleCoin: resData.user.battle_coin,
                         rating: resData.user.rating,
                         isAdmin: resData.isAdmin,
-                        keys: resData.user.card_keys?.[0]?.key ?? 0
+                        keys: resData.user.card_keys?.[0]?.key ?? 0,
+                        cardsCount: resData.user.total_cards ?? 0
                     })
                 }
             }
@@ -94,7 +99,8 @@ const useUserStore = create<IUserStore>((set, get) => ({
                             battleCoin: resData.user.battle_coin,
                             rating: resData.user.rating,
                             isAdmin: resData.isAdmin,
-                            keys: resData.user.card_keys?.[0]?.key ?? 0
+                            keys: resData.user.card_keys?.[0]?.key ?? 0,
+                            cardsCount: resData.user.total_cards ?? 0
                         })
                     }
                 }
@@ -105,7 +111,8 @@ const useUserStore = create<IUserStore>((set, get) => ({
                 battleCoin: get().battleCoin,
                 rating: get().rating,
                 isAdmin: get().isAdmin,
-                keys: get().keys
+                keys: get().keys,
+                cardsCount: get().cardsCount
             }
         }
     }

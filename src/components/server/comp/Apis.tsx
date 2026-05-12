@@ -1,9 +1,7 @@
 'use server'
 
-import { AxiosResponse } from "axios";
 import { cookies } from "next/headers";
 import UserApi from "./UserApi"
-import setCookieParser from 'set-cookie-parser';
 import AdminApi from "./AdminApi";
 import { InventoryApi, TwistApi } from "./InventoryApi";
 import ShopApi from "./ShopApi";
@@ -46,34 +44,20 @@ export const UpdateToken = async (access: string) => {
     'use server'
     const cookiesStorage = await cookies();
     if (access) {
-        const parsedCookies = setCookieParser.parse(access);
         console.log('updated token', access)
-        parsedCookies.forEach((c) => {
-            cookiesStorage.set(c.name, c.value, {
-                domain: BACK_ORIGIN,
-                httpOnly: true,
-                secure: c.secure,
-                path: c.path,
-                expires: c.expires,
-                sameSite: 'none',
-            });
-            cookiesStorage.set(c.name, c.value, {
-                // domain: BACK_ORIGIN,
-                httpOnly: true,
-                secure: c.secure,
-                path: c.path,
-                expires: c.expires,
-                sameSite: 'none',
-            });
+        cookiesStorage.set('access_token', access, {
+            expires: new Date(Date.now() + 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
         });
     }
 }
 
 export const RefreshUser = async () => {
     try {
-        const res = (await UserApi.RefreshToken() as AxiosResponse);
-        const setCookieHeader = res.headers['set-cookie'];
-        return setCookieHeader
+        const res = await UserApi.RefreshToken();
+        if (res === false) return false
+        return { access_token: res.access_token, refresh_token: res.refresh_token }
     }
     catch (error) {
         console.log(error)
@@ -88,7 +72,7 @@ export const GetAuthCookie = async () => {
     const refresh = cookieStore.get('refresh_token')
 
 
-    return {access, refresh}
+    return { access, refresh }
 }
 
 export const GetUser = UserApi.GetUser

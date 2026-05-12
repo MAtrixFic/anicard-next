@@ -5,8 +5,6 @@ import { Suspense } from "react"
 import { useUser } from "@/devs/hooks/server/useUser"
 import Image from "next/image"
 
-// const lazyStats = lazy(()=> import(''))
-
 const Page = () => {
     const { data } = useUser()
     console.log(data)
@@ -34,7 +32,7 @@ const Page = () => {
                         </section>
                         <section className="profile__user-achivments">
                             <ul className="profile__achivments-list">
-                                {[{ score: `${data.total_cards || '4'}`, title: 'Количество карт' },
+                                {[{ score: data.cardsCount?.toString() || '0', title: 'Количество карт' },
                                 { score: data.rating?.toString() || '0', title: 'Рейтин' }
                                 ].map((v, i) =>
                                     <UserAchivment key={v.score + v.title + i} score={v.score} title={v.title} />

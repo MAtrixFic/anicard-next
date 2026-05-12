@@ -18,6 +18,7 @@ export type TUserData = {
     coin: number,
     battle_coin: number,
     rating: number,
+    total_cards: number,
     card_keys: { key: number }[]
 }
 
@@ -71,10 +72,11 @@ export default class UserApi {
     }
 
 
-    static async RefreshToken() {
+    static async RefreshToken(): Promise<{ access_token: string, refresh_token: string } | false> {
         try {
             const res = await POST('user/refresh')
-            return res
+            console.log('refresh token', res.data)
+            return res.data
         }
         catch (error) {
             return false

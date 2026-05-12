@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BACK_ORIGIN } from "./env.config";
+import { RefreshUser, UpdateToken } from "../comp/Apis";
 // import { RefreshUser, UpdateToken } from "../comp/Apis";
+import { redirect } from "next/navigation";
 
 class FetchMG {
     public static origin: string = BACK_ORIGIN + '/';
@@ -27,24 +29,20 @@ class FetchMG {
     }
 }
 
-// FetchMG.api.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//         if (error.response?.status === 401) {
-//             if (error.response.data.detail.includes('Access')) {
-//                 const data = await RefreshUser()
-//                 if (data) {
-//                     console.log(data)
-//                     await UpdateToken(data[0])
-//                 }
-//             }
-//         }
-//         console.error(`[Global Interceptor] 401 Unauthorized on ${error.config?.url}`, {
-//             method: error.config?.method,
-//             message: error.response.data.detail
-//         });
-//         return { ok: false }
-//     }
-// );
+FetchMG.api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response?.status === 401) {
+            if (error.response.data.detail.includes('Signature has expired')) {
+                const data = await RefreshUser();
+                if (data) {
+                    await UpdateToken(data.access_token);
+                }
+            }
+        }
+
+        return Promise.reject(error.response?.data?.detail || error.message);
+    }
+);
 
 export default FetchMG

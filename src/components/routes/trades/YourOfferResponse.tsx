@@ -2,6 +2,7 @@ import { IYourOfferProps } from "./YourOffer"
 import LightButton from "@/components/additionals/buttons/LightButton"
 import Image from "next/image"
 import { Exchange } from "@/components/icons/Cards"
+import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
 
 interface IYourOfferResponseProps extends IYourOfferProps {
     acceptTrade: () => any,
@@ -16,13 +17,13 @@ const YourOfferResponse = ({ trade, userId, deleteTrade, acceptTrade }: IYourOff
             <div className="your-offer__left-block">
                 <div className="your-offer__cards">
                     <div className="your-offer__card">
-                        <Image className="your-offer__preview-img" src={`https://obviously-vocal-seagull.cloudpub.ru${trade.creatorCard.photo}`} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <Image className="your-offer__preview-img" src={`${BACK_ORIGIN}/${trade.creatorCard.photo}`} height={40} width={40} quality={75} preload alt="offer-img" />
                         <h4 className="your-offer__title">
                             {trade.creatorCard.rarity}
                         </h4>
                     </div>
                     <div className="your-offer__card">
-                        <Image className="your-offer__preview-img" src={`https://obviously-vocal-seagull.cloudpub.ru${trade.targetCard!.photo}`} height={40} width={40} quality={60} preload alt="offer-img" />
+                        <Image className="your-offer__preview-img" src={`${BACK_ORIGIN}/${trade.targetCard!.photo}`} height={40} width={40} quality={75} preload alt="offer-img" />
                         <h4 className="your-offer__title">
                             {trade.targetCard!.rarity}
                         </h4>

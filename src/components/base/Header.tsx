@@ -8,7 +8,7 @@ import { useUser } from "@/devs/hooks/server/useUser";
 const Avatar = dynamic(() => import('@/devs/browserStorages/SessionAvatar'), { ssr: false })
 
 const Header = () => {
-    const { data: user } = useUser()
+    const { data: user } = useUser(true)
     // const isVisible = useHeaderScroll();
     const router = useRouter();
     const pathname = usePathname();

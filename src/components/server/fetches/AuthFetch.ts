@@ -6,12 +6,14 @@ import FetchMG from './config'
 async function getAccessHeaders(headers?: any) {
     const cookieStore = await cookies()
     const accessToken = cookieStore.get('access_token')?.value
+    const refreshToken = cookieStore.get('refresh_token')?.value
 
     return {
         ...headers,
         ...(accessToken
             ? {
                 access_token: accessToken,
+                refresh_token: refreshToken,
             }
             : {}),
     }

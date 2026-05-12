@@ -23,7 +23,6 @@ const YourBlock = () => {
     })
     if (query.isLoading) return;
 
-
     return (
         <>
             <div className="trades__your-filter-block">

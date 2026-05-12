@@ -80,9 +80,9 @@ const ExchangeWindow = ({ exchangedTrade, setExchangedTrade }: IExchangeWindowPr
                 </section>
                 <section className="exchange-window__section exchange-window__section-your-choice">
                     <div className="cards-choise__list-container">
-                        <section className="cards-choise__filter-container">
+                        {/* <section className="cards-choise__filter-container">
                             <Filter style="cards-choise__filter pd-no" submit={(data: any) => console.log(data)} />
-                        </section>
+                        </section> */}
                         <section className="cards-choise__cards-list">
                             <ul className="cards-choise__list">
                                 {inventoryCards.map((v, i) =>

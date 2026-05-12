@@ -10,11 +10,13 @@ import { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard"
 import CardsChoise from "@/components/additionals/cardsList/CardsChoise"
 import { IPet } from "@/devs/store/PetsStore"
 import { ICardUpgradeInfo, IElementUpgradeInfo, IPetUpgradeInfo } from "@/components/server/comp/UpgradeApi"
+import LightButton from "@/components/additionals/buttons/LightButton"
+import { useTrades } from "@/devs/hooks/server/useTrades"
 
 const Page = () => {
     const { getCards } = useCards()
     const [selectedCard, setSelectedCard] = useSelectionCard<ICard>()
-
+    const { createTrade } = useTrades()
     const [inventoryCards, setInventoryCards] = useState<ICard[]>([])
 
     useQuery({
@@ -29,7 +31,10 @@ const Page = () => {
     return (
         <CardsChoise
             panel={selectedCard && <CardPanel selectedElement={selectedCard} >
-                <UpgradePanel type="card" index={selectedCard.id} />
+                <div className="card-logic">
+                    <UpgradePanel type="card" index={selectedCard.id} />
+                    <LightButton title="Обменять" func={() => createTrade(selectedCard.id)} />
+                </div>
             </CardPanel>}
         >
             {
@@ -43,7 +48,7 @@ const Page = () => {
                         <BaseFrame
                             university={v.universe}
                             rarity={v.rarity}
-                            rating={v.rating?.toString() || '0'}
+                            rating={v.current_rating?.toString() || '0'}
                             name={v.character || 'Unknown'} attribute={v.attribute} />
                     </PreviewSelectionCard>)}
         </CardsChoise >

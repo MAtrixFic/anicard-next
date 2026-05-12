@@ -499,6 +499,13 @@
     }
 }
 
+.card-logic {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: .4rem;
+}
+
 .upgrade-panel {
     flex-grow: 1;
     display: flex;

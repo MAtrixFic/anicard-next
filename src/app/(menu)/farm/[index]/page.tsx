@@ -17,7 +17,6 @@ import { usePVE } from '@/devs/hooks/server/usePve'
 import useTimer from '@/devs/hooks/useTimer'
 import SuperTimer from '@/devs/time/SuperTimer'
 import { type ICurrentStartAllDataResponse } from '@/components/server/comp/PVEApi'
-import { IAllPetData } from '@/components/server/comp/AdminApi'
 
 
 const Page = () => {
@@ -25,9 +24,9 @@ const Page = () => {
     const [overWS, setOverWS, setWMode] = useOverWindowStatus(300);
 
     const { getPets } = usePets()
-    const [pets, setPets] = useState<IAllPetData[]>([])
+    const [pets, setPets] = useState<IPet[]>([])
 
-    const [selectedPets, setSelectedPets] = useState<(IAllPetData | null)[]>(new Array(6).fill(null))
+    const [selectedPets, setSelectedPets] = useState<(IPet | null)[]>(new Array(6).fill(null))
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
     const [actIndex, setActIndex] = useState<number>(0)
 
@@ -104,7 +103,7 @@ const Page = () => {
                     <ul className='farm__all-pets-list'>
                         {pets.filter(fv => !selectedPets.includes(fv) && inProcessStar?.star.element.includes(fv.attribute)).map(v =>
                             <PreviewSelectionPets
-                                key={v?.pet_id}
+                                key={v?.id}
                                 setSelection={() => {
                                     let previewPets = selectedPets;
                                     previewPets[actIndex] = v
@@ -115,10 +114,10 @@ const Page = () => {
                                 thisPet={v}
                             >
                                 <PetFrame
-                                    attribute={v.pet.attribute}
-                                    rarity={v.pet.rarity}
-                                    rating={v.pet.rating.toString()}
-                                    name={v.pet.character} />
+                                    attribute={v.attribute}
+                                    rarity={v.rarity}
+                                    rating={v.rating.toString()}
+                                    name={v.character} />
                             </PreviewSelectionPets>
                         )}
                     </ul>

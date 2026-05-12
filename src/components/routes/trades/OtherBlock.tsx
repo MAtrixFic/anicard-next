@@ -19,9 +19,9 @@ const OtherBlock = () => {
 
     return (
         <>
-            <div className="trades__orders-filter-container">
+            {/* <div className="trades__orders-filter-container">
                 <Filter style="trades__form" submit={(data: any) => console.log(data)} />
-            </div>
+            </div> */}
             <div className="trades__orders-list-container">
                 <ul className="trades__orders-list">
                     <Loader

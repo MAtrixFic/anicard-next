@@ -1,7 +1,7 @@
 'use server'
 
 import { ICard } from "@/components/additionals/Windows/CardGlobalChoiseList"
-import FetchMG from "../fetches/config"
+import { POST, GET, DELETE } from "../fetches/AuthFetch";
 import { IRespone } from "./AdminApi";
 import { IError } from "./Apis";
 
@@ -36,9 +36,9 @@ interface IMyTradeRepsonse extends ITradePesponse {
 }
 
 
-export async function GetActiveTrades(userId: number): Promise<IRespone<ITrade[]>> {
+export async function GetActiveTrades(): Promise<IRespone<ITrade[]>> {
     try {
-        const res = await FetchMG.GET(`trades/${userId}`)
+        const res = await GET(`trades`)
         const tradesRes = (res.data as { trades: ITradePesponse[] }).trades.map(v => ({
             id: v.id,
             creatorId: v.creator_id,
@@ -56,9 +56,9 @@ export async function GetActiveTrades(userId: number): Promise<IRespone<ITrade[]
 }
 
 
-export async function GetMyTrades(userId: number): Promise<{ ok: boolean, trades: IMyTrade[] }> {
+export async function GetMyTrades(): Promise<{ ok: boolean, trades: IMyTrade[] }> {
     try {
-        const res = await FetchMG.GET(`trades/${userId}/my`)
+        const res = await GET(`trades/my`)
         const tradesRes = (res.data as { trade: IMyTradeRepsonse[] }).trade.map(v => ({
             id: v.id,
             creatorId: v.creator_id,
@@ -78,10 +78,10 @@ export async function GetMyTrades(userId: number): Promise<{ ok: boolean, trades
     }
 }
 
-export async function CreateTrade(userId: number, cardId: number) {
+export async function CreateTrade(cardId: number) {
     try {
-        console.log(`trades/${userId}/${cardId}`)
-        await FetchMG.POST(`trades/${userId}/${cardId}`)
+        console.log(`trades/${cardId}`)
+        await POST(`trades/${cardId}`)
         return true
     }
     catch (error) {
@@ -89,10 +89,12 @@ export async function CreateTrade(userId: number, cardId: number) {
     }
 }
 
-export async function ResponsdToOffer(userId: number, tradeId: number, cardId: number): Promise<IRespone<string>> {
+export async function ResponsdToOffer(tradeId: number, cardId: number): Promise<IRespone<string>> {
     try {
-        console.log(`trades/${tradeId}/${userId}/${cardId}/offer`)
-        await FetchMG.POST(`trades/${tradeId}/${userId}/${cardId}/offer`)
+        console.log(`trades/${tradeId}/${cardId}/offer`)
+        await POST(`trades/${cardId}/offer`, {
+            trade_id: tradeId
+        })
         return { ok: true, data: "Ответ на трейд успешен" }
     }
     catch (error) {
@@ -100,13 +102,15 @@ export async function ResponsdToOffer(userId: number, tradeId: number, cardId: n
     }
 }
 
-export async function AcceptOrNoTheOffer(userId: number, tradeId: number, status: TTradeStatus) {
+export async function AcceptOrNoTheOffer(tradeId: number, status: TTradeStatus) {
     try {
-        await FetchMG.POST(`trades/${tradeId}/${status}/${userId}/respond`)
+        await POST('trades/respond', {
+            trade_id: tradeId,
+            trade_status: status
+        })
         return true
     }
     catch (error) {
-        console.log(error)
         return false
     }
 }
@@ -114,7 +118,7 @@ export async function AcceptOrNoTheOffer(userId: number, tradeId: number, status
 export async function DeleteTrade(tradeId: number, userId: number) {
     try {
         console.log(`trades/${tradeId}/${userId}`)
-        await FetchMG.DELETE(`trades/${tradeId}/${userId}`)
+        await DELETE(`trades/${tradeId}/${userId}`)
         return true
     }
     catch (error) {

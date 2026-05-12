@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject } from 'react'
+import { useEffect, useMemo, useState, type RefObject } from 'react'
 import PreviewCard from '../cards/PreviewCard'
 import PreviewSelectionCard, { BaseFrame } from '../cards/PreviewSelectionCard'
 import PurpleButton from '../buttons/PurpleButton'
@@ -24,7 +24,7 @@ export interface IShortCardInfo {
     attribute: string,
     category: string,
     price?: string,
-    // current_rating?: number,
+    current_rating?: number,
 }
 
 interface ICardGlobalChoiseList<T extends { id: number, photo: string }> {
@@ -44,7 +44,7 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
 
     const query = useQuery({
         queryKey: ['all-cards', materialType],
-        queryFn: async () => loadAllMaterials().then(data => { setPreviewElements(data); return data })
+        queryFn: async () => loadAllMaterials().then(data => { setPreviewElements([...data]); return data })
     })
 
     useEffect(() => {
@@ -130,7 +130,7 @@ const CardGlobalChoiseList = ({ choisenMaterialNumber, materialRef, materialType
                                     <BaseFrame
                                         university={currentCard.universe}
                                         rarity={currentCard.rarity}
-                                        rating={currentCard.rating?.toString() || '0'}
+                                        rating={currentCard.current_rating?.toString() || '0'}
                                         name={currentCard.character || ''}
                                         attribute={currentCard.attribute} />
                                 </PreviewSelectionCard>
@@ -180,7 +180,7 @@ export const CardDesctiption = (element: IElement) => {
             </div>
             {isOpen && <div className="card-desc__desc-container">
                 <ul className="card-desc__desc-list">
-                    {Object.keys(element).filter(v => !['created', 'updated', 'photo', 'id', 'isBattle', 'isFavorite', 'current_rating', 'user_id', 'copies'].includes(v))
+                    {Object.keys(element).filter(v => !['created', 'updated', 'photo', 'id', 'isBattle', 'isFavorite', 'rating', 'user_id', 'copies'].includes(v))
                         .filter(v => element[v as keyof IElement] ? element[v as keyof IElement]!.toString().length > 0 : false)
                         .map((v, i) =>
                             <li className="card-desc__desc-element" key={i}>
