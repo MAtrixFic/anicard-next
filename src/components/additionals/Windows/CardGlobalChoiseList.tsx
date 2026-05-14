@@ -25,6 +25,7 @@ export interface IShortCardInfo {
     category: string,
     price?: string,
     current_rating?: number,
+    copies?: number,
 }
 
 interface ICardGlobalChoiseList<T extends { id: number, photo: string }> {

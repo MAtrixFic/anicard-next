@@ -11,6 +11,7 @@ import { useUser } from "@/devs/hooks/server/useUser";
 import useOverWindowStatus from "@/devs/hooks/useOverWindowStatus";
 import useSelection from "@/devs/hooks/useSelection";
 import { useEffect, useState } from "react";
+import { BaseFrame } from "@/components/additionals/cards/PreviewSelectionCard";
 
 interface IExchangeWindowProps {
     exchangedTrade: ITrade,
@@ -91,7 +92,14 @@ const ExchangeWindow = ({ exchangedTrade, setExchangedTrade }: IExchangeWindowPr
                                         setSelection={setSelectedCard}
                                         selectedCard={selectedCard}
                                         thisCard={v}
-                                    />
+                                    >
+                                        <BaseFrame
+                                            name={v.character || 'Unknown'}
+                                            rating={v.current_rating?.toString() || '0'}
+                                            attribute={v.attribute}
+                                            rarity={v.rarity}
+                                            university={v.universe} />
+                                    </PreviewSelectionCard>
                                 )}
                             </ul>
                         </section>

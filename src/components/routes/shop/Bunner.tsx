@@ -65,8 +65,10 @@ export const BannerSection = ({ banners, title, buy }: IBannerSectionProps) => {
                 </h4>
             </div>
             <div className="banner-section__list">
-                {banners.map((v, i) =>
+                {banners.length > 0 ? banners.map((v, i) =>
                     <Bunner key={i + v.name} material={v.material} {...v} buy={buy} />
+                ) : (
+                    <p className="banner-section__empty-text">Пока пусто</p>
                 )}
             </div>
 

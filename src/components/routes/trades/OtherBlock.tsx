@@ -40,7 +40,11 @@ const OtherBlock = () => {
                 </ul>
             </div>
 
-            {exchangeSelectionTrade && createPortal(<ExchangeWindow exchangedTrade={exchangeSelectionTrade} setExchangedTrade={setExchangeSelectionTrade} />, document.body)}
+            {exchangeSelectionTrade &&
+                createPortal(<ExchangeWindow
+                    exchangedTrade={exchangeSelectionTrade}
+                    setExchangedTrade={setExchangeSelectionTrade} />
+                    , document.body)}
         </>
     )
 }

@@ -18,7 +18,7 @@ const YourOffer = ({ trade, deleteTrade }: IYourOfferProps) => {
                 <div className="your-offer__info-block">
                     <div className="your-offer__title-container">
                         <h4 className="your-offer__title">
-                            {trade.creatorCard.rarity}
+                            {trade.creatorCard.character}
                         </h4>
                     </div>
                 </div>

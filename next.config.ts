@@ -7,13 +7,20 @@ const nextConfig: NextConfig = {
             allowedOrigins: [
                 'localhost:3000',
                 '74h98gnp-3000.euw.devtunnels.ms',
-                'communally-lovable-pointer.cloudpub.ru'
+                'communally-lovable-pointer.cloudpub.ru',
+                'backend.mrcookiss.online'
             ]
         }
     },
     images: {
         // Укажите домены для remotePatterns
         remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'backend.mrcookiss.online',
+                port: '',
+                pathname: '/**',
+            },
             {
                 protocol: 'https',
                 hostname: 'communally-lovable-pointer.cloudpub.ru',

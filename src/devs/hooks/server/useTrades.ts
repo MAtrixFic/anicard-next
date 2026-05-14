@@ -45,7 +45,7 @@ export const useTrades = () => {
 
 
     async function deleteTrade(tradeId: number) {
-        const res = await DeleteTrade(tradeId, await getValue('id'))
+        const res = await DeleteTrade(tradeId)
         console.log(res)
         if (res) addMessage({ text: 'Трейд успешно удален', type: 'message' })
         else addMessage({ text: 'Ошибка удаления трейда', type: 'error' })

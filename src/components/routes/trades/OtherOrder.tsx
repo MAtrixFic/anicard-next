@@ -17,8 +17,19 @@ const OtherOrder = ({ trade, openExchange }: IOtherOrderProps) => {
                 <div className="other-order__info-block">
                     <div className="other-order__title-container">
                         <h4 className="other-order__title">
-                            {trade.creatorCard.rarity}
+                            {trade.creatorCard.character}
                         </h4>
+                    </div>
+                    <div className="other-order__prefs">
+                        <span className="other-order__pref">
+                            {`Редкость: ${trade.creatorCard.rarity}`}
+                        </span>
+                        <span className="other-order__pref">
+                            {`Рейтинг: ${trade.creatorCard.current_rating}`}
+                        </span>
+                        <span className="other-order__pref">
+                            {`Дубликаты: ${trade.creatorCard.copies}`}
+                        </span>
                     </div>
                 </div>
                 <div className="other-order__manipulations-block">

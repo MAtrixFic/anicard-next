@@ -91,14 +91,15 @@ export async function CreateTrade(cardId: number) {
 
 export async function ResponsdToOffer(tradeId: number, cardId: number): Promise<IRespone<string>> {
     try {
-        console.log(`trades/${tradeId}/${cardId}/offer`)
+        console.log(`trades/${cardId}/offer`)
         await POST(`trades/${cardId}/offer`, {
             trade_id: tradeId
         })
         return { ok: true, data: "Ответ на трейд успешен" }
     }
     catch (error) {
-        return { ok: false, data: (error as IError).response.data.detail }
+        console.error(error)
+        return { ok: false, data: error?.toString() || "Ошибка при ответе на трейд" }
     }
 }
 
@@ -115,10 +116,10 @@ export async function AcceptOrNoTheOffer(tradeId: number, status: TTradeStatus) 
     }
 }
 
-export async function DeleteTrade(tradeId: number, userId: number) {
+export async function DeleteTrade(tradeId: number) {
     try {
-        console.log(`trades/${tradeId}/${userId}`)
-        await DELETE(`trades/${tradeId}/${userId}`)
+        console.log(`trades/${tradeId}`)
+        await DELETE(`trades/${tradeId}`)
         return true
     }
     catch (error) {

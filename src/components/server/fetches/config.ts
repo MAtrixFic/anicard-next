@@ -1,8 +1,6 @@
 import axios from "axios";
 import { BACK_ORIGIN } from "./env.config";
 import { RefreshUser, UpdateToken } from "../comp/Apis";
-// import { RefreshUser, UpdateToken } from "../comp/Apis";
-import { redirect } from "next/navigation";
 
 class FetchMG {
     public static origin: string = BACK_ORIGIN + '/';
