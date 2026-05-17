@@ -8,13 +8,20 @@ const nextConfig: NextConfig = {
                 'localhost:3000',
                 '74h98gnp-3000.euw.devtunnels.ms',
                 'communally-lovable-pointer.cloudpub.ru',
-                'backend.mrcookiss.online'
+                'backend.mrcookiss.online',
+                'matrixfic.online'
             ]
         }
     },
     images: {
         // Укажите домены для remotePatterns
         remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'matrixfic.online',
+                port: '',
+                pathname: '/**',
+            },
             {
                 protocol: 'https',
                 hostname: 'backend.mrcookiss.online',
