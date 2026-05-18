@@ -2,6 +2,7 @@ import { useRef } from "react"
 import CardGlobalChoiseList, { type ICard } from "../../additionals/Windows/CardGlobalChoiseList"
 import PurpleButton from "../../additionals/buttons/PurpleButton"
 import { useCardsStore } from "../../../devs/store/CardsStore"
+import { IPet } from "@/devs/store/PetsStore"
 
 const BattleCards = () => {
     const battleCardsRef = useRef<ICard[]>([])
@@ -16,7 +17,14 @@ const BattleCards = () => {
 
     return (
         <div className="battle-cards">
-            <CardGlobalChoiseList materialRef={battleCardsRef} materialType='battle' choisenMaterialNumber={6} />
+            <CardGlobalChoiseList
+                materialRef={battleCardsRef}
+                materialType='battle-cards'
+                choisenMaterialNumber={6} loadAllMaterials={function (args?: any): Promise<(ICard | IPet)[]> {
+                    throw new Error("Function not implemented.")
+                } } loadSelectedMaterials={function (args?: any): Promise<(ICard | IPet)[]> {
+                    throw new Error("Function not implemented.")
+                } } />
             <div className="battle-cards__btns">
                 <PurpleButton title={'Сохранить'} func={StoreBattleCards} additionStyle="tiny" />
             </div>
