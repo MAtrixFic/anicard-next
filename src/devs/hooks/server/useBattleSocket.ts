@@ -2,7 +2,7 @@
 import { useUserStore } from "@/devs/store/UserStore"
 import { useCallback } from "react"
 import useBattleSocketStore from "@/devs/store/BattleSocketStore"
-import { BACK_ORIGIN } from "@/components/server/fetches/env.config"
+import { BACK_ORIGIN, BACK_SOCKET } from "@/components/server/fetches/env.config"
 import { CookieGet } from "@/components/server/CookieManager"
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 
@@ -21,7 +21,7 @@ const useBattleSocket = () => {
         if (ws) return
         else {
             const accessToken = await CookieGet('access_token') as RequestCookie;
-            const localWS = new WebSocket(`${BACK_ORIGIN}/battle/ws?access_token=${accessToken.value}`,)
+            const localWS = new WebSocket(`${BACK_SOCKET}/battle/ws?access_token=${accessToken.value}`,)
             setWSValue('WS', localWS)
         }
     }, [ws])
