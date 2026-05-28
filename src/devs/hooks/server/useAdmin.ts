@@ -1,6 +1,7 @@
 'use client'
 import { DeleteCard, DeletePet } from "@/components/server/comp/Apis"
 import { useQueryClient } from "@tanstack/react-query"
+import { FRONT_ORIGIN } from "@/components/server/fetches/env.config"
 
 
 
@@ -9,7 +10,7 @@ export const useAdmin = () => {
     async function AddAdminCard(card: any) {
         console.log(card)
         try {
-            let res = await fetch(`https://74h98gnp-3000.euw.devtunnels.ms/api/admin/cards`, {
+            let res = await fetch(`${FRONT_ORIGIN}/api/admin/cards`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
@@ -31,7 +32,7 @@ export const useAdmin = () => {
     async function AddAdminPets(pet: any) {
         console.log(pet)
         try {
-            let res = await fetch(`https://74h98gnp-3000.euw.devtunnels.ms/api/admin/pets`, {
+            let res = await fetch(`${FRONT_ORIGIN}/api/admin/pets`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',

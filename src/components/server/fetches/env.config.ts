@@ -1,2 +1,2 @@
-export const BACK_ORIGIN = "https://backend.mrcookiss.online"
-export const FRONT_ORIGIN = "https://74h98gnp-3000.euw.devtunnels.ms"
+export const BACK_ORIGIN = "https://backend.anime-heaven.ru"
+export const FRONT_ORIGIN = 'https://anime-heaven.ru'

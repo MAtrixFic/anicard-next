@@ -69,11 +69,11 @@ export const BaseFrame = ({ name, rating, rarity, attribute, university }: IBase
                                 {university}
                             </span>
                         </div>
-                        <div className="card-frame__element">
+                        {attribute && <div className="card-frame__element">
                             <Image src={attributesImages[attribute as keyof typeof attributesImages]} width={20} height={20} alt={attribute} />
-                        </div>
+                        </div>}
                     </div>
-                    <div className="card-frame__anti-elements-block">
+                    {attribute && <div className="card-frame__anti-elements-block">
                         <span className="card-frame__text card-frame__text-red">
                             Несовместимые стихии
                         </span>
@@ -82,7 +82,7 @@ export const BaseFrame = ({ name, rating, rarity, attribute, university }: IBase
                                 <Image key={wa + i} src={attributesImages[wa as keyof typeof attributesImages]} width={15} height={15} alt={attribute} />
                             )}
                         </ul>
-                    </div>
+                    </div>}
                 </div>
             </section>
         </div>

@@ -9,13 +9,27 @@ const nextConfig: NextConfig = {
                 '74h98gnp-3000.euw.devtunnels.ms',
                 'communally-lovable-pointer.cloudpub.ru',
                 'backend.mrcookiss.online',
-                'matrixfic.online'
+                'matrixfic.online',
+                'anime-heaven.ru',
+                'backend.anime-heaven.ru'
             ]
         }
     },
     images: {
         // Укажите домены для remotePatterns
         remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'anime-heaven.rг',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'backend.anime-heaven.ru',
+                port: '',
+                pathname: '/**',
+            },
             {
                 protocol: 'https',
                 hostname: 'matrixfic.online',

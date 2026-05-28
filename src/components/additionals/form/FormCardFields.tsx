@@ -1,6 +1,9 @@
 import { useFormContext } from "react-hook-form"
 import BaseList from "../BaseList"
+import BaseInputWithList from "../BaseInputWithList";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { GetUniverses } from "@/components/server/comp/Apis";
 
 export const attributes: Record<string, string> = {
     'огонь': 'Огонь',
@@ -71,10 +74,15 @@ export const cardAttributeWeaknesses: Record<string, string[]> = {
 const FormCardFields = () => {
     const formContext = useFormContext()
     const [category, setCategory] = useState<string>(formContext.getValues('category'));
+    const { data } = useQuery({
+        queryKey: ['universes'],
+        queryFn: GetUniverses
+    })
+
     return (
         <>
             <BaseList naming={{ title: 'Категория', titleKey: 'category' }} values={{ 'battle': 'battle', 'collectible': 'collectible' }} onChange={() => setCategory(formContext.getValues('category'))} />
-            {['battle'].includes(category) && <BaseList naming={{ title: 'Вселенная', titleKey: 'universe' }} values={{ 'base': 'Нормисная' }} />}
+            {['battle'].includes(category) && <BaseInputWithList naming={{ title: 'Вселенная', titleKey: 'universe' }} values={data ? data as string[] : []} />}
             <BaseList naming={{ title: 'Редкость', titleKey: 'rarity' }} values={{ 'S': 'S', 'A': 'A', 'B': 'B', 'C': 'C' }} />
             {['battle'].includes(category) && <BaseList naming={{ title: 'Атрибут', titleKey: 'attribute' }} values={attributes} />}
             <div className="admin-panel__input-container">

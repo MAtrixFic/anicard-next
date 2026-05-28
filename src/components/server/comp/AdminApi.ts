@@ -26,6 +26,7 @@ export default class AdminApi {
             return { 'ok': false, cards: [] }
         }
     }
+
     static async AddCard(card: TCardWithPhoto): Promise<ICard | boolean> {
         try {
             const res = await POST(`admin/cards`, card)
@@ -33,6 +34,16 @@ export default class AdminApi {
         }
         catch (error) {
             // console.log(error.toJSON())
+            return false
+        }
+    }
+
+    static async GetUniverses(): Promise<string[] | boolean> {
+        try {
+            const res = await GET(`admin/cards/universes`)
+            return res.data.universes
+        }
+        catch (error) {
             return false
         }
     }

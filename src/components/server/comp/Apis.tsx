@@ -7,7 +7,6 @@ import { InventoryApi, TwistApi } from "./InventoryApi";
 import ShopApi from "./ShopApi";
 import PVEApi from "./PVEApi";
 import UpgradeApi from "./UpgradeApi";
-import { BACK_ORIGIN } from "../fetches/env.config";
 import { BattleApi } from "./BattleApi";
 
 
@@ -71,7 +70,6 @@ export const GetAuthCookie = async () => {
     const access = cookieStore.get('access_token')
     const refresh = cookieStore.get('refresh_token')
 
-
     return { access, refresh }
 }
 
@@ -86,6 +84,7 @@ export const DeletePet = AdminApi.DeletePet
 export const UploadPhotoForCard = async (data: File) => {
     console.log(data)
 }
+export const GetUniverses = AdminApi.GetUniverses
 
 //twists api
 export const AddTwistsCard = TwistApi.AddTwistCard

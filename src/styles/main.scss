@@ -774,7 +774,7 @@ body {
             align-items: center;
         }
 
-        &__anti-elements-list{
+        &__anti-elements-list {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1052,6 +1052,21 @@ body {
     display: flex;
     width: fit-content;
 
+    &__input {
+        outline: unset;
+        height: 30px;
+        border-radius: 10px;
+        border: 1px solid props.$labelColor;
+        background-color: props.$bodyColor;
+        text-align: center;
+        color: white;
+        width: 100%;
+
+        &:focus {
+            outline: unset;
+        }
+    }
+
     &.small {
         .base-list__active-value {
             &-container {
@@ -1140,6 +1155,8 @@ body {
         flex-direction: column;
         padding: .3rem;
         border-radius: 10px;
+        max-height: 200px;
+        overflow-y: auto;
         background-color: rgba(props.$bodyColor, .9);
         backdrop-filter: blur(8px);
         width: 100%;

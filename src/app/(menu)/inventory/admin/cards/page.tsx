@@ -42,9 +42,9 @@ const Page = () => {
                     >
                         <BaseFrame
                             rarity={v.rarity}
-                            rating={v.rating.toString()}
+                            rating={v.rating?.toString() || '0'}
                             name={v.character || ''}
-                            attribute={v.attribute}
+                            attribute={v.attribute || ''}
                             university={v.universe}
                         />
                     </PreviewSelectionCard>)
